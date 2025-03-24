@@ -20,6 +20,9 @@ use std::{
     collections::HashMap,
     sync::{atomic::AtomicUsize, mpsc::channel},
 };
+use tfhe::prelude::*;
+#[cfg(feature = "gpu")]
+use tfhe::{core_crypto::gpu::get_number_of_gpus, GpuIndex};
 use tokio::task::JoinSet;
 
 struct ExecNode {
@@ -53,7 +56,11 @@ pub struct Scheduler<'a> {
     edges: Dag<(), OpEdge>,
     sks: tfhe::ServerKey,
     #[cfg(feature = "gpu")]
-    csks: tfhe::CudaServerKey,
+    gpu_sks: tfhe::CudaServerKey,
+    #[cfg(feature = "gpu")]
+    csks: tfhe::CompressedServerKey,
+    #[cfg(feature = "gpu")]
+    multi_gpu_sks: Vec<tfhe::CudaServerKey>,
 }
 
 impl<'a> Scheduler<'a> {
@@ -74,15 +81,24 @@ impl<'a> Scheduler<'a> {
     pub fn new(
         graph: &'a mut Dag<OpNode, OpEdge>,
         sks: tfhe::ServerKey,
-        #[cfg(feature = "gpu")] csks: tfhe::CudaServerKey,
+        #[cfg(feature = "gpu")] gpu_sks: tfhe::CudaServerKey,
+        #[cfg(feature = "gpu")] csks: tfhe::CompressedServerKey,
     ) -> Self {
         let edges = graph.map(|_, _| (), |_, edge| *edge);
+        let mut multi_gpu_sks = vec![];
+        for i in 0..get_number_of_gpus() {
+            multi_gpu_sks.push(csks.decompress_to_specific_gpu(GpuIndex::new(i)));
+        }
         Self {
             graph,
             edges,
             sks: sks.clone(),
             #[cfg(feature = "gpu")]
             csks: csks.clone(),
+            #[cfg(feature = "gpu")]
+            gpu_sks: gpu_sks.clone(),
+            #[cfg(feature = "gpu")]
+            multi_gpu_sks,
         }
     }
 
@@ -109,7 +125,7 @@ impl<'a> Scheduler<'a> {
 
     async fn decompress_ciphertexts(&mut self) -> Result<()> {
         #[cfg(feature = "gpu")]
-        let sks = self.csks.clone();
+        let sks = self.gpu_sks.clone();
         #[cfg(not(feature = "gpu"))]
         let sks = self.sks.clone();
         tfhe::set_server_key(sks.clone());
@@ -137,7 +153,7 @@ impl<'a> Scheduler<'a> {
     async fn schedule_fine_grain(&mut self) -> Result<()> {
         let mut set: JoinSet<TaskResult> = JoinSet::new();
         #[cfg(feature = "gpu")]
-        let sks = self.csks.clone();
+        let sks = self.gpu_sks.clone();
         #[cfg(not(feature = "gpu"))]
         let sks = self.sks.clone();
         tfhe::set_server_key(sks.clone());
@@ -212,7 +228,7 @@ impl<'a> Scheduler<'a> {
 
     async fn schedule_coarse_grain(&mut self, strategy: PartitionStrategy) -> Result<()> {
         #[cfg(feature = "gpu")]
-        let sks = self.csks.clone();
+        let sks = self.gpu_sks.clone();
         #[cfg(not(feature = "gpu"))]
         let sks = self.sks.clone();
         tfhe::set_server_key(sks.clone());
@@ -312,13 +328,16 @@ impl<'a> Scheduler<'a> {
         let _ = partition_components(self.graph, &mut execution_graph);
         let mut comps = vec![];
         #[cfg(feature = "gpu")]
-        let sks = self.csks.clone();
+        let sks = self.gpu_sks.clone();
         #[cfg(not(feature = "gpu"))]
         let sks = self.sks.clone();
-        tfhe::set_server_key(sks.clone());
-        rayon::broadcast(|_| {
+        #[cfg(not(feature = "gpu"))]
+        {
             tfhe::set_server_key(sks.clone());
-        });
+            rayon::broadcast(|_| {
+                tfhe::set_server_key(sks.clone());
+            });
+        }
 
         // Prime the scheduler with all nodes without dependences
         for idx in 0..execution_graph.node_count() {
@@ -341,11 +360,19 @@ impl<'a> Scheduler<'a> {
         }
 
         let (src, dest) = channel();
+        let keys = self.multi_gpu_sks.clone();
+        let num_gpus = self.multi_gpu_sks.len();
         tokio::task::spawn_blocking(move || {
+            #[cfg(not(feature = "gpu"))]
             tfhe::set_server_key(sks.clone());
-            comps.par_iter().for_each_with(src, |src, (args, index)| {
-                src.send(execute_partition(args.to_vec(), *index)).unwrap();
-            });
+            comps
+                .par_iter()
+                .enumerate()
+                .for_each_with(src, |src, (i, (args, index))| {
+                    #[cfg(feature = "gpu")]
+                    tfhe::set_server_key(keys[i % num_gpus].clone());
+                    src.send(execute_partition(args.to_vec(), *index)).unwrap();
+                });
         })
         .await?;
         let results: Vec<_> = dest.iter().collect();
