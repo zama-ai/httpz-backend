@@ -16,6 +16,7 @@ use fhevm_engine_common::{
     common::FheOperation, tfhe_ops::perform_fhe_operation, types::SupportedFheCiphertexts,
 };
 use rayon::prelude::*;
+use std::time::SystemTime;
 use std::{
     collections::HashMap,
     sync::{atomic::AtomicUsize, mpsc::channel},
