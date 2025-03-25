@@ -104,7 +104,12 @@ impl<'a> Scheduler<'a> {
 
     pub async fn schedule(&mut self) -> Result<()> {
         let schedule_type = std::env::var("FHEVM_DF_SCHEDULE");
+        let now = SystemTime::now();
         self.decompress_ciphertexts().await?;
+        println!(
+            "Decompress time (schedule): {}",
+            now.elapsed().unwrap().as_millis()
+        );
         match schedule_type {
             Ok(val) => match val.as_str() {
                 "MAX_PARALLELISM" => {
@@ -359,6 +364,7 @@ impl<'a> Scheduler<'a> {
             }
         }
 
+        let now = SystemTime::now();
         let (src, dest) = channel();
         let keys = self.multi_gpu_sks.clone();
         let num_gpus = self.multi_gpu_sks.len();
@@ -383,6 +389,10 @@ impl<'a> Scheduler<'a> {
                 self.graph[node_index].result = Some(o.1);
             }
         }
+        println!(
+            "Execution time (loop sched main): {}",
+            now.elapsed().unwrap().as_millis()
+        );
         Ok(())
     }
 }
