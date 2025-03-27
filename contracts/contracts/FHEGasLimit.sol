@@ -65,9 +65,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte == 0x01) {
-            if (resultType == 1) {
-                _updateFunding(65000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(94000);
             } else if (resultType == 3) {
                 _updateFunding(133000);
@@ -77,15 +75,11 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(188000);
             } else if (resultType == 6) {
                 _updateFunding(218000);
-            } else if (resultType == 8) {
-                _updateFunding(253000);
             } else {
                 revert UnsupportedOperation();
             }
         } else {
-            if (resultType == 1) {
-                _updateFunding(65000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(94000);
             } else if (resultType == 3) {
                 _updateFunding(133000);
@@ -95,8 +89,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(188000);
             } else if (resultType == 6) {
                 _updateFunding(218000);
-            } else if (resultType == 8) {
-                _updateFunding(253000);
             } else {
                 revert UnsupportedOperation();
             }
@@ -113,9 +105,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte == 0x01) {
-            if (resultType == 1) {
-                _updateFunding(65000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(94000);
             } else if (resultType == 3) {
                 _updateFunding(133000);
@@ -125,15 +115,11 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(188000);
             } else if (resultType == 6) {
                 _updateFunding(218000);
-            } else if (resultType == 8) {
-                _updateFunding(253000);
             } else {
                 revert UnsupportedOperation();
             }
         } else {
-            if (resultType == 1) {
-                _updateFunding(65000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(94000);
             } else if (resultType == 3) {
                 _updateFunding(133000);
@@ -143,8 +129,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(188000);
             } else if (resultType == 6) {
                 _updateFunding(218000);
-            } else if (resultType == 8) {
-                _updateFunding(253000);
             } else {
                 revert UnsupportedOperation();
             }
@@ -161,9 +145,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte == 0x01) {
-            if (resultType == 1) {
-                _updateFunding(88000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(159000);
             } else if (resultType == 3) {
                 _updateFunding(208000);
@@ -173,15 +155,11 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(356000);
             } else if (resultType == 6) {
                 _updateFunding(480000);
-            } else if (resultType == 8) {
-                _updateFunding(647000);
             } else {
                 revert UnsupportedOperation();
             }
         } else {
-            if (resultType == 1) {
-                _updateFunding(150000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(197000);
             } else if (resultType == 3) {
                 _updateFunding(262000);
@@ -191,8 +169,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(641000);
             } else if (resultType == 6) {
                 _updateFunding(1145000);
-            } else if (resultType == 8) {
-                _updateFunding(2045000);
             } else {
                 revert UnsupportedOperation();
             }
@@ -209,9 +185,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte != 0x01) revert OnlyScalarOperationsAreSupported();
-        if (resultType == 1) {
-            _updateFunding(139000);
-        } else if (resultType == 2) {
+        if (resultType == 2) {
             _updateFunding(238000);
         } else if (resultType == 3) {
             _updateFunding(314000);
@@ -221,8 +195,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
             _updateFunding(584000);
         } else if (resultType == 6) {
             _updateFunding(857000);
-        } else if (resultType == 8) {
-            _updateFunding(1258000);
         } else {
             revert UnsupportedOperation();
         }
@@ -238,9 +210,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte != 0x01) revert OnlyScalarOperationsAreSupported();
-        if (resultType == 1) {
-            _updateFunding(286000);
-        } else if (resultType == 2) {
+        if (resultType == 2) {
             _updateFunding(460000);
         } else if (resultType == 3) {
             _updateFunding(622000);
@@ -250,8 +220,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
             _updateFunding(1095000);
         } else if (resultType == 6) {
             _updateFunding(1499000);
-        } else if (resultType == 8) {
-            _updateFunding(2052000);
         } else {
             revert UnsupportedOperation();
         }
@@ -269,8 +237,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (scalarByte == 0x01) {
             if (resultType == 0) {
                 _updateFunding(26000);
-            } else if (resultType == 1) {
-                _updateFunding(32000);
             } else if (resultType == 2) {
                 _updateFunding(34000);
             } else if (resultType == 3) {
@@ -289,8 +255,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         } else {
             if (resultType == 0) {
                 _updateFunding(26000);
-            } else if (resultType == 1) {
-                _updateFunding(32000);
             } else if (resultType == 2) {
                 _updateFunding(34000);
             } else if (resultType == 3) {
@@ -321,8 +285,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (scalarByte == 0x01) {
             if (resultType == 0) {
                 _updateFunding(26000);
-            } else if (resultType == 1) {
-                _updateFunding(32000);
             } else if (resultType == 2) {
                 _updateFunding(34000);
             } else if (resultType == 3) {
@@ -341,8 +303,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         } else {
             if (resultType == 0) {
                 _updateFunding(26000);
-            } else if (resultType == 1) {
-                _updateFunding(32000);
             } else if (resultType == 2) {
                 _updateFunding(34000);
             } else if (resultType == 3) {
@@ -373,8 +333,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (scalarByte == 0x01) {
             if (resultType == 0) {
                 _updateFunding(26000);
-            } else if (resultType == 1) {
-                _updateFunding(32000);
             } else if (resultType == 2) {
                 _updateFunding(34000);
             } else if (resultType == 3) {
@@ -393,8 +351,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         } else {
             if (resultType == 0) {
                 _updateFunding(26000);
-            } else if (resultType == 1) {
-                _updateFunding(32000);
             } else if (resultType == 2) {
                 _updateFunding(34000);
             } else if (resultType == 3) {
@@ -423,9 +379,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte == 0x01) {
-            if (resultType == 1) {
-                _updateFunding(35000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(35000);
             } else if (resultType == 3) {
                 _updateFunding(35000);
@@ -441,9 +395,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 revert UnsupportedOperation();
             }
         } else {
-            if (resultType == 1) {
-                _updateFunding(116000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(133000);
             } else if (resultType == 3) {
                 _updateFunding(153000);
@@ -471,9 +423,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte == 0x01) {
-            if (resultType == 1) {
-                _updateFunding(35000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(35000);
             } else if (resultType == 3) {
                 _updateFunding(35000);
@@ -489,9 +439,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 revert UnsupportedOperation();
             }
         } else {
-            if (resultType == 1) {
-                _updateFunding(116000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(133000);
             } else if (resultType == 3) {
                 _updateFunding(153000);
@@ -519,9 +467,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte == 0x01) {
-            if (resultType == 1) {
-                _updateFunding(35000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(35000);
             } else if (resultType == 3) {
                 _updateFunding(35000);
@@ -537,9 +483,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 revert UnsupportedOperation();
             }
         } else {
-            if (resultType == 1) {
-                _updateFunding(116000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(133000);
             } else if (resultType == 3) {
                 _updateFunding(153000);
@@ -567,9 +511,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte == 0x01) {
-            if (resultType == 1) {
-                _updateFunding(35000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(35000);
             } else if (resultType == 3) {
                 _updateFunding(35000);
@@ -585,9 +527,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 revert UnsupportedOperation();
             }
         } else {
-            if (resultType == 1) {
-                _updateFunding(116000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(133000);
             } else if (resultType == 3) {
                 _updateFunding(153000);
@@ -617,8 +557,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (scalarByte == 0x01) {
             if (resultType == 0) {
                 _updateFunding(49000);
-            } else if (resultType == 1) {
-                _updateFunding(51000);
             } else if (resultType == 2) {
                 _updateFunding(53000);
             } else if (resultType == 3) {
@@ -645,8 +583,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         } else {
             if (resultType == 0) {
                 _updateFunding(49000);
-            } else if (resultType == 1) {
-                _updateFunding(51000);
             } else if (resultType == 2) {
                 _updateFunding(53000);
             } else if (resultType == 3) {
@@ -685,8 +621,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (scalarByte == 0x01) {
             if (resultType == 0) {
                 _updateFunding(49000);
-            } else if (resultType == 1) {
-                _updateFunding(51000);
             } else if (resultType == 2) {
                 _updateFunding(53000);
             } else if (resultType == 3) {
@@ -713,8 +647,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         } else {
             if (resultType == 0) {
                 _updateFunding(49000);
-            } else if (resultType == 1) {
-                _updateFunding(51000);
             } else if (resultType == 2) {
                 _updateFunding(53000);
             } else if (resultType == 3) {
@@ -751,9 +683,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte == 0x01) {
-            if (resultType == 1) {
-                _updateFunding(70000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(82000);
             } else if (resultType == 3) {
                 _updateFunding(105000);
@@ -763,15 +693,11 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(156000);
             } else if (resultType == 6) {
                 _updateFunding(190000);
-            } else if (resultType == 8) {
-                _updateFunding(231000);
             } else {
                 revert UnsupportedOperation();
             }
         } else {
-            if (resultType == 1) {
-                _updateFunding(70000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(82000);
             } else if (resultType == 3) {
                 _updateFunding(105000);
@@ -781,8 +707,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(156000);
             } else if (resultType == 6) {
                 _updateFunding(190000);
-            } else if (resultType == 8) {
-                _updateFunding(231000);
             } else {
                 revert UnsupportedOperation();
             }
@@ -799,9 +723,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte == 0x01) {
-            if (resultType == 1) {
-                _updateFunding(70000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(82000);
             } else if (resultType == 3) {
                 _updateFunding(105000);
@@ -811,15 +733,11 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(156000);
             } else if (resultType == 6) {
                 _updateFunding(190000);
-            } else if (resultType == 8) {
-                _updateFunding(231000);
             } else {
                 revert UnsupportedOperation();
             }
         } else {
-            if (resultType == 1) {
-                _updateFunding(70000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(82000);
             } else if (resultType == 3) {
                 _updateFunding(105000);
@@ -829,8 +747,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(156000);
             } else if (resultType == 6) {
                 _updateFunding(190000);
-            } else if (resultType == 8) {
-                _updateFunding(231000);
             } else {
                 revert UnsupportedOperation();
             }
@@ -847,9 +763,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte == 0x01) {
-            if (resultType == 1) {
-                _updateFunding(70000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(82000);
             } else if (resultType == 3) {
                 _updateFunding(105000);
@@ -859,15 +773,11 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(156000);
             } else if (resultType == 6) {
                 _updateFunding(190000);
-            } else if (resultType == 8) {
-                _updateFunding(231000);
             } else {
                 revert UnsupportedOperation();
             }
         } else {
-            if (resultType == 1) {
-                _updateFunding(70000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(82000);
             } else if (resultType == 3) {
                 _updateFunding(105000);
@@ -877,8 +787,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(156000);
             } else if (resultType == 6) {
                 _updateFunding(190000);
-            } else if (resultType == 8) {
-                _updateFunding(231000);
             } else {
                 revert UnsupportedOperation();
             }
@@ -895,9 +803,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte == 0x01) {
-            if (resultType == 1) {
-                _updateFunding(70000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(82000);
             } else if (resultType == 3) {
                 _updateFunding(105000);
@@ -907,15 +813,11 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(156000);
             } else if (resultType == 6) {
                 _updateFunding(190000);
-            } else if (resultType == 8) {
-                _updateFunding(231000);
             } else {
                 revert UnsupportedOperation();
             }
         } else {
-            if (resultType == 1) {
-                _updateFunding(70000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(82000);
             } else if (resultType == 3) {
                 _updateFunding(105000);
@@ -925,8 +827,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(156000);
             } else if (resultType == 6) {
                 _updateFunding(190000);
-            } else if (resultType == 8) {
-                _updateFunding(231000);
             } else {
                 revert UnsupportedOperation();
             }
@@ -943,9 +843,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte == 0x01) {
-            if (resultType == 1) {
-                _updateFunding(121000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(128000);
             } else if (resultType == 3) {
                 _updateFunding(150000);
@@ -955,15 +853,11 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(192000);
             } else if (resultType == 6) {
                 _updateFunding(225000);
-            } else if (resultType == 8) {
-                _updateFunding(264000);
             } else {
                 revert UnsupportedOperation();
             }
         } else {
-            if (resultType == 1) {
-                _updateFunding(121000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(128000);
             } else if (resultType == 3) {
                 _updateFunding(153000);
@@ -973,8 +867,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(210000);
             } else if (resultType == 6) {
                 _updateFunding(241000);
-            } else if (resultType == 8) {
-                _updateFunding(277000);
             } else {
                 revert UnsupportedOperation();
             }
@@ -991,9 +883,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (scalarByte == 0x01) {
-            if (resultType == 1) {
-                _updateFunding(121000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(128000);
             } else if (resultType == 3) {
                 _updateFunding(150000);
@@ -1003,15 +893,11 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(192000);
             } else if (resultType == 6) {
                 _updateFunding(225000);
-            } else if (resultType == 8) {
-                _updateFunding(264000);
             } else {
                 revert UnsupportedOperation();
             }
         } else {
-            if (resultType == 1) {
-                _updateFunding(121000);
-            } else if (resultType == 2) {
+            if (resultType == 2) {
                 _updateFunding(128000);
             } else if (resultType == 3) {
                 _updateFunding(153000);
@@ -1021,8 +907,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
                 _updateFunding(210000);
             } else if (resultType == 6) {
                 _updateFunding(241000);
-            } else if (resultType == 8) {
-                _updateFunding(277000);
             } else {
                 revert UnsupportedOperation();
             }
@@ -1037,9 +921,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
     function payForFheNeg(uint8 resultType) external virtual {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
-        if (resultType == 1) {
-            _updateFunding(60000);
-        } else if (resultType == 2) {
+        if (resultType == 2) {
             _updateFunding(95000);
         } else if (resultType == 3) {
             _updateFunding(131000);
@@ -1066,8 +948,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         _checkIfNewBlock();
         if (resultType == 0) {
             _updateFunding(30000);
-        } else if (resultType == 1) {
-            _updateFunding(33000);
         } else if (resultType == 2) {
             _updateFunding(34000);
         } else if (resultType == 3) {
@@ -1095,8 +975,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         _checkIfNewBlock();
         if (resultType == 0) {
             _updateFunding(200);
-        } else if (resultType == 1) {
-            _updateFunding(200);
         } else if (resultType == 2) {
             _updateFunding(200);
         } else if (resultType == 3) {
@@ -1123,8 +1001,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
         if (resultType == 0) {
-            _updateFunding(100);
-        } else if (resultType == 1) {
             _updateFunding(100);
         } else if (resultType == 2) {
             _updateFunding(100);
@@ -1161,8 +1037,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         _checkIfNewBlock();
         if (resultType == 0) {
             _updateFunding(43000);
-        } else if (resultType == 1) {
-            _updateFunding(45000);
         } else if (resultType == 2) {
             _updateFunding(47000);
         } else if (resultType == 3) {
@@ -1198,8 +1072,6 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
         _checkIfNewBlock();
         if (resultType == 0) {
             _updateFunding(100000);
-        } else if (resultType == 1) {
-            _updateFunding(100000);
         } else if (resultType == 2) {
             _updateFunding(100000);
         } else if (resultType == 3) {
@@ -1231,9 +1103,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
     function payForFheRandBounded(uint8 resultType) external virtual {
         if (msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
-        if (resultType == 1) {
-            _updateFunding(100000);
-        } else if (resultType == 2) {
+        if (resultType == 2) {
             _updateFunding(100000);
         } else if (resultType == 3) {
             _updateFunding(100000);
