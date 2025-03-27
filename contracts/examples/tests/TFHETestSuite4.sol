@@ -20,6 +20,69 @@ contract TFHETestSuite4 {
         TFHE.setFHEVM(FHEVMConfig.defaultConfig());
     }
 
+    function and_euint64_euint64(einput a, einput b, bytes calldata inputProof) public {
+        euint64 aProc = TFHE.asEuint64(a, inputProof);
+        euint64 bProc = TFHE.asEuint64(b, inputProof);
+        euint64 result = TFHE.and(aProc, bProc);
+        TFHE.allowThis(result);
+        resEuint64 = result;
+    }
+    function or_euint64_euint64(einput a, einput b, bytes calldata inputProof) public {
+        euint64 aProc = TFHE.asEuint64(a, inputProof);
+        euint64 bProc = TFHE.asEuint64(b, inputProof);
+        euint64 result = TFHE.or(aProc, bProc);
+        TFHE.allowThis(result);
+        resEuint64 = result;
+    }
+    function xor_euint64_euint64(einput a, einput b, bytes calldata inputProof) public {
+        euint64 aProc = TFHE.asEuint64(a, inputProof);
+        euint64 bProc = TFHE.asEuint64(b, inputProof);
+        euint64 result = TFHE.xor(aProc, bProc);
+        TFHE.allowThis(result);
+        resEuint64 = result;
+    }
+    function eq_euint64_euint64(einput a, einput b, bytes calldata inputProof) public {
+        euint64 aProc = TFHE.asEuint64(a, inputProof);
+        euint64 bProc = TFHE.asEuint64(b, inputProof);
+        ebool result = TFHE.eq(aProc, bProc);
+        TFHE.allowThis(result);
+        resEbool = result;
+    }
+    function ne_euint64_euint64(einput a, einput b, bytes calldata inputProof) public {
+        euint64 aProc = TFHE.asEuint64(a, inputProof);
+        euint64 bProc = TFHE.asEuint64(b, inputProof);
+        ebool result = TFHE.ne(aProc, bProc);
+        TFHE.allowThis(result);
+        resEbool = result;
+    }
+    function ge_euint64_euint64(einput a, einput b, bytes calldata inputProof) public {
+        euint64 aProc = TFHE.asEuint64(a, inputProof);
+        euint64 bProc = TFHE.asEuint64(b, inputProof);
+        ebool result = TFHE.ge(aProc, bProc);
+        TFHE.allowThis(result);
+        resEbool = result;
+    }
+    function gt_euint64_euint64(einput a, einput b, bytes calldata inputProof) public {
+        euint64 aProc = TFHE.asEuint64(a, inputProof);
+        euint64 bProc = TFHE.asEuint64(b, inputProof);
+        ebool result = TFHE.gt(aProc, bProc);
+        TFHE.allowThis(result);
+        resEbool = result;
+    }
+    function le_euint64_euint64(einput a, einput b, bytes calldata inputProof) public {
+        euint64 aProc = TFHE.asEuint64(a, inputProof);
+        euint64 bProc = TFHE.asEuint64(b, inputProof);
+        ebool result = TFHE.le(aProc, bProc);
+        TFHE.allowThis(result);
+        resEbool = result;
+    }
+    function lt_euint64_euint64(einput a, einput b, bytes calldata inputProof) public {
+        euint64 aProc = TFHE.asEuint64(a, inputProof);
+        euint64 bProc = TFHE.asEuint64(b, inputProof);
+        ebool result = TFHE.lt(aProc, bProc);
+        TFHE.allowThis(result);
+        resEbool = result;
+    }
     function min_euint64_euint64(einput a, einput b, bytes calldata inputProof) public {
         euint64 aProc = TFHE.asEuint64(a, inputProof);
         euint64 bProc = TFHE.asEuint64(b, inputProof);
@@ -131,6 +194,27 @@ contract TFHETestSuite4 {
         euint128 result = TFHE.max(aProc, bProc);
         TFHE.allowThis(result);
         resEuint128 = result;
+    }
+    function and_euint64_euint256(einput a, einput b, bytes calldata inputProof) public {
+        euint64 aProc = TFHE.asEuint64(a, inputProof);
+        euint256 bProc = TFHE.asEuint256(b, inputProof);
+        euint256 result = TFHE.and(aProc, bProc);
+        TFHE.allowThis(result);
+        resEuint256 = result;
+    }
+    function or_euint64_euint256(einput a, einput b, bytes calldata inputProof) public {
+        euint64 aProc = TFHE.asEuint64(a, inputProof);
+        euint256 bProc = TFHE.asEuint256(b, inputProof);
+        euint256 result = TFHE.or(aProc, bProc);
+        TFHE.allowThis(result);
+        resEuint256 = result;
+    }
+    function xor_euint64_euint256(einput a, einput b, bytes calldata inputProof) public {
+        euint64 aProc = TFHE.asEuint64(a, inputProof);
+        euint256 bProc = TFHE.asEuint256(b, inputProof);
+        euint256 result = TFHE.xor(aProc, bProc);
+        TFHE.allowThis(result);
+        resEuint256 = result;
     }
     function eq_euint64_euint256(einput a, einput b, bytes calldata inputProof) public {
         euint64 aProc = TFHE.asEuint64(a, inputProof);
@@ -565,89 +649,5 @@ contract TFHETestSuite4 {
         euint128 result = TFHE.and(aProc, bProc);
         TFHE.allowThis(result);
         resEuint128 = result;
-    }
-    function or_euint128_euint128(einput a, einput b, bytes calldata inputProof) public {
-        euint128 aProc = TFHE.asEuint128(a, inputProof);
-        euint128 bProc = TFHE.asEuint128(b, inputProof);
-        euint128 result = TFHE.or(aProc, bProc);
-        TFHE.allowThis(result);
-        resEuint128 = result;
-    }
-    function xor_euint128_euint128(einput a, einput b, bytes calldata inputProof) public {
-        euint128 aProc = TFHE.asEuint128(a, inputProof);
-        euint128 bProc = TFHE.asEuint128(b, inputProof);
-        euint128 result = TFHE.xor(aProc, bProc);
-        TFHE.allowThis(result);
-        resEuint128 = result;
-    }
-    function eq_euint128_euint128(einput a, einput b, bytes calldata inputProof) public {
-        euint128 aProc = TFHE.asEuint128(a, inputProof);
-        euint128 bProc = TFHE.asEuint128(b, inputProof);
-        ebool result = TFHE.eq(aProc, bProc);
-        TFHE.allowThis(result);
-        resEbool = result;
-    }
-    function ne_euint128_euint128(einput a, einput b, bytes calldata inputProof) public {
-        euint128 aProc = TFHE.asEuint128(a, inputProof);
-        euint128 bProc = TFHE.asEuint128(b, inputProof);
-        ebool result = TFHE.ne(aProc, bProc);
-        TFHE.allowThis(result);
-        resEbool = result;
-    }
-    function ge_euint128_euint128(einput a, einput b, bytes calldata inputProof) public {
-        euint128 aProc = TFHE.asEuint128(a, inputProof);
-        euint128 bProc = TFHE.asEuint128(b, inputProof);
-        ebool result = TFHE.ge(aProc, bProc);
-        TFHE.allowThis(result);
-        resEbool = result;
-    }
-    function gt_euint128_euint128(einput a, einput b, bytes calldata inputProof) public {
-        euint128 aProc = TFHE.asEuint128(a, inputProof);
-        euint128 bProc = TFHE.asEuint128(b, inputProof);
-        ebool result = TFHE.gt(aProc, bProc);
-        TFHE.allowThis(result);
-        resEbool = result;
-    }
-    function le_euint128_euint128(einput a, einput b, bytes calldata inputProof) public {
-        euint128 aProc = TFHE.asEuint128(a, inputProof);
-        euint128 bProc = TFHE.asEuint128(b, inputProof);
-        ebool result = TFHE.le(aProc, bProc);
-        TFHE.allowThis(result);
-        resEbool = result;
-    }
-    function lt_euint128_euint128(einput a, einput b, bytes calldata inputProof) public {
-        euint128 aProc = TFHE.asEuint128(a, inputProof);
-        euint128 bProc = TFHE.asEuint128(b, inputProof);
-        ebool result = TFHE.lt(aProc, bProc);
-        TFHE.allowThis(result);
-        resEbool = result;
-    }
-    function min_euint128_euint128(einput a, einput b, bytes calldata inputProof) public {
-        euint128 aProc = TFHE.asEuint128(a, inputProof);
-        euint128 bProc = TFHE.asEuint128(b, inputProof);
-        euint128 result = TFHE.min(aProc, bProc);
-        TFHE.allowThis(result);
-        resEuint128 = result;
-    }
-    function max_euint128_euint128(einput a, einput b, bytes calldata inputProof) public {
-        euint128 aProc = TFHE.asEuint128(a, inputProof);
-        euint128 bProc = TFHE.asEuint128(b, inputProof);
-        euint128 result = TFHE.max(aProc, bProc);
-        TFHE.allowThis(result);
-        resEuint128 = result;
-    }
-    function eq_euint128_euint256(einput a, einput b, bytes calldata inputProof) public {
-        euint128 aProc = TFHE.asEuint128(a, inputProof);
-        euint256 bProc = TFHE.asEuint256(b, inputProof);
-        ebool result = TFHE.eq(aProc, bProc);
-        TFHE.allowThis(result);
-        resEbool = result;
-    }
-    function ne_euint128_euint256(einput a, einput b, bytes calldata inputProof) public {
-        euint128 aProc = TFHE.asEuint128(a, inputProof);
-        euint256 bProc = TFHE.asEuint256(b, inputProof);
-        ebool result = TFHE.ne(aProc, bProc);
-        TFHE.allowThis(result);
-        resEbool = result;
     }
 }

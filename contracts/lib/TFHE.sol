@@ -1187,6 +1187,45 @@ library TFHE {
     }
 
     /**
+     * @dev Evaluates and(euint8 a, euint256 b)  and returns the result.
+     */
+    function and(euint8 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint8(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.and(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates or(euint8 a, euint256 b)  and returns the result.
+     */
+    function or(euint8 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint8(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.or(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates xor(euint8 a, euint256 b)  and returns the result.
+     */
+    function xor(euint8 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint8(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.xor(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
      * @dev Evaluates eq(euint8 a, euint256 b)  and returns the result.
      */
     function eq(euint8 a, euint256 b) internal returns (ebool) {
@@ -2120,6 +2159,45 @@ library TFHE {
             b = asEuint128(0);
         }
         return euint128.wrap(Impl.max(euint128.unwrap(asEuint128(a)), euint128.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates and(euint16 a, euint256 b)  and returns the result.
+     */
+    function and(euint16 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint16(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.and(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates or(euint16 a, euint256 b)  and returns the result.
+     */
+    function or(euint16 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint16(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.or(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates xor(euint16 a, euint256 b)  and returns the result.
+     */
+    function xor(euint16 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint16(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.xor(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
     }
 
     /**
@@ -3059,6 +3137,45 @@ library TFHE {
     }
 
     /**
+     * @dev Evaluates and(euint32 a, euint256 b)  and returns the result.
+     */
+    function and(euint32 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint32(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.and(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates or(euint32 a, euint256 b)  and returns the result.
+     */
+    function or(euint32 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint32(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.or(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates xor(euint32 a, euint256 b)  and returns the result.
+     */
+    function xor(euint32 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint32(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.xor(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
      * @dev Evaluates eq(euint32 a, euint256 b)  and returns the result.
      */
     function eq(euint32 a, euint256 b) internal returns (ebool) {
@@ -3992,6 +4109,45 @@ library TFHE {
             b = asEuint128(0);
         }
         return euint128.wrap(Impl.max(euint128.unwrap(asEuint128(a)), euint128.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates and(euint64 a, euint256 b)  and returns the result.
+     */
+    function and(euint64 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint64(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.and(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates or(euint64 a, euint256 b)  and returns the result.
+     */
+    function or(euint64 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint64(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.or(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates xor(euint64 a, euint256 b)  and returns the result.
+     */
+    function xor(euint64 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint64(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.xor(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
     }
 
     /**
@@ -4931,6 +5087,45 @@ library TFHE {
     }
 
     /**
+     * @dev Evaluates and(euint128 a, euint256 b)  and returns the result.
+     */
+    function and(euint128 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint128(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.and(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates or(euint128 a, euint256 b)  and returns the result.
+     */
+    function or(euint128 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint128(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.or(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates xor(euint128 a, euint256 b)  and returns the result.
+     */
+    function xor(euint128 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint128(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.xor(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
      * @dev Evaluates eq(euint128 a, euint256 b)  and returns the result.
      */
     function eq(euint128 a, euint256 b) internal returns (ebool) {
@@ -4954,6 +5149,45 @@ library TFHE {
             b = asEuint256(0);
         }
         return ebool.wrap(Impl.ne(euint256.unwrap(asEuint256(a)), euint256.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates and(euint256 a, euint8 b)  and returns the result.
+     */
+    function and(euint256 a, euint8 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint8(0);
+        }
+        return euint256.wrap(Impl.and(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates or(euint256 a, euint8 b)  and returns the result.
+     */
+    function or(euint256 a, euint8 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint8(0);
+        }
+        return euint256.wrap(Impl.or(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates xor(euint256 a, euint8 b)  and returns the result.
+     */
+    function xor(euint256 a, euint8 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint8(0);
+        }
+        return euint256.wrap(Impl.xor(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
     }
 
     /**
@@ -4983,6 +5217,45 @@ library TFHE {
     }
 
     /**
+     * @dev Evaluates and(euint256 a, euint16 b)  and returns the result.
+     */
+    function and(euint256 a, euint16 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint16(0);
+        }
+        return euint256.wrap(Impl.and(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates or(euint256 a, euint16 b)  and returns the result.
+     */
+    function or(euint256 a, euint16 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint16(0);
+        }
+        return euint256.wrap(Impl.or(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates xor(euint256 a, euint16 b)  and returns the result.
+     */
+    function xor(euint256 a, euint16 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint16(0);
+        }
+        return euint256.wrap(Impl.xor(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
      * @dev Evaluates eq(euint256 a, euint16 b)  and returns the result.
      */
     function eq(euint256 a, euint16 b) internal returns (ebool) {
@@ -5006,6 +5279,45 @@ library TFHE {
             b = asEuint16(0);
         }
         return ebool.wrap(Impl.ne(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates and(euint256 a, euint32 b)  and returns the result.
+     */
+    function and(euint256 a, euint32 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint32(0);
+        }
+        return euint256.wrap(Impl.and(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates or(euint256 a, euint32 b)  and returns the result.
+     */
+    function or(euint256 a, euint32 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint32(0);
+        }
+        return euint256.wrap(Impl.or(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates xor(euint256 a, euint32 b)  and returns the result.
+     */
+    function xor(euint256 a, euint32 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint32(0);
+        }
+        return euint256.wrap(Impl.xor(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
     }
 
     /**
@@ -5035,6 +5347,45 @@ library TFHE {
     }
 
     /**
+     * @dev Evaluates and(euint256 a, euint64 b)  and returns the result.
+     */
+    function and(euint256 a, euint64 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint64(0);
+        }
+        return euint256.wrap(Impl.and(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates or(euint256 a, euint64 b)  and returns the result.
+     */
+    function or(euint256 a, euint64 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint64(0);
+        }
+        return euint256.wrap(Impl.or(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates xor(euint256 a, euint64 b)  and returns the result.
+     */
+    function xor(euint256 a, euint64 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint64(0);
+        }
+        return euint256.wrap(Impl.xor(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
      * @dev Evaluates eq(euint256 a, euint64 b)  and returns the result.
      */
     function eq(euint256 a, euint64 b) internal returns (ebool) {
@@ -5061,6 +5412,45 @@ library TFHE {
     }
 
     /**
+     * @dev Evaluates and(euint256 a, euint128 b)  and returns the result.
+     */
+    function and(euint256 a, euint128 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint128(0);
+        }
+        return euint256.wrap(Impl.and(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates or(euint256 a, euint128 b)  and returns the result.
+     */
+    function or(euint256 a, euint128 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint128(0);
+        }
+        return euint256.wrap(Impl.or(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates xor(euint256 a, euint128 b)  and returns the result.
+     */
+    function xor(euint256 a, euint128 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint128(0);
+        }
+        return euint256.wrap(Impl.xor(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
      * @dev Evaluates eq(euint256 a, euint128 b)  and returns the result.
      */
     function eq(euint256 a, euint128 b) internal returns (ebool) {
@@ -5084,6 +5474,45 @@ library TFHE {
             b = asEuint128(0);
         }
         return ebool.wrap(Impl.ne(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates and(euint256 a, euint256 b)  and returns the result.
+     */
+    function and(euint256 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.and(euint256.unwrap(a), euint256.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates or(euint256 a, euint256 b)  and returns the result.
+     */
+    function or(euint256 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.or(euint256.unwrap(a), euint256.unwrap(b), false));
+    }
+
+    /**
+     * @dev Evaluates xor(euint256 a, euint256 b)  and returns the result.
+     */
+    function xor(euint256 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.xor(euint256.unwrap(a), euint256.unwrap(b), false));
     }
 
     /**
@@ -6822,6 +7251,66 @@ library TFHE {
     }
 
     /**
+     * @dev Evaluates and(euint256 a, uint256 b) and returns the result.
+     */
+    function and(euint256 a, uint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        return euint256.wrap(Impl.and(euint256.unwrap(a), bytes32(uint256(b)), true));
+    }
+
+    /**
+     * @dev Evaluates and(uint256 a, euint256 b) and returns the result.
+     */
+    function and(uint256 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.and(euint256.unwrap(b), bytes32(uint256(a)), true));
+    }
+
+    /**
+     * @dev Evaluates or(euint256 a, uint256 b) and returns the result.
+     */
+    function or(euint256 a, uint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        return euint256.wrap(Impl.or(euint256.unwrap(a), bytes32(uint256(b)), true));
+    }
+
+    /**
+     * @dev Evaluates or(uint256 a, euint256 b) and returns the result.
+     */
+    function or(uint256 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.or(euint256.unwrap(b), bytes32(uint256(a)), true));
+    }
+
+    /**
+     * @dev Evaluates xor(euint256 a, uint256 b) and returns the result.
+     */
+    function xor(euint256 a, uint256 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        return euint256.wrap(Impl.xor(euint256.unwrap(a), bytes32(uint256(b)), true));
+    }
+
+    /**
+     * @dev Evaluates xor(uint256 a, euint256 b) and returns the result.
+     */
+    function xor(uint256 a, euint256 b) internal returns (euint256) {
+        if (!isInitialized(b)) {
+            b = asEuint256(0);
+        }
+        return euint256.wrap(Impl.xor(euint256.unwrap(b), bytes32(uint256(a)), true));
+    }
+
+    /**
      * @dev Evaluates eq(euint256 a, uint256 b) and returns the result.
      */
     function eq(euint256 a, uint256 b) internal returns (ebool) {
@@ -7482,6 +7971,98 @@ library TFHE {
     }
 
     /**
+     * @dev Evaluates shl(euint256 a, euint8 b) and returns the result.
+     */
+    function shl(euint256 a, euint8 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint8(0);
+        }
+        return euint256.wrap(Impl.shl(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates shl(euint256 a, uint8) and returns the result.
+     */
+    function shl(euint256 a, uint8 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        return euint256.wrap(Impl.shl(euint256.unwrap(a), bytes32(uint256(b)), true));
+    }
+
+    /**
+     * @dev Evaluates shr(euint256 a, euint8 b) and returns the result.
+     */
+    function shr(euint256 a, euint8 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint8(0);
+        }
+        return euint256.wrap(Impl.shr(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates shr(euint256 a, uint8) and returns the result.
+     */
+    function shr(euint256 a, uint8 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        return euint256.wrap(Impl.shr(euint256.unwrap(a), bytes32(uint256(b)), true));
+    }
+
+    /**
+     * @dev Evaluates rotl(euint256 a, euint8 b) and returns the result.
+     */
+    function rotl(euint256 a, euint8 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint8(0);
+        }
+        return euint256.wrap(Impl.rotl(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates rotl(euint256 a, uint8) and returns the result.
+     */
+    function rotl(euint256 a, uint8 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        return euint256.wrap(Impl.rotl(euint256.unwrap(a), bytes32(uint256(b)), true));
+    }
+
+    /**
+     * @dev Evaluates rotr(euint256 a, euint8 b) and returns the result.
+     */
+    function rotr(euint256 a, euint8 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        if (!isInitialized(b)) {
+            b = asEuint8(0);
+        }
+        return euint256.wrap(Impl.rotr(euint256.unwrap(a), euint256.unwrap(asEuint256(b)), false));
+    }
+
+    /**
+     * @dev Evaluates rotr(euint256 a, uint8) and returns the result.
+     */
+    function rotr(euint256 a, uint8 b) internal returns (euint256) {
+        if (!isInitialized(a)) {
+            a = asEuint256(0);
+        }
+        return euint256.wrap(Impl.rotr(euint256.unwrap(a), bytes32(uint256(b)), true));
+    }
+
+    /**
      * @dev If 'control's value is 'true', the result has the same value as 'ifTrue'.
      *      If 'control's value is 'false', the result has the same value as 'ifFalse'.
      */
@@ -7933,6 +8514,20 @@ library TFHE {
      */
     function not(euint128 value) internal returns (euint128) {
         return euint128.wrap(Impl.not(euint128.unwrap(value)));
+    }
+
+    /**
+     * @dev Evaluates neg(euint256 value) and returns the result.
+     */
+    function neg(euint256 value) internal returns (euint256) {
+        return euint256.wrap(Impl.neg(euint256.unwrap(value)));
+    }
+
+    /**
+     * @dev Evaluates not(euint256 value) and returns the result.
+     */
+    function not(euint256 value) internal returns (euint256) {
+        return euint256.wrap(Impl.not(euint256.unwrap(value)));
     }
 
     /**

@@ -510,6 +510,27 @@ contract TFHETestSuite1 {
         TFHE.allowThis(result);
         resEuint128 = result;
     }
+    function and_euint8_euint256(einput a, einput b, bytes calldata inputProof) public {
+        euint8 aProc = TFHE.asEuint8(a, inputProof);
+        euint256 bProc = TFHE.asEuint256(b, inputProof);
+        euint256 result = TFHE.and(aProc, bProc);
+        TFHE.allowThis(result);
+        resEuint256 = result;
+    }
+    function or_euint8_euint256(einput a, einput b, bytes calldata inputProof) public {
+        euint8 aProc = TFHE.asEuint8(a, inputProof);
+        euint256 bProc = TFHE.asEuint256(b, inputProof);
+        euint256 result = TFHE.or(aProc, bProc);
+        TFHE.allowThis(result);
+        resEuint256 = result;
+    }
+    function xor_euint8_euint256(einput a, einput b, bytes calldata inputProof) public {
+        euint8 aProc = TFHE.asEuint8(a, inputProof);
+        euint256 bProc = TFHE.asEuint256(b, inputProof);
+        euint256 result = TFHE.xor(aProc, bProc);
+        TFHE.allowThis(result);
+        resEuint256 = result;
+    }
     function eq_euint8_euint256(einput a, einput b, bytes calldata inputProof) public {
         euint8 aProc = TFHE.asEuint8(a, inputProof);
         euint256 bProc = TFHE.asEuint256(b, inputProof);
@@ -626,27 +647,6 @@ contract TFHETestSuite1 {
         euint16 aProc = TFHE.asEuint16(a, inputProof);
         euint16 bProc = TFHE.asEuint16(b, inputProof);
         euint16 result = TFHE.add(aProc, bProc);
-        TFHE.allowThis(result);
-        resEuint16 = result;
-    }
-    function sub_euint16_euint16(einput a, einput b, bytes calldata inputProof) public {
-        euint16 aProc = TFHE.asEuint16(a, inputProof);
-        euint16 bProc = TFHE.asEuint16(b, inputProof);
-        euint16 result = TFHE.sub(aProc, bProc);
-        TFHE.allowThis(result);
-        resEuint16 = result;
-    }
-    function mul_euint16_euint16(einput a, einput b, bytes calldata inputProof) public {
-        euint16 aProc = TFHE.asEuint16(a, inputProof);
-        euint16 bProc = TFHE.asEuint16(b, inputProof);
-        euint16 result = TFHE.mul(aProc, bProc);
-        TFHE.allowThis(result);
-        resEuint16 = result;
-    }
-    function and_euint16_euint16(einput a, einput b, bytes calldata inputProof) public {
-        euint16 aProc = TFHE.asEuint16(a, inputProof);
-        euint16 bProc = TFHE.asEuint16(b, inputProof);
-        euint16 result = TFHE.and(aProc, bProc);
         TFHE.allowThis(result);
         resEuint16 = result;
     }

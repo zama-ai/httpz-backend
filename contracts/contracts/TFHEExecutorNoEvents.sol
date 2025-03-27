@@ -234,7 +234,7 @@ contract TFHEExecutorNoEvents is UUPSUpgradeable, Ownable2StepUpgradeable {
      * @return result       Result.
      */
     function fheBitAnd(bytes32 lhs, bytes32 rhs, bytes1 scalarByte) public virtual returns (bytes32 result) {
-        uint256 supportedTypes = (1 << 0) + (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6);
+        uint256 supportedTypes = (1 << 0) + (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6) + (1 << 8);
         _requireType(lhs, supportedTypes);
         uint8 lhsType = _typeOf(lhs);
         bytes1 scalar = scalarByte & 0x01;
@@ -250,7 +250,7 @@ contract TFHEExecutorNoEvents is UUPSUpgradeable, Ownable2StepUpgradeable {
      * @return result       Result.
      */
     function fheBitOr(bytes32 lhs, bytes32 rhs, bytes1 scalarByte) public virtual returns (bytes32 result) {
-        uint256 supportedTypes = (1 << 0) + (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6);
+        uint256 supportedTypes = (1 << 0) + (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6) + (1 << 8);
         _requireType(lhs, supportedTypes);
         uint8 lhsType = _typeOf(lhs);
         bytes1 scalar = scalarByte & 0x01;
@@ -266,7 +266,7 @@ contract TFHEExecutorNoEvents is UUPSUpgradeable, Ownable2StepUpgradeable {
      * @return result       Result.
      */
     function fheBitXor(bytes32 lhs, bytes32 rhs, bytes1 scalarByte) public virtual returns (bytes32 result) {
-        uint256 supportedTypes = (1 << 0) + (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6);
+        uint256 supportedTypes = (1 << 0) + (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6) + (1 << 8);
         _requireType(lhs, supportedTypes);
         uint8 lhsType = _typeOf(lhs);
         bytes1 scalar = scalarByte & 0x01;
@@ -282,7 +282,7 @@ contract TFHEExecutorNoEvents is UUPSUpgradeable, Ownable2StepUpgradeable {
      * @return result       Result.
      */
     function fheShl(bytes32 lhs, bytes32 rhs, bytes1 scalarByte) public virtual returns (bytes32 result) {
-        uint256 supportedTypes = (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6);
+        uint256 supportedTypes = (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6) + (1 << 8);
         _requireType(lhs, supportedTypes);
         uint8 lhsType = _typeOf(lhs);
         bytes1 scalar = scalarByte & 0x01;
@@ -298,7 +298,7 @@ contract TFHEExecutorNoEvents is UUPSUpgradeable, Ownable2StepUpgradeable {
      * @return result       Result.
      */
     function fheShr(bytes32 lhs, bytes32 rhs, bytes1 scalarByte) public virtual returns (bytes32 result) {
-        uint256 supportedTypes = (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6);
+        uint256 supportedTypes = (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6) + (1 << 8);
         _requireType(lhs, supportedTypes);
         uint8 lhsType = _typeOf(lhs);
         bytes1 scalar = scalarByte & 0x01;
@@ -314,7 +314,7 @@ contract TFHEExecutorNoEvents is UUPSUpgradeable, Ownable2StepUpgradeable {
      * @return result       Result.
      */
     function fheRotl(bytes32 lhs, bytes32 rhs, bytes1 scalarByte) public virtual returns (bytes32 result) {
-        uint256 supportedTypes = (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6);
+        uint256 supportedTypes = (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6) + (1 << 8);
         _requireType(lhs, supportedTypes);
         uint8 lhsType = _typeOf(lhs);
         bytes1 scalar = scalarByte & 0x01;
@@ -330,7 +330,7 @@ contract TFHEExecutorNoEvents is UUPSUpgradeable, Ownable2StepUpgradeable {
      * @return result       Result.
      */
     function fheRotr(bytes32 lhs, bytes32 rhs, bytes1 scalarByte) public virtual returns (bytes32 result) {
-        uint256 supportedTypes = (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6);
+        uint256 supportedTypes = (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6) + (1 << 8);
         _requireType(lhs, supportedTypes);
         uint8 lhsType = _typeOf(lhs);
         bytes1 scalar = scalarByte & 0x01;
@@ -544,7 +544,7 @@ contract TFHEExecutorNoEvents is UUPSUpgradeable, Ownable2StepUpgradeable {
      * @return result       Result.
      */
     function fheNeg(bytes32 ct) public virtual returns (bytes32 result) {
-        uint256 supportedTypes = (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6);
+        uint256 supportedTypes = (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6) + (1 << 8);
         _requireType(ct, supportedTypes);
         uint8 typeCt = _typeOf(ct);
         fheGasLimit.payForFheNeg(typeCt);
@@ -557,7 +557,7 @@ contract TFHEExecutorNoEvents is UUPSUpgradeable, Ownable2StepUpgradeable {
      * @return result       Result.
      */
     function fheNot(bytes32 ct) public virtual returns (bytes32 result) {
-        uint256 supportedTypes = (1 << 0) + (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6);
+        uint256 supportedTypes = (1 << 0) + (1 << 2) + (1 << 3) + (1 << 4) + (1 << 5) + (1 << 6) + (1 << 8);
         _requireType(ct, supportedTypes);
         uint8 typeCt = _typeOf(ct);
         fheGasLimit.payForFheNot(typeCt);
