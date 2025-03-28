@@ -67,6 +67,7 @@ export const ALL_FHE_TYPES: FheType[] = [
       'not',
       'select',
       'rand',
+      'randBounded',
     ],
     bitLength: 8,
     clearMatchingType: 'uint8',

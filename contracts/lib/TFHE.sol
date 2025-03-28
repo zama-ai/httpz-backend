@@ -8691,6 +8691,14 @@ library TFHE {
     }
 
     /**
+     * @dev Generates a random encrypted 8-bit unsigned integer in the [0, upperBound) range.
+     *      The upperBound must be a power of 2.
+     */
+    function randEuint8(uint8 upperBound) internal returns (euint8) {
+        return euint8.wrap(Impl.randBounded(upperBound, uint8(FheType.Euint8)));
+    }
+
+    /**
      * @dev Generates a random encrypted value.
      */
     function randEuint16() internal returns (euint16) {
