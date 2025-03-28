@@ -8135,35 +8135,35 @@ library TFHE {
      * @dev Casts an encrypted integer from 'euint16' to 'euint8'.
      */
     function asEuint8(euint16 value) internal returns (euint8) {
-        return euint8.wrap(Impl.cast(euint16.unwrap(value), uint8(FheType.Euint8)));
+        return euint8.wrap(Impl.cast(euint16.unwrap(value), FheType.Euint8));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint32' to 'euint8'.
      */
     function asEuint8(euint32 value) internal returns (euint8) {
-        return euint8.wrap(Impl.cast(euint32.unwrap(value), uint8(FheType.Euint8)));
+        return euint8.wrap(Impl.cast(euint32.unwrap(value), FheType.Euint8));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint64' to 'euint8'.
      */
     function asEuint8(euint64 value) internal returns (euint8) {
-        return euint8.wrap(Impl.cast(euint64.unwrap(value), uint8(FheType.Euint8)));
+        return euint8.wrap(Impl.cast(euint64.unwrap(value), FheType.Euint8));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint128' to 'euint8'.
      */
     function asEuint8(euint128 value) internal returns (euint8) {
-        return euint8.wrap(Impl.cast(euint128.unwrap(value), uint8(FheType.Euint8)));
+        return euint8.wrap(Impl.cast(euint128.unwrap(value), FheType.Euint8));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint256' to 'euint8'.
      */
     function asEuint8(euint256 value) internal returns (euint8) {
-        return euint8.wrap(Impl.cast(euint256.unwrap(value), uint8(FheType.Euint8)));
+        return euint8.wrap(Impl.cast(euint256.unwrap(value), FheType.Euint8));
     }
 
     /**
@@ -8171,7 +8171,7 @@ library TFHE {
      * @dev Converts an 'ebool' to an 'euint8'.
      */
     function asEuint8(ebool b) internal returns (euint8) {
-        return euint8.wrap(Impl.cast(ebool.unwrap(b), uint8(FheType.Euint8)));
+        return euint8.wrap(Impl.cast(ebool.unwrap(b), FheType.Euint8));
     }
 
     /**
@@ -8185,35 +8185,35 @@ library TFHE {
      * @dev Casts an encrypted integer from 'euint8' to 'euint16'.
      */
     function asEuint16(euint8 value) internal returns (euint16) {
-        return euint16.wrap(Impl.cast(euint8.unwrap(value), uint8(FheType.Euint16)));
+        return euint16.wrap(Impl.cast(euint8.unwrap(value), FheType.Euint16));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint32' to 'euint16'.
      */
     function asEuint16(euint32 value) internal returns (euint16) {
-        return euint16.wrap(Impl.cast(euint32.unwrap(value), uint8(FheType.Euint16)));
+        return euint16.wrap(Impl.cast(euint32.unwrap(value), FheType.Euint16));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint64' to 'euint16'.
      */
     function asEuint16(euint64 value) internal returns (euint16) {
-        return euint16.wrap(Impl.cast(euint64.unwrap(value), uint8(FheType.Euint16)));
+        return euint16.wrap(Impl.cast(euint64.unwrap(value), FheType.Euint16));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint128' to 'euint16'.
      */
     function asEuint16(euint128 value) internal returns (euint16) {
-        return euint16.wrap(Impl.cast(euint128.unwrap(value), uint8(FheType.Euint16)));
+        return euint16.wrap(Impl.cast(euint128.unwrap(value), FheType.Euint16));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint256' to 'euint16'.
      */
     function asEuint16(euint256 value) internal returns (euint16) {
-        return euint16.wrap(Impl.cast(euint256.unwrap(value), uint8(FheType.Euint16)));
+        return euint16.wrap(Impl.cast(euint256.unwrap(value), FheType.Euint16));
     }
 
     /**
@@ -8221,7 +8221,7 @@ library TFHE {
      * @dev Converts an 'ebool' to an 'euint16'.
      */
     function asEuint16(ebool b) internal returns (euint16) {
-        return euint16.wrap(Impl.cast(ebool.unwrap(b), uint8(FheType.Euint16)));
+        return euint16.wrap(Impl.cast(ebool.unwrap(b), FheType.Euint16));
     }
 
     /**
@@ -8235,35 +8235,35 @@ library TFHE {
      * @dev Casts an encrypted integer from 'euint8' to 'euint32'.
      */
     function asEuint32(euint8 value) internal returns (euint32) {
-        return euint32.wrap(Impl.cast(euint8.unwrap(value), uint8(FheType.Euint32)));
+        return euint32.wrap(Impl.cast(euint8.unwrap(value), FheType.Euint32));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint16' to 'euint32'.
      */
     function asEuint32(euint16 value) internal returns (euint32) {
-        return euint32.wrap(Impl.cast(euint16.unwrap(value), uint8(FheType.Euint32)));
+        return euint32.wrap(Impl.cast(euint16.unwrap(value), FheType.Euint32));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint64' to 'euint32'.
      */
     function asEuint32(euint64 value) internal returns (euint32) {
-        return euint32.wrap(Impl.cast(euint64.unwrap(value), uint8(FheType.Euint32)));
+        return euint32.wrap(Impl.cast(euint64.unwrap(value), FheType.Euint32));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint128' to 'euint32'.
      */
     function asEuint32(euint128 value) internal returns (euint32) {
-        return euint32.wrap(Impl.cast(euint128.unwrap(value), uint8(FheType.Euint32)));
+        return euint32.wrap(Impl.cast(euint128.unwrap(value), FheType.Euint32));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint256' to 'euint32'.
      */
     function asEuint32(euint256 value) internal returns (euint32) {
-        return euint32.wrap(Impl.cast(euint256.unwrap(value), uint8(FheType.Euint32)));
+        return euint32.wrap(Impl.cast(euint256.unwrap(value), FheType.Euint32));
     }
 
     /**
@@ -8271,7 +8271,7 @@ library TFHE {
      * @dev Converts an 'ebool' to an 'euint32'.
      */
     function asEuint32(ebool b) internal returns (euint32) {
-        return euint32.wrap(Impl.cast(ebool.unwrap(b), uint8(FheType.Euint32)));
+        return euint32.wrap(Impl.cast(ebool.unwrap(b), FheType.Euint32));
     }
 
     /**
@@ -8285,35 +8285,35 @@ library TFHE {
      * @dev Casts an encrypted integer from 'euint8' to 'euint64'.
      */
     function asEuint64(euint8 value) internal returns (euint64) {
-        return euint64.wrap(Impl.cast(euint8.unwrap(value), uint8(FheType.Euint64)));
+        return euint64.wrap(Impl.cast(euint8.unwrap(value), FheType.Euint64));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint16' to 'euint64'.
      */
     function asEuint64(euint16 value) internal returns (euint64) {
-        return euint64.wrap(Impl.cast(euint16.unwrap(value), uint8(FheType.Euint64)));
+        return euint64.wrap(Impl.cast(euint16.unwrap(value), FheType.Euint64));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint32' to 'euint64'.
      */
     function asEuint64(euint32 value) internal returns (euint64) {
-        return euint64.wrap(Impl.cast(euint32.unwrap(value), uint8(FheType.Euint64)));
+        return euint64.wrap(Impl.cast(euint32.unwrap(value), FheType.Euint64));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint128' to 'euint64'.
      */
     function asEuint64(euint128 value) internal returns (euint64) {
-        return euint64.wrap(Impl.cast(euint128.unwrap(value), uint8(FheType.Euint64)));
+        return euint64.wrap(Impl.cast(euint128.unwrap(value), FheType.Euint64));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint256' to 'euint64'.
      */
     function asEuint64(euint256 value) internal returns (euint64) {
-        return euint64.wrap(Impl.cast(euint256.unwrap(value), uint8(FheType.Euint64)));
+        return euint64.wrap(Impl.cast(euint256.unwrap(value), FheType.Euint64));
     }
 
     /**
@@ -8321,7 +8321,7 @@ library TFHE {
      * @dev Converts an 'ebool' to an 'euint64'.
      */
     function asEuint64(ebool b) internal returns (euint64) {
-        return euint64.wrap(Impl.cast(ebool.unwrap(b), uint8(FheType.Euint64)));
+        return euint64.wrap(Impl.cast(ebool.unwrap(b), FheType.Euint64));
     }
 
     /**
@@ -8335,35 +8335,35 @@ library TFHE {
      * @dev Casts an encrypted integer from 'euint8' to 'euint128'.
      */
     function asEuint128(euint8 value) internal returns (euint128) {
-        return euint128.wrap(Impl.cast(euint8.unwrap(value), uint8(FheType.Euint128)));
+        return euint128.wrap(Impl.cast(euint8.unwrap(value), FheType.Euint128));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint16' to 'euint128'.
      */
     function asEuint128(euint16 value) internal returns (euint128) {
-        return euint128.wrap(Impl.cast(euint16.unwrap(value), uint8(FheType.Euint128)));
+        return euint128.wrap(Impl.cast(euint16.unwrap(value), FheType.Euint128));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint32' to 'euint128'.
      */
     function asEuint128(euint32 value) internal returns (euint128) {
-        return euint128.wrap(Impl.cast(euint32.unwrap(value), uint8(FheType.Euint128)));
+        return euint128.wrap(Impl.cast(euint32.unwrap(value), FheType.Euint128));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint64' to 'euint128'.
      */
     function asEuint128(euint64 value) internal returns (euint128) {
-        return euint128.wrap(Impl.cast(euint64.unwrap(value), uint8(FheType.Euint128)));
+        return euint128.wrap(Impl.cast(euint64.unwrap(value), FheType.Euint128));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint256' to 'euint128'.
      */
     function asEuint128(euint256 value) internal returns (euint128) {
-        return euint128.wrap(Impl.cast(euint256.unwrap(value), uint8(FheType.Euint128)));
+        return euint128.wrap(Impl.cast(euint256.unwrap(value), FheType.Euint128));
     }
 
     /**
@@ -8371,7 +8371,7 @@ library TFHE {
      * @dev Converts an 'ebool' to an 'euint128'.
      */
     function asEuint128(ebool b) internal returns (euint128) {
-        return euint128.wrap(Impl.cast(ebool.unwrap(b), uint8(FheType.Euint128)));
+        return euint128.wrap(Impl.cast(ebool.unwrap(b), FheType.Euint128));
     }
 
     /**
@@ -8385,35 +8385,35 @@ library TFHE {
      * @dev Casts an encrypted integer from 'euint8' to 'euint256'.
      */
     function asEuint256(euint8 value) internal returns (euint256) {
-        return euint256.wrap(Impl.cast(euint8.unwrap(value), uint8(FheType.Euint256)));
+        return euint256.wrap(Impl.cast(euint8.unwrap(value), FheType.Euint256));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint16' to 'euint256'.
      */
     function asEuint256(euint16 value) internal returns (euint256) {
-        return euint256.wrap(Impl.cast(euint16.unwrap(value), uint8(FheType.Euint256)));
+        return euint256.wrap(Impl.cast(euint16.unwrap(value), FheType.Euint256));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint32' to 'euint256'.
      */
     function asEuint256(euint32 value) internal returns (euint256) {
-        return euint256.wrap(Impl.cast(euint32.unwrap(value), uint8(FheType.Euint256)));
+        return euint256.wrap(Impl.cast(euint32.unwrap(value), FheType.Euint256));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint64' to 'euint256'.
      */
     function asEuint256(euint64 value) internal returns (euint256) {
-        return euint256.wrap(Impl.cast(euint64.unwrap(value), uint8(FheType.Euint256)));
+        return euint256.wrap(Impl.cast(euint64.unwrap(value), FheType.Euint256));
     }
 
     /**
      * @dev Casts an encrypted integer from 'euint128' to 'euint256'.
      */
     function asEuint256(euint128 value) internal returns (euint256) {
-        return euint256.wrap(Impl.cast(euint128.unwrap(value), uint8(FheType.Euint256)));
+        return euint256.wrap(Impl.cast(euint128.unwrap(value), FheType.Euint256));
     }
 
     /**
@@ -8421,7 +8421,7 @@ library TFHE {
      * @dev Converts an 'ebool' to an 'euint256'.
      */
     function asEuint256(ebool b) internal returns (euint256) {
-        return euint256.wrap(Impl.cast(ebool.unwrap(b), uint8(FheType.Euint256)));
+        return euint256.wrap(Impl.cast(ebool.unwrap(b), FheType.Euint256));
     }
 
     /**
@@ -8526,168 +8526,168 @@ library TFHE {
      * @dev Convert an inputHandle with corresponding inputProof to an encrypted ebool integer.
      */
     function asEbool(einput inputHandle, bytes memory inputProof) internal returns (ebool) {
-        return ebool.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(FheType.Ebool)));
+        return ebool.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, FheType.Ebool));
     }
 
     /**
      * @dev Converts a plaintext boolean to an encrypted boolean.
      */
     function asEbool(bool value) internal returns (ebool) {
-        return ebool.wrap(Impl.trivialEncrypt(value ? 1 : 0, uint8(FheType.Ebool)));
+        return ebool.wrap(Impl.trivialEncrypt(value ? 1 : 0, FheType.Ebool));
     }
 
     /**
      * @dev Convert an inputHandle with corresponding inputProof to an encrypted euint8 integer.
      */
     function asEuint8(einput inputHandle, bytes memory inputProof) internal returns (euint8) {
-        return euint8.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(FheType.Euint8)));
+        return euint8.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, FheType.Euint8));
     }
 
     /**
      * @dev Convert a plaintext value to an encrypted euint8 integer.
      */
     function asEuint8(uint8 value) internal returns (euint8) {
-        return euint8.wrap(Impl.trivialEncrypt(uint256(value), uint8(FheType.Euint8)));
+        return euint8.wrap(Impl.trivialEncrypt(uint256(value), FheType.Euint8));
     }
 
     /**
      * @dev Convert an inputHandle with corresponding inputProof to an encrypted euint16 integer.
      */
     function asEuint16(einput inputHandle, bytes memory inputProof) internal returns (euint16) {
-        return euint16.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(FheType.Euint16)));
+        return euint16.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, FheType.Euint16));
     }
 
     /**
      * @dev Convert a plaintext value to an encrypted euint16 integer.
      */
     function asEuint16(uint16 value) internal returns (euint16) {
-        return euint16.wrap(Impl.trivialEncrypt(uint256(value), uint8(FheType.Euint16)));
+        return euint16.wrap(Impl.trivialEncrypt(uint256(value), FheType.Euint16));
     }
 
     /**
      * @dev Convert an inputHandle with corresponding inputProof to an encrypted euint32 integer.
      */
     function asEuint32(einput inputHandle, bytes memory inputProof) internal returns (euint32) {
-        return euint32.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(FheType.Euint32)));
+        return euint32.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, FheType.Euint32));
     }
 
     /**
      * @dev Convert a plaintext value to an encrypted euint32 integer.
      */
     function asEuint32(uint32 value) internal returns (euint32) {
-        return euint32.wrap(Impl.trivialEncrypt(uint256(value), uint8(FheType.Euint32)));
+        return euint32.wrap(Impl.trivialEncrypt(uint256(value), FheType.Euint32));
     }
 
     /**
      * @dev Convert an inputHandle with corresponding inputProof to an encrypted euint64 integer.
      */
     function asEuint64(einput inputHandle, bytes memory inputProof) internal returns (euint64) {
-        return euint64.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(FheType.Euint64)));
+        return euint64.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, FheType.Euint64));
     }
 
     /**
      * @dev Convert a plaintext value to an encrypted euint64 integer.
      */
     function asEuint64(uint64 value) internal returns (euint64) {
-        return euint64.wrap(Impl.trivialEncrypt(uint256(value), uint8(FheType.Euint64)));
+        return euint64.wrap(Impl.trivialEncrypt(uint256(value), FheType.Euint64));
     }
 
     /**
      * @dev Convert an inputHandle with corresponding inputProof to an encrypted euint128 integer.
      */
     function asEuint128(einput inputHandle, bytes memory inputProof) internal returns (euint128) {
-        return euint128.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(FheType.Euint128)));
+        return euint128.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, FheType.Euint128));
     }
 
     /**
      * @dev Convert a plaintext value to an encrypted euint128 integer.
      */
     function asEuint128(uint128 value) internal returns (euint128) {
-        return euint128.wrap(Impl.trivialEncrypt(uint256(value), uint8(FheType.Euint128)));
+        return euint128.wrap(Impl.trivialEncrypt(uint256(value), FheType.Euint128));
     }
 
     /**
      * @dev Convert an inputHandle with corresponding inputProof to an encrypted euint256 integer.
      */
     function asEuint256(einput inputHandle, bytes memory inputProof) internal returns (euint256) {
-        return euint256.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(FheType.Euint256)));
+        return euint256.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, FheType.Euint256));
     }
 
     /**
      * @dev Convert a plaintext value to an encrypted euint256 integer.
      */
     function asEuint256(uint256 value) internal returns (euint256) {
-        return euint256.wrap(Impl.trivialEncrypt(uint256(value), uint8(FheType.Euint256)));
+        return euint256.wrap(Impl.trivialEncrypt(uint256(value), FheType.Euint256));
     }
 
     /**
      * @dev Convert an inputHandle with corresponding inputProof to an encrypted ebytes64 integer.
      */
     function asEbytes64(einput inputHandle, bytes memory inputProof) internal returns (ebytes64) {
-        return ebytes64.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(FheType.Ebytes64)));
+        return ebytes64.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, FheType.Ebytes64));
     }
 
     /**
      * @dev Convert the plaintext bytes to a ebytes64 value.
      */
     function asEbytes64(bytes memory value) internal returns (ebytes64) {
-        return ebytes64.wrap(Impl.trivialEncrypt(value, uint8(FheType.Ebytes64)));
+        return ebytes64.wrap(Impl.trivialEncrypt(value, FheType.Ebytes64));
     }
 
     /**
      * @dev Convert an inputHandle with corresponding inputProof to an encrypted ebytes128 integer.
      */
     function asEbytes128(einput inputHandle, bytes memory inputProof) internal returns (ebytes128) {
-        return ebytes128.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(FheType.Ebytes128)));
+        return ebytes128.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, FheType.Ebytes128));
     }
 
     /**
      * @dev Convert the plaintext bytes to a ebytes128 value.
      */
     function asEbytes128(bytes memory value) internal returns (ebytes128) {
-        return ebytes128.wrap(Impl.trivialEncrypt(value, uint8(FheType.Ebytes128)));
+        return ebytes128.wrap(Impl.trivialEncrypt(value, FheType.Ebytes128));
     }
 
     /**
      * @dev Convert an inputHandle with corresponding inputProof to an encrypted ebytes256 integer.
      */
     function asEbytes256(einput inputHandle, bytes memory inputProof) internal returns (ebytes256) {
-        return ebytes256.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(FheType.Ebytes256)));
+        return ebytes256.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, FheType.Ebytes256));
     }
 
     /**
      * @dev Convert the plaintext bytes to a ebytes256 value.
      */
     function asEbytes256(bytes memory value) internal returns (ebytes256) {
-        return ebytes256.wrap(Impl.trivialEncrypt(value, uint8(FheType.Ebytes256)));
+        return ebytes256.wrap(Impl.trivialEncrypt(value, FheType.Ebytes256));
     }
 
     /**
      * @dev Convert an inputHandle with corresponding inputProof to an encrypted eaddress integer.
      */
     function asEaddress(einput inputHandle, bytes memory inputProof) internal returns (eaddress) {
-        return eaddress.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(FheType.Euint160)));
+        return eaddress.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, FheType.Euint160));
     }
 
     /**
      * @dev Convert a plaintext value to an encrypted eaddress integer.
      */
     function asEaddress(address value) internal returns (eaddress) {
-        return eaddress.wrap(Impl.trivialEncrypt(uint256(uint160(value)), uint8(FheType.Euint160)));
+        return eaddress.wrap(Impl.trivialEncrypt(uint256(uint160(value)), FheType.Euint160));
     }
 
     /**
      * @dev Generates a random encrypted value.
      */
     function randEbool() internal returns (ebool) {
-        return ebool.wrap(Impl.rand(uint8(FheType.Ebool)));
+        return ebool.wrap(Impl.rand(FheType.Ebool));
     }
 
     /**
      * @dev Generates a random encrypted value.
      */
     function randEuint8() internal returns (euint8) {
-        return euint8.wrap(Impl.rand(uint8(FheType.Euint8)));
+        return euint8.wrap(Impl.rand(FheType.Euint8));
     }
 
     /**
@@ -8695,14 +8695,14 @@ library TFHE {
      *      The upperBound must be a power of 2.
      */
     function randEuint8(uint8 upperBound) internal returns (euint8) {
-        return euint8.wrap(Impl.randBounded(upperBound, uint8(FheType.Euint8)));
+        return euint8.wrap(Impl.randBounded(upperBound, FheType.Euint8));
     }
 
     /**
      * @dev Generates a random encrypted value.
      */
     function randEuint16() internal returns (euint16) {
-        return euint16.wrap(Impl.rand(uint8(FheType.Euint16)));
+        return euint16.wrap(Impl.rand(FheType.Euint16));
     }
 
     /**
@@ -8710,14 +8710,14 @@ library TFHE {
      *      The upperBound must be a power of 2.
      */
     function randEuint16(uint16 upperBound) internal returns (euint16) {
-        return euint16.wrap(Impl.randBounded(upperBound, uint8(FheType.Euint16)));
+        return euint16.wrap(Impl.randBounded(upperBound, FheType.Euint16));
     }
 
     /**
      * @dev Generates a random encrypted value.
      */
     function randEuint32() internal returns (euint32) {
-        return euint32.wrap(Impl.rand(uint8(FheType.Euint32)));
+        return euint32.wrap(Impl.rand(FheType.Euint32));
     }
 
     /**
@@ -8725,14 +8725,14 @@ library TFHE {
      *      The upperBound must be a power of 2.
      */
     function randEuint32(uint32 upperBound) internal returns (euint32) {
-        return euint32.wrap(Impl.randBounded(upperBound, uint8(FheType.Euint32)));
+        return euint32.wrap(Impl.randBounded(upperBound, FheType.Euint32));
     }
 
     /**
      * @dev Generates a random encrypted value.
      */
     function randEuint64() internal returns (euint64) {
-        return euint64.wrap(Impl.rand(uint8(FheType.Euint64)));
+        return euint64.wrap(Impl.rand(FheType.Euint64));
     }
 
     /**
@@ -8740,14 +8740,14 @@ library TFHE {
      *      The upperBound must be a power of 2.
      */
     function randEuint64(uint64 upperBound) internal returns (euint64) {
-        return euint64.wrap(Impl.randBounded(upperBound, uint8(FheType.Euint64)));
+        return euint64.wrap(Impl.randBounded(upperBound, FheType.Euint64));
     }
 
     /**
      * @dev Generates a random encrypted value.
      */
     function randEuint128() internal returns (euint128) {
-        return euint128.wrap(Impl.rand(uint8(FheType.Euint128)));
+        return euint128.wrap(Impl.rand(FheType.Euint128));
     }
 
     /**
@@ -8755,14 +8755,14 @@ library TFHE {
      *      The upperBound must be a power of 2.
      */
     function randEuint128(uint128 upperBound) internal returns (euint128) {
-        return euint128.wrap(Impl.randBounded(upperBound, uint8(FheType.Euint128)));
+        return euint128.wrap(Impl.randBounded(upperBound, FheType.Euint128));
     }
 
     /**
      * @dev Generates a random encrypted value.
      */
     function randEuint256() internal returns (euint256) {
-        return euint256.wrap(Impl.rand(uint8(FheType.Euint256)));
+        return euint256.wrap(Impl.rand(FheType.Euint256));
     }
 
     /**
@@ -8770,28 +8770,28 @@ library TFHE {
      *      The upperBound must be a power of 2.
      */
     function randEuint256(uint256 upperBound) internal returns (euint256) {
-        return euint256.wrap(Impl.randBounded(upperBound, uint8(FheType.Euint256)));
+        return euint256.wrap(Impl.randBounded(upperBound, FheType.Euint256));
     }
 
     /**
      * @dev Generates a random encrypted value.
      */
     function randEbytes64() internal returns (ebytes64) {
-        return ebytes64.wrap(Impl.rand(uint8(FheType.Ebytes64)));
+        return ebytes64.wrap(Impl.rand(FheType.Ebytes64));
     }
 
     /**
      * @dev Generates a random encrypted value.
      */
     function randEbytes128() internal returns (ebytes128) {
-        return ebytes128.wrap(Impl.rand(uint8(FheType.Ebytes128)));
+        return ebytes128.wrap(Impl.rand(FheType.Ebytes128));
     }
 
     /**
      * @dev Generates a random encrypted value.
      */
     function randEbytes256() internal returns (ebytes256) {
-        return ebytes256.wrap(Impl.rand(uint8(FheType.Ebytes256)));
+        return ebytes256.wrap(Impl.rand(FheType.Ebytes256));
     }
 
     /**

@@ -16,6 +16,8 @@ export function generateSolidityFHEGasLimit(priceData: PriceData): string {
   import {Ownable2StepUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol";
   import {tfheExecutorAdd} from "../addresses/TFHEExecutorAddress.sol";
 
+  import {FheType} from "../lib/TFHE.sol"; 
+
   /**
    * @title  FHEGasLimit
    * @notice This contract manages the amount of gas to be paid for FHE operations.
@@ -76,7 +78,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
      * @param resultType    Result type.
      * @param scalarByte    Scalar byte.
      */
-     function ${functionName}(uint8 resultType, bytes1 scalarByte) external virtual {
+     function ${functionName}(FheType resultType, bytes1 scalarByte) external virtual {
         if(msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
 `;
@@ -85,7 +87,7 @@ contract FHEGasLimit is UUPSUpgradeable, Ownable2StepUpgradeable {
      * @notice              Computes the gas required for ${operation.charAt(0).toUpperCase() + operation.slice(1)}.
      * @param resultType    Result type.
      */
-    function ${functionName}(uint8 resultType) external virtual {
+    function ${functionName}(FheType resultType) external virtual {
         if(msg.sender != tfheExecutorAddress) revert CallerMustBeTFHEExecutorContract();
         _checkIfNewBlock();
 `;
@@ -192,7 +194,7 @@ function generatePriceChecks(prices: { [key: string]: number }): string {
   return (
     Object.entries(prices)
       .map(
-        ([resultType, price]) => `        if (resultType == ${resultType}) {
+        ([resultType, price]) => `        if (resultType == FheType.${resultType}) {
         _updateFunding(${price});
         }`,
       )

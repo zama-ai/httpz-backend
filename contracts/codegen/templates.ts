@@ -84,6 +84,8 @@ export function generateSolidityImplLib(operators: Operator[]): string {
 // SPDX-License-Identifier: BSD-3-Clause-Clear
 pragma solidity ^0.8.24;
 
+import {FheType} from "./TFHE.sol";
+
 ${generateImplCoprocessorInterface(operators)}
 
 ${generateACLInterface()}
@@ -206,7 +208,7 @@ function coprocessorInterfaceCustomFunctions(): string {
      * @param inputType       Input type.
      * @return result         Result.
      */
-    function verifyCiphertext(bytes32 inputHandle, address callerAddress, bytes memory inputProof, bytes1 inputType) external returns (bytes32 result);
+    function verifyCiphertext(bytes32 inputHandle, address callerAddress, bytes memory inputProof, FheType inputType) external returns (bytes32 result);
 
     /**
      * @notice          Performs the casting to a target type.
@@ -214,7 +216,7 @@ function coprocessorInterfaceCustomFunctions(): string {
      * @param toType    Target type.
      * @return result   Result value of the target type.
      */
-    function cast(bytes32 ct, bytes1 toType) external returns (bytes32 result);
+    function cast(bytes32 ct, FheType toType) external returns (bytes32 result);
 
      /**
      * @notice          Does trivial encryption.
@@ -222,7 +224,7 @@ function coprocessorInterfaceCustomFunctions(): string {
      * @param toType    Target type.
      * @return result   Result value of the target type.
      */
-    function trivialEncrypt(uint256 ct, bytes1 toType) external returns (bytes32 result);
+    function trivialEncrypt(uint256 ct, FheType toType) external returns (bytes32 result);
 
     /**
      * @notice          Does trivial encryption.
@@ -230,7 +232,7 @@ function coprocessorInterfaceCustomFunctions(): string {
      * @param toType    Target type.
      * @return result   Result value of the target type.
      */
-    function trivialEncrypt(bytes memory ct, bytes1 toType) external returns (bytes32 result);
+    function trivialEncrypt(bytes memory ct, FheType toType) external returns (bytes32 result);
 
     /**
      * @notice              Computes FHEEq operation.
@@ -264,7 +266,7 @@ function coprocessorInterfaceCustomFunctions(): string {
      * @param randType      Type for the random result.
      * @return result       Result.
      */
-    function fheRand(bytes1 randType) external returns (bytes32 result);
+    function fheRand(FheType randType) external returns (bytes32 result);
 
     /**
      * @notice              Computes FHERandBounded operation.
@@ -272,7 +274,7 @@ function coprocessorInterfaceCustomFunctions(): string {
      * @param randType      Type for the random result.
      * @return result       Result.
      */
-    function fheRandBounded(uint256 upperBound, bytes1 randType) external returns (bytes32 result);
+    function fheRandBounded(uint256 upperBound, FheType randType) external returns (bytes32 result);
   `;
 }
 
@@ -767,7 +769,7 @@ function handleSolidityTFHECustomCastBetweenTwoEuint(inputFheType: FheType, outp
     * @dev Casts an encrypted integer from '${inputFheType.type.toLowerCase()}' to '${outputFheType.type.toLowerCase()}'.
     */
     function as${outputFheType.type}(${inputFheType.type.toLowerCase()} value) internal returns (${outputFheType.type.toLowerCase()}) {
-        return ${outputFheType.type.toLowerCase()}.wrap(Impl.cast(${inputFheType.type.toLowerCase()}.unwrap(value), uint8(FheType.${outputFheType.type})));
+        return ${outputFheType.type.toLowerCase()}.wrap(Impl.cast(${inputFheType.type.toLowerCase()}.unwrap(value), FheType.${outputFheType.type}));
     }
     `;
 }
@@ -782,7 +784,7 @@ function handleSolidityTFHECustomCastBetweenEboolAndEuint(fheType: FheType): str
      * @dev Converts an 'ebool' to an '${fheType.type.toLowerCase()}'.
      */
     function as${fheType.type}(ebool b) internal returns (${fheType.type.toLowerCase()}) {
-        return ${fheType.type.toLowerCase()}.wrap(Impl.cast(ebool.unwrap(b), uint8(FheType.${fheType.type})));
+        return ${fheType.type.toLowerCase()}.wrap(Impl.cast(ebool.unwrap(b), FheType.${fheType.type}));
     }
     `);
 
@@ -838,7 +840,7 @@ function handleSolidityTFHEConvertPlaintextAndEinputToRespectiveType(fheType: Fh
      * @dev Convert an inputHandle with corresponding inputProof to an encrypted ${fheType.type.toLowerCase()} integer.
      */
     function as${fheType.type}(einput inputHandle, bytes memory inputProof) internal returns (${fheType.type.toLowerCase()}) {
-        return ${fheType.type.toLowerCase()}.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
+        return ${fheType.type.toLowerCase()}.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, FheType.${fheType.isAlias ? fheType.aliasType : fheType.type}));
     }
 
     `;
@@ -850,7 +852,7 @@ function handleSolidityTFHEConvertPlaintextAndEinputToRespectiveType(fheType: Fh
      * @dev Converts a plaintext boolean to an encrypted boolean.
      */
       function asEbool(bool value) internal returns (ebool) {
-        return ebool.wrap(Impl.trivialEncrypt(value? 1 : 0, uint8(FheType.Ebool)));
+        return ebool.wrap(Impl.trivialEncrypt(value? 1 : 0, FheType.Ebool));
     }
 
     `;
@@ -860,7 +862,7 @@ function handleSolidityTFHEConvertPlaintextAndEinputToRespectiveType(fheType: Fh
         * @dev Convert the plaintext bytes to a ${fheType.type.toLowerCase()} value.
       */
       function as${fheType.type}(${fheType.clearMatchingType} value) internal returns (${fheType.type.toLowerCase()}) {
-        return ${fheType.type.toLowerCase()}.wrap(Impl.trivialEncrypt(value, uint8(FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
+        return ${fheType.type.toLowerCase()}.wrap(Impl.trivialEncrypt(value, FheType.${fheType.isAlias ? fheType.aliasType : fheType.type}));
       }
       `;
   } else {
@@ -874,7 +876,7 @@ function handleSolidityTFHEConvertPlaintextAndEinputToRespectiveType(fheType: Fh
      * @dev Convert a plaintext value to an encrypted ${fheType.type.toLowerCase()} integer.
     */
     function as${fheType.type}(${fheType.clearMatchingType} value) internal returns (${fheType.type.toLowerCase()}) {
-        return ${fheType.type.toLowerCase()}.wrap(Impl.trivialEncrypt(uint256(${value}), uint8(FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
+        return ${fheType.type.toLowerCase()}.wrap(Impl.trivialEncrypt(uint256(${value}), FheType.${fheType.isAlias ? fheType.aliasType : fheType.type}));
     }
 
     `;
@@ -1018,10 +1020,10 @@ function generateCustomMethodsForImpl(): string {
     function verify(
         bytes32 inputHandle,
         bytes memory inputProof,
-        uint8 toType
+        FheType toType
     ) internal returns (bytes32 result) {
       FHEVMConfigStruct storage $ = getFHEVMConfig();
-        result = ITFHEExecutor($.TFHEExecutorAddress).verifyCiphertext(inputHandle, msg.sender, inputProof, bytes1(toType));
+        result = ITFHEExecutor($.TFHEExecutorAddress).verifyCiphertext(inputHandle, msg.sender, inputProof, toType);
         IACL($.ACLAddress).allowTransient(result, msg.sender);
     }
 
@@ -1033,10 +1035,10 @@ function generateCustomMethodsForImpl(): string {
      */
     function cast(
         bytes32 ciphertext,
-        uint8 toType
+        FheType toType
     ) internal returns (bytes32 result) {
         FHEVMConfigStruct storage $ = getFHEVMConfig();
-        result = ITFHEExecutor($.TFHEExecutorAddress).cast(ciphertext, bytes1(toType));
+        result = ITFHEExecutor($.TFHEExecutorAddress).cast(ciphertext, toType);
     }
 
     /**
@@ -1047,10 +1049,10 @@ function generateCustomMethodsForImpl(): string {
      */
     function trivialEncrypt(
         uint256 value,
-        uint8 toType
+        FheType toType
     ) internal returns (bytes32 result) {
       FHEVMConfigStruct storage $ = getFHEVMConfig();
-        result = ITFHEExecutor($.TFHEExecutorAddress).trivialEncrypt(value, bytes1(toType));
+        result = ITFHEExecutor($.TFHEExecutorAddress).trivialEncrypt(value, toType);
     }
 
     /**
@@ -1061,10 +1063,10 @@ function generateCustomMethodsForImpl(): string {
      */
     function trivialEncrypt(
       bytes memory value,
-      uint8 toType
+      FheType toType
     ) internal returns (bytes32 result) {
       FHEVMConfigStruct storage $ = getFHEVMConfig();
-        result = ITFHEExecutor($.TFHEExecutorAddress).trivialEncrypt(value, bytes1(toType));
+        result = ITFHEExecutor($.TFHEExecutorAddress).trivialEncrypt(value, toType);
     }
 
     /**
@@ -1103,14 +1105,14 @@ function generateCustomMethodsForImpl(): string {
       result = ITFHEExecutor($.TFHEExecutorAddress).fheNe(lhs, rhs, scalarByte);
   }
 
-    function rand(uint8 randType) internal returns(bytes32 result) {
+    function rand(FheType randType) internal returns(bytes32 result) {
       FHEVMConfigStruct storage $ = getFHEVMConfig();
-      result = ITFHEExecutor($.TFHEExecutorAddress).fheRand(bytes1(randType));
+      result = ITFHEExecutor($.TFHEExecutorAddress).fheRand(randType);
     }
 
-    function randBounded(uint256 upperBound, uint8 randType) internal returns(bytes32 result) {
+    function randBounded(uint256 upperBound, FheType randType) internal returns(bytes32 result) {
       FHEVMConfigStruct storage $ = getFHEVMConfig();
-      result = ITFHEExecutor($.TFHEExecutorAddress).fheRandBounded(upperBound, bytes1(randType));
+      result = ITFHEExecutor($.TFHEExecutorAddress).fheRandBounded(upperBound, randType);
     }
 
     /**
@@ -1181,7 +1183,7 @@ function handleSolidityTFHERand(fheType: FheType): string {
     * @dev Generates a random encrypted value.
     */
     function rand${fheType.type}() internal returns (${fheType.type.toLowerCase()}) {
-      return ${fheType.type.toLowerCase()}.wrap(Impl.rand(uint8(FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
+      return ${fheType.type.toLowerCase()}.wrap(Impl.rand(FheType.${fheType.isAlias ? fheType.aliasType : fheType.type}));
     }
 
     `;
@@ -1194,7 +1196,7 @@ function handleSolidityTFHERand(fheType: FheType): string {
     *      The upperBound must be a power of 2.
     */
     function rand${fheType.type}(uint${fheType.bitLength} upperBound) internal returns (${fheType.type.toLowerCase()}) {
-      return ${fheType.type.toLowerCase()}.wrap(Impl.randBounded(upperBound, uint8(FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
+      return ${fheType.type.toLowerCase()}.wrap(Impl.randBounded(upperBound, FheType.${fheType.isAlias ? fheType.aliasType : fheType.type}));
     }
 
     `;
