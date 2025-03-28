@@ -23,7 +23,7 @@ export function createSolidityTypeAliasesFromFheTypes(fheTypes: FheType[]): stri
 }
 
 /**
- * Generates a Solidity enum definition from an array of FheType objects. It is used in Common.sol.
+ * Generates a Solidity enum definition from an array of FheType objects.
  *
  * @param {FheType[]} fheTypes - An array of FheType objects to be converted into a Solidity enum.
  * @returns {string} A string representing the Solidity enum definition.
@@ -38,39 +38,6 @@ export function createSolidityEnumFromFheTypes(fheTypes: FheType[]): string {
       )
       .join('\n')}
 }`;
-}
-
-/**
- * Generates a Solidity library named `Common.sol` that contains type aliases and enums
- * based on the provided FHE types.
- *
- * The generated library includes:
- * - Type aliases for the provided FHE types.
- * - An enum representing the provided FHE types.
- *
- * @param {FheType[]} fheTypes - An array of FHE types to be used for generating the Solidity Common.sol library.
- * @returns {string} The generated Solidity library code as a string.
- */
-function generateSolidityCommonLibrary(fheTypes: FheType[]): string {
-  let lib = createSolidityTypeAliasesFromFheTypes(fheTypes);
-
-  lib += `\n
-  /**
-   * @title   Common
-   * @notice  This library contains all the values used to communicate types to the run time.
-   *          It matches the tfhe-rs types.
-   *          see: https://github.com/zama-ai/tfhe-rs/blob/a2f1825691f9f95e9d241ca4bd4c4598b905f070/tfhe/src/high_level_api/mod.rs
-   */
-  library Common {
-  `;
-
-  lib += createSolidityEnumFromFheTypes(fheTypes);
-
-  lib += `
-  }
-  `;
-
-  return lib;
 }
 
 /**
@@ -384,7 +351,10 @@ export function generateSolidityTFHELibAndOverloads(operators: Operator[], fheTy
 
   import "./Impl.sol";
 
-${generateSolidityCommonLibrary(fheTypes)}
+  ${createSolidityTypeAliasesFromFheTypes(fheTypes)}
+
+  ${createSolidityEnumFromFheTypes(fheTypes)}
+
 
   /**
    * @title   TFHE
@@ -797,7 +767,7 @@ function handleSolidityTFHECustomCastBetweenTwoEuint(inputFheType: FheType, outp
     * @dev Casts an encrypted integer from '${inputFheType.type.toLowerCase()}' to '${outputFheType.type.toLowerCase()}'.
     */
     function as${outputFheType.type}(${inputFheType.type.toLowerCase()} value) internal returns (${outputFheType.type.toLowerCase()}) {
-        return ${outputFheType.type.toLowerCase()}.wrap(Impl.cast(${inputFheType.type.toLowerCase()}.unwrap(value), uint8(Common.FheType.${outputFheType.type})));
+        return ${outputFheType.type.toLowerCase()}.wrap(Impl.cast(${inputFheType.type.toLowerCase()}.unwrap(value), uint8(FheType.${outputFheType.type})));
     }
     `;
 }
@@ -812,7 +782,7 @@ function handleSolidityTFHECustomCastBetweenEboolAndEuint(fheType: FheType): str
      * @dev Converts an 'ebool' to an '${fheType.type.toLowerCase()}'.
      */
     function as${fheType.type}(ebool b) internal returns (${fheType.type.toLowerCase()}) {
-        return ${fheType.type.toLowerCase()}.wrap(Impl.cast(ebool.unwrap(b), uint8(Common.FheType.${fheType.type})));
+        return ${fheType.type.toLowerCase()}.wrap(Impl.cast(ebool.unwrap(b), uint8(FheType.${fheType.type})));
     }
     `);
 
@@ -868,7 +838,7 @@ function handleSolidityTFHEConvertPlaintextAndEinputToRespectiveType(fheType: Fh
      * @dev Convert an inputHandle with corresponding inputProof to an encrypted ${fheType.type.toLowerCase()} integer.
      */
     function as${fheType.type}(einput inputHandle, bytes memory inputProof) internal returns (${fheType.type.toLowerCase()}) {
-        return ${fheType.type.toLowerCase()}.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(Common.FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
+        return ${fheType.type.toLowerCase()}.wrap(Impl.verify(einput.unwrap(inputHandle), inputProof, uint8(FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
     }
 
     `;
@@ -880,7 +850,7 @@ function handleSolidityTFHEConvertPlaintextAndEinputToRespectiveType(fheType: Fh
      * @dev Converts a plaintext boolean to an encrypted boolean.
      */
       function asEbool(bool value) internal returns (ebool) {
-        return ebool.wrap(Impl.trivialEncrypt(value? 1 : 0, uint8(Common.FheType.Ebool)));
+        return ebool.wrap(Impl.trivialEncrypt(value? 1 : 0, uint8(FheType.Ebool)));
     }
 
     `;
@@ -890,7 +860,7 @@ function handleSolidityTFHEConvertPlaintextAndEinputToRespectiveType(fheType: Fh
         * @dev Convert the plaintext bytes to a ${fheType.type.toLowerCase()} value.
       */
       function as${fheType.type}(${fheType.clearMatchingType} value) internal returns (${fheType.type.toLowerCase()}) {
-        return ${fheType.type.toLowerCase()}.wrap(Impl.trivialEncrypt(value, uint8(Common.FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
+        return ${fheType.type.toLowerCase()}.wrap(Impl.trivialEncrypt(value, uint8(FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
       }
       `;
   } else {
@@ -904,7 +874,7 @@ function handleSolidityTFHEConvertPlaintextAndEinputToRespectiveType(fheType: Fh
      * @dev Convert a plaintext value to an encrypted ${fheType.type.toLowerCase()} integer.
     */
     function as${fheType.type}(${fheType.clearMatchingType} value) internal returns (${fheType.type.toLowerCase()}) {
-        return ${fheType.type.toLowerCase()}.wrap(Impl.trivialEncrypt(uint256(${value}), uint8(Common.FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
+        return ${fheType.type.toLowerCase()}.wrap(Impl.trivialEncrypt(uint256(${value}), uint8(FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
     }
 
     `;
@@ -1211,7 +1181,7 @@ function handleSolidityTFHERand(fheType: FheType): string {
     * @dev Generates a random encrypted value.
     */
     function rand${fheType.type}() internal returns (${fheType.type.toLowerCase()}) {
-      return ${fheType.type.toLowerCase()}.wrap(Impl.rand(uint8(Common.FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
+      return ${fheType.type.toLowerCase()}.wrap(Impl.rand(uint8(FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
     }
 
     `;
@@ -1224,7 +1194,7 @@ function handleSolidityTFHERand(fheType: FheType): string {
     *      The upperBound must be a power of 2.
     */
     function rand${fheType.type}(uint${fheType.bitLength} upperBound) internal returns (${fheType.type.toLowerCase()}) {
-      return ${fheType.type.toLowerCase()}.wrap(Impl.randBounded(upperBound, uint8(Common.FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
+      return ${fheType.type.toLowerCase()}.wrap(Impl.randBounded(upperBound, uint8(FheType.${fheType.isAlias ? fheType.aliasType : fheType.type})));
     }
 
     `;

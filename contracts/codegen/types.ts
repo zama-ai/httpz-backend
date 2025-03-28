@@ -29,7 +29,7 @@ export const ALL_FHE_TYPES: FheType[] = [
     type: 'Ebool',
     value: 0,
     supportedOperators: ['and', 'or', 'xor', 'eq', 'ne', 'not', 'select', 'rand'],
-    bitLength: 1, // 8 bits?
+    bitLength: 2,
     clearMatchingType: 'bool',
   },
   {

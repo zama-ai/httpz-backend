@@ -37,6 +37,7 @@ export const findMaximumValueInBigIntArray = (...args: bigint[]) => {
  * @returns A random BigInt number within the range defined by the number of bits and at least minValue.
  */
 export const generateRandomNumber = (bits: number, minValue: bigint = 5n) => {
+  // @dev minValue is set at 5 to prevent underflows since tests would use smallest - 4n.
   const power = BigInt(Math.pow(2, bits) - 1);
   const maxRange = findMinimumValueInBigIntArray(power, BigInt(Number.MAX_SAFE_INTEGER));
   const subtract = findMaximumValueInBigIntArray(BigInt(Math.floor(Math.random() * Number(maxRange))), minValue);
