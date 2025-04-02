@@ -28,6 +28,8 @@ env:
 jobs:
   parse-inputs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       profile: ${{ steps.parse_profile.outputs.profile }}
       hardware_name: ${{ steps.parse_hardware_name.outputs.name }}
@@ -69,6 +71,8 @@ jobs:
     name: Coprocessor GPU benchmarks on (${{ inputs.profile }})
     needs: setup-instance
     runs-on: ${{ needs.setup-instance.outputs.runner-name }}
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       # explicit include-based build matrix, of known valid options
@@ -183,7 +187,7 @@ jobs:
   teardown-instance:
     name: Teardown instance (fhevm-backend-gpu L40 test)
     if: ${{ always() && needs.setup-instance.result == 'success' }}
-    needs: [ setup-instance, fhevm-backend-gpu ]
+    needs: [ setup-instance, fhevm-coprocessor-benchmarks-gpu ]
     runs-on: ubuntu-latest
     permissions:
       contents: read
