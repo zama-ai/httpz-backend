@@ -47,8 +47,6 @@ jobs:
   setup-instance:
     name: Setup instance (fhevm-coprocessor-benchmarks-gpu)
     needs: parse-inputs
-    if: github.event_name == 'workflow_dispatch' ||
-      needs.should-run.outputs.gpu_test == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -64,7 +62,7 @@ jobs:
           github-token: ${{ secrets.SLAB_ACTION_TOKEN }}
           slab-url: ${{ secrets.SLAB_BASE_URL }}
           job-secret: ${{ secrets.JOB_SECRET }}
-          backend: ${{ needs.parse-inputs.outputs.hardware_name }}
+          backend: hyperstack
           profile: ${{ needs.parse-inputs.outputs.profile }}
 
   fhevm-coprocessor-benchmarks-gpu:
