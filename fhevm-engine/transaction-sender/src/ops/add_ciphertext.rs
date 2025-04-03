@@ -1,5 +1,7 @@
 use std::time::Duration;
 
+use crate::nonce_managed_provider::NonceManagedProvider;
+
 use super::common::try_into_array;
 use super::TransactionOperation;
 use alloy::{
@@ -25,16 +27,15 @@ sol!(
 #[derive(Clone)]
 pub struct AddCiphertextOperation<P: Provider<Ethereum> + Clone + 'static> {
     ciphertext_manager_address: Address,
-    provider: P,
+    provider: NonceManagedProvider<P>,
     conf: crate::ConfigSettings,
     gas: Option<u64>,
+    db_pool: Pool<Postgres>,
 }
 
 impl<P: Provider<Ethereum> + Clone + 'static> AddCiphertextOperation<P> {
     async fn send_transaction(
         &self,
-        db_pool: Pool<Postgres>,
-        provider: P,
         handle: Vec<u8>,
         txn_request: impl Into<TransactionRequest>,
     ) -> anyhow::Result<()> {
@@ -43,7 +44,7 @@ impl<P: Provider<Ethereum> + Clone + 'static> AddCiphertextOperation<P> {
         info!("Processing transaction, handle: {}", h);
 
         let txn_req = txn_request.into();
-        let transaction = match provider.send_transaction(txn_req.clone()).await {
+        let transaction = match self.provider.send_transaction(txn_req.clone()).await {
             Ok(txn) => txn,
             Err(e) => {
                 error!(
@@ -51,7 +52,7 @@ impl<P: Provider<Ethereum> + Clone + 'static> AddCiphertextOperation<P> {
                     txn_req, e, h
                 );
 
-                Self::increment_db_retry(&db_pool, handle, &e.to_string()).await?;
+                self.increment_db_retry(handle, &e.to_string()).await?;
                 bail!("Transaction sending failed with error: {}", e);
             }
         };
@@ -69,7 +70,7 @@ impl<P: Provider<Ethereum> + Clone + 'static> AddCiphertextOperation<P> {
             Ok(receipt) => receipt,
             Err(e) => {
                 error!("Getting receipt failed with error: {}", e);
-                Self::increment_db_retry(&db_pool, handle, &e.to_string()).await?;
+                self.increment_db_retry(handle, &e.to_string()).await?;
                 return Err(anyhow::Error::new(e));
             }
         };
@@ -81,7 +82,7 @@ impl<P: Provider<Ethereum> + Clone + 'static> AddCiphertextOperation<P> {
                 WHERE handle = $1 AND txn_is_sent = false",
                 handle
             )
-            .execute(&db_pool)
+            .execute(&self.db_pool)
             .await?;
 
             info!(
@@ -96,7 +97,8 @@ impl<P: Provider<Ethereum> + Clone + 'static> AddCiphertextOperation<P> {
                 h
             );
 
-            Self::increment_db_retry(&db_pool, handle, "receipt status = false").await?;
+            self.increment_db_retry(handle, "receipt status = false")
+                .await?;
 
             return Err(anyhow::anyhow!(
                 "Transaction {} failed with status {}, handle: {}",
@@ -112,9 +114,10 @@ impl<P: Provider<Ethereum> + Clone + 'static> AddCiphertextOperation<P> {
 impl<P: Provider<Ethereum> + Clone + 'static> AddCiphertextOperation<P> {
     pub fn new(
         ciphertext_manager_address: Address,
-        provider: P,
+        provider: NonceManagedProvider<P>,
         conf: crate::ConfigSettings,
         gas: Option<u64>,
+        db_pool: Pool<Postgres>,
     ) -> Self {
         info!(
             "Creating AddCiphertextOperation with gas: {} and CiphertextManager address: {}",
@@ -123,6 +126,7 @@ impl<P: Provider<Ethereum> + Clone + 'static> AddCiphertextOperation<P> {
         );
 
         Self {
+            db_pool,
             ciphertext_manager_address,
             provider,
             conf,
@@ -130,11 +134,7 @@ impl<P: Provider<Ethereum> + Clone + 'static> AddCiphertextOperation<P> {
         }
     }
 
-    async fn increment_db_retry(
-        db_pool: &Pool<Postgres>,
-        handle: Vec<u8>,
-        err: &str,
-    ) -> anyhow::Result<()> {
+    async fn increment_db_retry(&self, handle: Vec<u8>, err: &str) -> anyhow::Result<()> {
         info!("Updating retry count, handle {}", compact_hex(&handle));
         sqlx::query!(
             "UPDATE ciphertext_digest
@@ -146,7 +146,7 @@ impl<P: Provider<Ethereum> + Clone + 'static> AddCiphertextOperation<P> {
             err,
             handle,
         )
-        .execute(db_pool)
+        .execute(&self.db_pool)
         .await?;
         Ok(())
     }
@@ -161,7 +161,7 @@ where
         &self.conf.add_ciphertexts_db_channel
     }
 
-    async fn execute(&self, db_pool: &Pool<Postgres>) -> anyhow::Result<bool> {
+    async fn execute(&self) -> anyhow::Result<bool> {
         // The service responsible for populating the ciphertext_digest table must
         // ensure that ciphertext and ciphertext128 are non-null only after the
         // ciphertexts have been successfully uploaded to AWS S3 buckets.
@@ -177,11 +177,11 @@ where
             self.conf.add_ciphertexts_max_retries as i64,
             self.conf.add_ciphertexts_batch_limit as i64,
         )
-        .fetch_all(db_pool)
+        .fetch_all(&self.db_pool)
         .await?;
 
         let ciphertext_manager: CiphertextManager::CiphertextManagerInstance<(), &P> =
-            CiphertextManager::new(self.ciphertext_manager_address, &self.provider);
+            CiphertextManager::new(self.ciphertext_manager_address, self.provider.inner());
 
         info!("Selected {} rows to process", rows.len());
 
@@ -189,7 +189,7 @@ where
 
         let mut join_set = JoinSet::new();
         for row in rows.into_iter() {
-            let tenant_info = match query_tenant_info(db_pool, row.tenant_id).await {
+            let tenant_info = match query_tenant_info(&self.db_pool, row.tenant_id).await {
                 Ok(res) => res,
                 Err(_) => {
                     error!(
@@ -250,15 +250,9 @@ where
                     .into_transaction_request(),
             };
 
-            let db_pool = db_pool.clone();
-            let provider = self.provider.clone();
-
             let operation = self.clone();
-            join_set.spawn(async move {
-                operation
-                    .send_transaction(db_pool, provider, row.handle, txn_request)
-                    .await
-            });
+            join_set
+                .spawn(async move { operation.send_transaction(row.handle, txn_request).await });
         }
 
         while let Some(res) = join_set.join_next().await {

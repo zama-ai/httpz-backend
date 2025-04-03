@@ -1,5 +1,5 @@
 use alloy::primitives::FixedBytes;
-use alloy::providers::{Provider, WsConnect};
+use alloy::providers::WsConnect;
 use alloy::signers::local::PrivateKeySigner;
 use alloy::{primitives::U256, sol_types::eip712_domain};
 use alloy::{providers::ProviderBuilder, signers::SignerSync, sol, sol_types::SolStruct};
@@ -10,7 +10,7 @@ use serial_test::serial;
 use sqlx::{Postgres, QueryBuilder};
 use std::time::Duration;
 use tokio::time::sleep;
-use transaction_sender::{ProviderFillers, TransactionSender};
+use transaction_sender::{DefaultProviderFillers, NonceManagedProvider, TransactionSender};
 
 mod common;
 
@@ -27,13 +27,16 @@ sol! {
 #[serial(db)]
 async fn verify_proof_response_success() -> anyhow::Result<()> {
     let env = TestEnvironment::new().await?;
-    let provider = ProviderBuilder::default()
-        .wallet(env.wallet)
-        .filler(ProviderFillers::default())
-        .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
-        .await?;
-    let zkpok_manager = ZKPoKManager::deploy(&provider, false, false).await?;
-    let ciphertext_manager = CiphertextManager::deploy(&provider).await?;
+    let provider = NonceManagedProvider::new(
+        ProviderBuilder::default()
+            .wallet(env.wallet)
+            .filler(DefaultProviderFillers::default())
+            .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
+            .await?,
+        Some(env.signer.address()),
+    );
+    let zkpok_manager = ZKPoKManager::deploy(provider.inner(), false, false).await?;
+    let ciphertext_manager = CiphertextManager::deploy(provider.inner()).await?;
     let txn_sender = TransactionSender::new(
         *zkpok_manager.address(),
         *ciphertext_manager.address(),
@@ -135,13 +138,16 @@ async fn verify_proof_response_success() -> anyhow::Result<()> {
 #[serial(db)]
 async fn verify_proof_response_concurrent_success() -> anyhow::Result<()> {
     let env = TestEnvironment::new().await?;
-    let provider = ProviderBuilder::default()
-        .wallet(env.wallet)
-        .filler(ProviderFillers::default())
-        .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
-        .await?;
-    let zkpok_manager = ZKPoKManager::deploy(&provider, false, false).await?;
-    let ciphertext_manager = CiphertextManager::deploy(&provider).await?;
+    let provider = NonceManagedProvider::new(
+        ProviderBuilder::default()
+            .wallet(env.wallet)
+            .filler(DefaultProviderFillers::default())
+            .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
+            .await?,
+        Some(env.signer.address()),
+    );
+    let zkpok_manager = ZKPoKManager::deploy(provider.inner(), false, false).await?;
+    let ciphertext_manager = CiphertextManager::deploy(provider.inner()).await?;
     let txn_sender = TransactionSender::new(
         *zkpok_manager.address(),
         *ciphertext_manager.address(),
@@ -245,13 +251,16 @@ async fn verify_proof_response_concurrent_success() -> anyhow::Result<()> {
 #[serial(db)]
 async fn verify_proof_response_reversal_already_responded() -> anyhow::Result<()> {
     let env = TestEnvironment::new().await?;
-    let provider = ProviderBuilder::default()
-        .wallet(env.wallet)
-        .filler(ProviderFillers::default())
-        .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
-        .await?;
-    let zkpok_manager = ZKPoKManager::deploy(&provider, true, false).await?;
-    let ciphertext_manager = CiphertextManager::deploy(&provider).await?;
+    let provider = NonceManagedProvider::new(
+        ProviderBuilder::default()
+            .wallet(env.wallet)
+            .filler(DefaultProviderFillers::default())
+            .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
+            .await?,
+        Some(env.signer.address()),
+    );
+    let zkpok_manager = ZKPoKManager::deploy(provider.inner(), true, false).await?;
+    let ciphertext_manager = CiphertextManager::deploy(provider.inner()).await?;
     let txn_sender = TransactionSender::new(
         *zkpok_manager.address(),
         *ciphertext_manager.address(),
@@ -320,13 +329,16 @@ async fn verify_proof_response_reversal_already_responded() -> anyhow::Result<()
 #[serial(db)]
 async fn verify_proof_response_other_reversal_gas_estimation() -> anyhow::Result<()> {
     let env = TestEnvironment::new().await?;
-    let provider = ProviderBuilder::default()
-        .wallet(env.wallet)
-        .filler(ProviderFillers::default())
-        .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
-        .await?;
-    let zkpok_manager = ZKPoKManager::deploy(&provider, false, true).await?;
-    let ciphertext_manager = CiphertextManager::deploy(&provider).await?;
+    let provider = NonceManagedProvider::new(
+        ProviderBuilder::default()
+            .wallet(env.wallet)
+            .filler(DefaultProviderFillers::default())
+            .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
+            .await?,
+        Some(env.signer.address()),
+    );
+    let zkpok_manager = ZKPoKManager::deploy(provider.inner(), false, true).await?;
+    let ciphertext_manager = CiphertextManager::deploy(provider.inner()).await?;
     let txn_sender = TransactionSender::new(
         *zkpok_manager.address(),
         *ciphertext_manager.address(),
@@ -395,13 +407,16 @@ async fn verify_proof_response_other_reversal_gas_estimation() -> anyhow::Result
 #[serial(db)]
 async fn verify_proof_response_other_reversal_receipt() -> anyhow::Result<()> {
     let env = TestEnvironment::new().await?;
-    let provider = ProviderBuilder::default()
-        .wallet(env.wallet)
-        .filler(ProviderFillers::default())
-        .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
-        .await?;
-    let zkpok_manager = ZKPoKManager::deploy(&provider, false, true).await?;
-    let ciphertext_manager = CiphertextManager::deploy(&provider).await?;
+    let provider = NonceManagedProvider::new(
+        ProviderBuilder::default()
+            .wallet(env.wallet)
+            .filler(DefaultProviderFillers::default())
+            .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
+            .await?,
+        Some(env.signer.address()),
+    );
+    let zkpok_manager = ZKPoKManager::deploy(provider.inner(), false, true).await?;
+    let ciphertext_manager = CiphertextManager::deploy(provider.inner()).await?;
     // Create the sender with a gas limit such that no gas estimation is done, forcing failure at receipt (after the txn has been sent).
     let txn_sender = TransactionSender::new(
         *zkpok_manager.address(),
@@ -473,13 +488,16 @@ async fn verify_proof_max_retries_remove_entry() -> anyhow::Result<()> {
     let mut env = TestEnvironment::new().await?;
     env.conf.verify_proof_remove_after_max_retries = true;
     env.conf.verify_proof_resp_max_retries = 2;
-    let provider = ProviderBuilder::default()
-        .wallet(env.wallet)
-        .filler(ProviderFillers::default())
-        .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
-        .await?;
-    let zkpok_manager = ZKPoKManager::deploy(&provider, false, true).await?;
-    let ciphertext_manager = CiphertextManager::deploy(&provider).await?;
+    let provider = NonceManagedProvider::new(
+        ProviderBuilder::default()
+            .wallet(env.wallet)
+            .filler(DefaultProviderFillers::default())
+            .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
+            .await?,
+        Some(env.signer.address()),
+    );
+    let zkpok_manager = ZKPoKManager::deploy(provider.inner(), false, true).await?;
+    let ciphertext_manager = CiphertextManager::deploy(provider.inner()).await?;
     let txn_sender = TransactionSender::new(
         *zkpok_manager.address(),
         *ciphertext_manager.address(),
@@ -540,13 +558,16 @@ async fn verify_proof_max_retries_do_not_remove_entry() -> anyhow::Result<()> {
     let mut env = TestEnvironment::new().await?;
     env.conf.verify_proof_remove_after_max_retries = false;
     env.conf.verify_proof_resp_max_retries = 2;
-    let provider = ProviderBuilder::default()
-        .wallet(env.wallet)
-        .filler(ProviderFillers::default())
-        .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
-        .await?;
-    let zkpok_manager = ZKPoKManager::deploy(&provider, false, true).await?;
-    let ciphertext_manager = CiphertextManager::deploy(&provider).await?;
+    let provider = NonceManagedProvider::new(
+        ProviderBuilder::default()
+            .wallet(env.wallet)
+            .filler(DefaultProviderFillers::default())
+            .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
+            .await?,
+        Some(env.signer.address()),
+    );
+    let zkpok_manager = ZKPoKManager::deploy(provider.inner(), false, true).await?;
+    let ciphertext_manager = CiphertextManager::deploy(provider.inner()).await?;
     let txn_sender = TransactionSender::new(
         *zkpok_manager.address(),
         *ciphertext_manager.address(),
@@ -618,13 +639,16 @@ async fn verify_proof_max_retries_do_not_remove_entry() -> anyhow::Result<()> {
 #[serial(db)]
 async fn reject_proof_response_success() -> anyhow::Result<()> {
     let env = TestEnvironment::new().await?;
-    let provider = ProviderBuilder::default()
-        .wallet(env.wallet)
-        .filler(ProviderFillers::default())
-        .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
-        .await?;
-    let zkpok_manager = ZKPoKManager::deploy(&provider, false, false).await?;
-    let ciphertext_manager = CiphertextManager::deploy(&provider).await?;
+    let provider = NonceManagedProvider::new(
+        ProviderBuilder::default()
+            .wallet(env.wallet)
+            .filler(DefaultProviderFillers::default())
+            .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
+            .await?,
+        Some(env.signer.address()),
+    );
+    let zkpok_manager = ZKPoKManager::deploy(provider.inner(), false, false).await?;
+    let ciphertext_manager = CiphertextManager::deploy(provider.inner()).await?;
     let txn_sender = TransactionSender::new(
         *zkpok_manager.address(),
         *ciphertext_manager.address(),
@@ -705,13 +729,16 @@ async fn reject_proof_response_success() -> anyhow::Result<()> {
 #[serial(db)]
 async fn reject_proof_response_reversal_already_responded() -> anyhow::Result<()> {
     let env = TestEnvironment::new().await?;
-    let provider = ProviderBuilder::default()
-        .wallet(env.wallet)
-        .filler(ProviderFillers::default())
-        .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
-        .await?;
-    let zkpok_manager = ZKPoKManager::deploy(&provider, true, false).await?;
-    let ciphertext_manager = CiphertextManager::deploy(&provider).await?;
+    let provider = NonceManagedProvider::new(
+        ProviderBuilder::default()
+            .wallet(env.wallet)
+            .filler(DefaultProviderFillers::default())
+            .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
+            .await?,
+        Some(env.signer.address()),
+    );
+    let zkpok_manager = ZKPoKManager::deploy(provider.inner(), true, false).await?;
+    let ciphertext_manager = CiphertextManager::deploy(provider.inner()).await?;
     let txn_sender = TransactionSender::new(
         *zkpok_manager.address(),
         *ciphertext_manager.address(),
@@ -779,13 +806,16 @@ async fn reject_proof_response_reversal_already_responded() -> anyhow::Result<()
 #[serial(db)]
 async fn reject_proof_response_other_reversal_receipt() -> anyhow::Result<()> {
     let env = TestEnvironment::new().await?;
-    let provider = ProviderBuilder::default()
-        .wallet(env.wallet)
-        .filler(ProviderFillers::default())
-        .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
-        .await?;
-    let zkpok_manager = ZKPoKManager::deploy(&provider, false, true).await?;
-    let ciphertext_manager = CiphertextManager::deploy(&provider).await?;
+    let provider = NonceManagedProvider::new(
+        ProviderBuilder::default()
+            .wallet(env.wallet)
+            .filler(DefaultProviderFillers::default())
+            .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
+            .await?,
+        Some(env.signer.address()),
+    );
+    let zkpok_manager = ZKPoKManager::deploy(provider.inner(), false, true).await?;
+    let ciphertext_manager = CiphertextManager::deploy(provider.inner()).await?;
     // Create the sender with a gas limit such that no gas estimation is done, forcing failure at receipt (after the txn has been sent).
     let txn_sender = TransactionSender::new(
         *zkpok_manager.address(),
@@ -851,13 +881,16 @@ async fn reject_proof_response_other_reversal_receipt() -> anyhow::Result<()> {
 #[serial(db)]
 async fn reject_proof_response_other_reversal_gas_estimation() -> anyhow::Result<()> {
     let env = TestEnvironment::new().await?;
-    let provider = ProviderBuilder::default()
-        .wallet(env.wallet)
-        .filler(ProviderFillers::default())
-        .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
-        .await?;
-    let zkpok_manager = ZKPoKManager::deploy(&provider, false, true).await?;
-    let ciphertext_manager = CiphertextManager::deploy(&provider).await?;
+    let provider = NonceManagedProvider::new(
+        ProviderBuilder::default()
+            .wallet(env.wallet)
+            .filler(DefaultProviderFillers::default())
+            .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
+            .await?,
+        Some(env.signer.address()),
+    );
+    let zkpok_manager = ZKPoKManager::deploy(provider.inner(), false, true).await?;
+    let ciphertext_manager = CiphertextManager::deploy(provider.inner()).await?;
     let txn_sender = TransactionSender::new(
         *zkpok_manager.address(),
         *ciphertext_manager.address(),

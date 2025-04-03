@@ -10,7 +10,9 @@ use alloy::{
 use clap::Parser;
 use tokio::signal::unix::{signal, SignalKind};
 use tokio_util::sync::CancellationToken;
-use transaction_sender::{ConfigSettings, ProviderFillers, TransactionSender};
+use transaction_sender::{
+    ConfigSettings, DefaultProviderFillers, NonceManagedProvider, TransactionSender,
+};
 
 #[derive(Parser, Debug, Clone)]
 #[command(version, about, long_about = None)]
@@ -103,11 +105,14 @@ async fn main() -> anyhow::Result<()> {
         .clone()
         .unwrap_or_else(|| std::env::var("DATABASE_URL").expect("DATABASE_URL is undefined"));
     let cancel_token = CancellationToken::new();
-    let provider = ProviderBuilder::default()
-        .wallet(wallet)
-        .filler(ProviderFillers::default())
-        .on_ws(WsConnect::new(conf.gateway_url))
-        .await?;
+    let provider = NonceManagedProvider::new(
+        ProviderBuilder::default()
+            .wallet(wallet)
+            .filler(DefaultProviderFillers::default())
+            .on_ws(WsConnect::new(conf.gateway_url))
+            .await?,
+        Some(signer.address()),
+    );
     let sender = TransactionSender::new(
         conf.zkpok_manager_address,
         conf.ciphertext_manager_address,
