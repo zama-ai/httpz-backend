@@ -65,8 +65,8 @@ jobs:
           profile: ${{ needs.parse-inputs.outputs.profile }}
 
   fhevm-coprocessor-benchmarks-gpu:
-    name: Coprocessor GPU benchmarks on (${{ inputs.profile }})
-    needs: setup-instance
+    name: Coprocessor GPU benchmarks on (${{ needs.parse-inputs.outputs.profile }})
+    needs: [ parse-inputs, setup-instance ]
     runs-on: ${{ needs.setup-instance.outputs.runner-name }}
     permissions:
       contents: read
@@ -152,19 +152,18 @@ jobs:
         run: |
           python3 ./ci/benchmark_parser.py fhevm-engine/target/criterion ${{ env.RESULTS_FILENAME }} \
           --database coprocessor \
-          --hardware "${{ inputs.hardware_name }}" \
+          --hardware "${{ needs.parse-inputs.outputs.hardware_name }}" \
           --backend gpu \
           --project-version "${{ env.COMMIT_HASH }}" \
           --branch ${{ github.ref_name }} \
           --commit-date "${{ env.COMMIT_DATE }}" \
           --bench-date "${{ env.BENCH_DATE }}" \
-          --walk-subdirs \
-          --name-suffix avx512
+          --walk-subdirs
 
       - name: Upload parsed results artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: ${{ github.sha }}_erc20_${{ inputs.profile }}
+          name: ${{ github.sha }}_erc20_${{ needs.parse-inputs.outputs.profile }}
           path: ${{ env.RESULTS_FILENAME }}
 
       - name: Checkout Slab repo

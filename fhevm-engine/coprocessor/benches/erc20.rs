@@ -38,12 +38,22 @@ fn main() {
     let bench_name = "erc20::transfer";
 
     let mut group = c.benchmark_group(bench_name);
-    for num_elems in [10, 100, 500] {
+    for num_elems in [10, 20, 50] {
         group.throughput(Throughput::Elements(num_elems));
         let bench_id =
             format!("{bench_name}::throughput::whitepaper::FHEUint64::{num_elems}_elems");
         group.bench_with_input(bench_id.clone(), &num_elems, move |b, &num_elems| {
             let _ = Runtime::new().unwrap().block_on(schedule_erc20_whitepaper(
+                b,
+                num_elems as usize,
+                bench_id.clone(),
+            ));
+        });
+
+        group.throughput(Throughput::Elements(num_elems));
+        let bench_id = format!("{bench_name}::throughput::no_cmux::FHEUint64::{num_elems}_elems");
+        group.bench_with_input(bench_id.clone(), &num_elems, move |b, &num_elems| {
+            let _ = Runtime::new().unwrap().block_on(schedule_erc20_no_cmux(
                 b,
                 num_elems as usize,
                 bench_id.clone(),
@@ -215,7 +225,11 @@ async fn schedule_erc20_whitepaper(
     Ok(())
 }
 
-async fn schedule_erc20_no_cmux() -> Result<(), Box<dyn std::error::Error>> {
+async fn schedule_erc20_no_cmux(
+    bencher: &mut Bencher<'_, WallTime>,
+    num_tx: usize,
+    bench_id: String,
+) -> Result<(), Box<dyn std::error::Error>> {
     let app = setup_test_app().await?;
     let pool = sqlx::postgres::PgPoolOptions::new()
         .max_connections(2)
@@ -257,7 +271,6 @@ async fn schedule_erc20_no_cmux() -> Result<(), Box<dyn std::error::Error>> {
             .unwrap();
 
         let serialized = safe_serialize(&the_list);
-        println!("Encrypting inputs...");
         let mut input_request = tonic::Request::new(InputUploadBatch {
             input_ciphertexts: vec![InputToUpload {
                 input_payload: serialized,
@@ -349,7 +362,6 @@ async fn schedule_erc20_no_cmux() -> Result<(), Box<dyn std::error::Error>> {
         });
     }
 
-    println!("Scheduling computations...");
     let mut compute_request = tonic::Request::new(AsyncComputeRequest {
         computations: async_computations,
     });
@@ -359,30 +371,22 @@ async fn schedule_erc20_no_cmux() -> Result<(), Box<dyn std::error::Error>> {
     );
     let _resp = client.async_compute(compute_request).await?;
 
-    println!("Computations scheduled, waiting upon completion...");
-    let now = SystemTime::now();
+    bencher.to_async(FuturesExecutor).iter(|| async {
+        let now = SystemTime::now();
+        wait_until_all_ciphertexts_computed(&app).await.unwrap();
+        println!("Execution time: {}", now.elapsed().unwrap().as_millis());
+    });
 
-    wait_until_all_ciphertexts_computed(&app).await?;
-    println!("Execution time: {}", now.elapsed().unwrap().as_millis());
-
-    let decrypt_request = output_handles.clone();
-    let resp = decrypt_ciphertexts(&pool, 1, decrypt_request).await?;
-
-    assert_eq!(
-        resp.len(),
-        output_handles.len(),
-        "Outputs length doesn't match"
+    let params = keys.1.computation_parameters();
+    write_to_json::<u64, _>(
+        &bench_id,
+        params,
+        "",
+        "erc20-transfer",
+        &OperatorType::Atomic,
+        64,
+        vec![],
     );
-    for (i, r) in resp.iter().enumerate() {
-        match r.value.as_str() {
-            "true" if i % 5 == 0 => (), // trxa <= bals true
-            "1" if i % 5 == 1 => (),    // cast
-            "10" if i % 5 == 2 => (),   // select trxa * cast
-            "30" if i % 5 == 3 => (),   // bals + selected trxa
-            "90" if i % 5 == 4 => (),   // bald - selected trxa
-            s => panic!("unexpected result: {} for output {i}", s),
-        }
-    }
     Ok(())
 }
 
