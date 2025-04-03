@@ -55,7 +55,6 @@ jobs:
     steps:
       - name: Start remote instance
         id: start-remote-instance
-        if: env.SECRETS_AVAILABLE == 'true'
         uses: zama-ai/slab-github-runner@79939325c3c429837c10d6041e4fd8589d328bac
         with:
           mode: start
@@ -63,7 +62,7 @@ jobs:
           slab-url: ${{ secrets.SLAB_BASE_URL }}
           job-secret: ${{ secrets.JOB_SECRET }}
           backend: hyperstack
-          profile: l40
+          profile: ${{ needs.parse-inputs.outputs.profile }}
 
   fhevm-coprocessor-benchmarks-gpu:
     name: Coprocessor GPU benchmarks on (${{ inputs.profile }})
