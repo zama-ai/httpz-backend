@@ -172,7 +172,7 @@ jobs:
           repository: zama-ai/slab
           path: slab
           persist-credentials: 'false'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.REPO_CHECKOUT_TOKEN }}
 
       - name: Send data to Slab
         shell: bash
