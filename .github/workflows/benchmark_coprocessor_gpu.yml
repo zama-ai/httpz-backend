@@ -63,7 +63,7 @@ jobs:
           slab-url: ${{ secrets.SLAB_BASE_URL }}
           job-secret: ${{ secrets.JOB_SECRET }}
           backend: hyperstack
-          profile: ${{ needs.parse-inputs.outputs.profile }}
+          profile: l40
 
   fhevm-coprocessor-benchmarks-gpu:
     name: Coprocessor GPU benchmarks on (${{ inputs.profile }})
