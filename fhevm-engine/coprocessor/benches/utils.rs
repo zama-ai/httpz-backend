@@ -1,11 +1,8 @@
 use coprocessor::daemon_cli::Args;
 use coprocessor::types::TfheTenantKeys;
-use fhevm_engine_common::tfhe_ops::current_ciphertext_version;
-use fhevm_engine_common::types::SupportedFheCiphertexts;
-use fhevm_engine_common::utils::{safe_deserialize, safe_deserialize_key};
+use fhevm_engine_common::utils::safe_deserialize_key;
 use rand::Rng;
 use sqlx::query;
-use std::collections::BTreeMap;
 use std::sync::atomic::{AtomicU16, Ordering};
 use std::sync::Arc;
 use testcontainers::{core::WaitFor, runners::AsyncRunner, GenericImage, ImageExt};
@@ -238,86 +235,6 @@ pub async fn setup_test_user(pool: &sqlx::PgPool) -> Result<(), Box<dyn std::err
     .await?;
 
     Ok(())
-}
-
-pub async fn decrypt_ciphertexts(
-    pool: &sqlx::PgPool,
-    tenant_id: i32,
-    input: Vec<Vec<u8>>,
-) -> Result<Vec<DecryptionResult>, Box<dyn std::error::Error>> {
-    let mut keys = sqlx::query!(
-        "
-            SELECT cks_key, sks_key
-            FROM tenants
-            WHERE tenant_id = $1
-        ",
-        tenant_id
-    )
-    .fetch_all(pool)
-    .await?;
-    if keys.is_empty() || keys[0].cks_key.is_none() {
-        panic!("tenant keys not found");
-    }
-
-    let mut ct_indexes: BTreeMap<&[u8], usize> = BTreeMap::new();
-    for (idx, h) in input.iter().enumerate() {
-        ct_indexes.insert(h.as_slice(), idx);
-    }
-    let cts = sqlx::query!(
-        "
-            SELECT ciphertext, ciphertext_type, handle
-            FROM ciphertexts
-            WHERE tenant_id = $1
-            AND handle = ANY($2::BYTEA[])
-            AND ciphertext_version = $3
-        ",
-        tenant_id,
-        &input,
-        current_ciphertext_version()
-    )
-    .fetch_all(pool)
-    .await?;
-    if cts.is_empty() {
-        panic!("ciphertext not found");
-    }
-
-    assert_eq!(keys.len(), 1);
-    let keys = keys.pop().unwrap();
-
-    let mut values = tokio::task::spawn_blocking(move || {
-        let cks = keys.cks_key.clone().unwrap();
-        let client_key: tfhe::ClientKey = safe_deserialize(&cks).unwrap();
-        #[cfg(not(feature = "gpu"))]
-        let sks: tfhe::ServerKey = safe_deserialize_key(&keys.sks_key).unwrap();
-        #[cfg(feature = "gpu")]
-        let sks = {
-            let csks: tfhe::CompressedServerKey = safe_deserialize_key(&keys.sks_key).unwrap();
-            csks.decompress()
-        };
-        tfhe::set_server_key(sks);
-
-        let mut decrypted: Vec<(Vec<u8>, DecryptionResult)> = Vec::with_capacity(cts.len());
-        for ct in cts {
-            let deserialized =
-                SupportedFheCiphertexts::decompress(ct.ciphertext_type, &ct.ciphertext).unwrap();
-            decrypted.push((
-                ct.handle,
-                DecryptionResult {
-                    output_type: ct.ciphertext_type,
-                    value: deserialized.decrypt(&client_key),
-                },
-            ));
-        }
-
-        decrypted
-    })
-    .await
-    .unwrap();
-
-    values.sort_by_key(|(h, _)| ct_indexes.get(h.as_slice()).unwrap());
-
-    let values = values.into_iter().map(|i| i.1).collect::<Vec<_>>();
-    Ok(values)
 }
 
 pub async fn query_tenant_keys<'a, T>(
