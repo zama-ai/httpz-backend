@@ -9,7 +9,7 @@ use sqlx::PgPool;
 use std::time::Duration;
 use test_harness::db_utils::insert_random_tenant;
 use tokio::time::sleep;
-use transaction_sender::{ProviderFillers, TransactionSender};
+use transaction_sender::{DefaultProviderFillers, NonceManagedProvider, TransactionSender};
 
 mod common;
 
@@ -17,12 +17,15 @@ mod common;
 #[serial(db)]
 async fn test_allow_handle() -> anyhow::Result<()> {
     let env = TestEnvironment::new().await?;
-    let provider = ProviderBuilder::default()
-        .wallet(env.wallet)
-        .filler(ProviderFillers::default())
-        .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
-        .await?;
-    let acl_manager = ACLManager::deploy(&provider).await?;
+    let provider = NonceManagedProvider::new(
+        ProviderBuilder::default()
+            .wallet(env.wallet)
+            .filler(DefaultProviderFillers::default())
+            .on_ws(WsConnect::new(env.anvil.ws_endpoint_url()))
+            .await?,
+        Some(env.signer.address()),
+    );
+    let acl_manager = ACLManager::deploy(provider.inner()).await?;
 
     let txn_sender = TransactionSender::new(
         PrivateKeySigner::random().address(),
