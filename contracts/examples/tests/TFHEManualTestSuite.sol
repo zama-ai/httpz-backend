@@ -5,18 +5,17 @@ import "../../lib/TFHE.sol";
 import "../../lib/FHEVMConfig.sol";
 
 contract TFHEManualTestSuite {
-    ebool public resb;
-    euint4 public res4;
-    euint8 public res8;
-    euint16 public res16;
-    euint32 public res32;
-    euint64 public res64;
-    euint128 public res128;
-    euint256 public res256;
+    ebool public resEbool;
+    euint8 public resEuint8;
+    euint16 public resEuint16;
+    euint32 public resEuint32;
+    euint64 public resEuint64;
+    euint128 public resEuint128;
+    euint256 public resEuint256;
     eaddress public resAdd;
-    ebytes64 public resB64;
-    ebytes128 public resB128;
-    ebytes256 public resB256;
+    ebytes64 public resEbytes64;
+    ebytes128 public resEbytes128;
+    ebytes256 public resEbytes256;
 
     constructor() {
         TFHE.setFHEVM(FHEVMConfig.defaultConfig()); // Set up the FHEVM configuration for this contract
@@ -27,21 +26,21 @@ contract TFHEManualTestSuite {
         ebool input2 = TFHE.asEbool(b);
         ebool result = TFHE.eq(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function eqEboolScalarL(bool a, bool b) external {
         ebool input2 = TFHE.asEbool(b);
         ebool result = TFHE.eq(a, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function eqEboolScalarR(bool a, bool b) external {
         ebool input1 = TFHE.asEbool(a);
         ebool result = TFHE.eq(input1, b);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function neEbool(bool a, bool b) external {
@@ -49,21 +48,21 @@ contract TFHEManualTestSuite {
         ebool input2 = TFHE.asEbool(b);
         ebool result = TFHE.ne(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function neEboolScalarL(bool a, bool b) external {
         ebool input2 = TFHE.asEbool(b);
         ebool result = TFHE.ne(a, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function neEboolScalarR(bool a, bool b) external {
         ebool input1 = TFHE.asEbool(a);
         ebool result = TFHE.ne(input1, b);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function eqEbytes256(einput inp1, bytes calldata inputProof1, einput inp2, bytes calldata inputProof2) external {
@@ -71,7 +70,7 @@ contract TFHEManualTestSuite {
         ebytes256 input2 = TFHE.asEbytes256(inp2, inputProof2);
         ebool result = TFHE.eq(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function neEbytes256(einput inp1, bytes calldata inputProof1, einput inp2, bytes calldata inputProof2) external {
@@ -79,7 +78,7 @@ contract TFHEManualTestSuite {
         ebytes256 input2 = TFHE.asEbytes256(inp2, inputProof2);
         ebool result = TFHE.ne(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function eqEbytes64(bytes memory a, bytes memory b) external {
@@ -87,7 +86,7 @@ contract TFHEManualTestSuite {
         ebytes64 input2 = TFHE.asEbytes64(TFHE.padToBytes64(b));
         ebool result = TFHE.eq(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function eqEbytes64ScalarL(bytes memory a, bytes memory b) external {
@@ -95,7 +94,7 @@ contract TFHEManualTestSuite {
         ebytes64 input2 = TFHE.asEbytes64(TFHE.padToBytes64(b));
         ebool result = TFHE.eq(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function eqEbytes64ScalarR(bytes memory a, bytes memory b) external {
@@ -103,7 +102,7 @@ contract TFHEManualTestSuite {
         bytes memory input2 = TFHE.padToBytes64(b);
         ebool result = TFHE.eq(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function neEbytes64(bytes memory a, bytes memory b) external {
@@ -111,7 +110,7 @@ contract TFHEManualTestSuite {
         ebytes64 input2 = TFHE.asEbytes64(TFHE.padToBytes64(b));
         ebool result = TFHE.ne(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function neEbytes64ScalarL(bytes memory a, bytes memory b) external {
@@ -119,7 +118,7 @@ contract TFHEManualTestSuite {
         ebytes64 input2 = TFHE.asEbytes64(TFHE.padToBytes64(b));
         ebool result = TFHE.ne(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function neEbytes64ScalarR(bytes memory a, bytes memory b) external {
@@ -127,7 +126,7 @@ contract TFHEManualTestSuite {
         bytes memory input2 = TFHE.padToBytes64(b);
         ebool result = TFHE.ne(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function eqEbytes128(bytes memory a, bytes memory b) external {
@@ -135,7 +134,7 @@ contract TFHEManualTestSuite {
         ebytes128 input2 = TFHE.asEbytes128(TFHE.padToBytes128(b));
         ebool result = TFHE.eq(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function eqEbytes128ScalarL(bytes memory a, bytes memory b) external {
@@ -143,7 +142,7 @@ contract TFHEManualTestSuite {
         ebytes128 input2 = TFHE.asEbytes128(TFHE.padToBytes128(b));
         ebool result = TFHE.eq(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function eqEbytes128ScalarR(bytes memory a, bytes memory b) external {
@@ -151,7 +150,7 @@ contract TFHEManualTestSuite {
         bytes memory input2 = TFHE.padToBytes128(b);
         ebool result = TFHE.eq(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function neEbytes128(bytes memory a, bytes memory b) external {
@@ -159,7 +158,7 @@ contract TFHEManualTestSuite {
         ebytes128 input2 = TFHE.asEbytes128(TFHE.padToBytes128(b));
         ebool result = TFHE.ne(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function neEbytes128ScalarL(bytes memory a, bytes memory b) external {
@@ -167,7 +166,7 @@ contract TFHEManualTestSuite {
         ebytes128 input2 = TFHE.asEbytes128(TFHE.padToBytes128(b));
         ebool result = TFHE.ne(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function neEbytes128ScalarR(bytes memory a, bytes memory b) external {
@@ -175,7 +174,7 @@ contract TFHEManualTestSuite {
         bytes memory input2 = TFHE.padToBytes128(b);
         ebool result = TFHE.ne(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function eqEbytes256ScalarL(bytes memory a, bytes memory b) external {
@@ -183,7 +182,7 @@ contract TFHEManualTestSuite {
         ebytes256 input2 = TFHE.asEbytes256(TFHE.padToBytes256(b));
         ebool result = TFHE.eq(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function eqEbytes256ScalarR(bytes memory a, bytes memory b) external {
@@ -191,7 +190,7 @@ contract TFHEManualTestSuite {
         bytes memory input2 = TFHE.padToBytes256(b);
         ebool result = TFHE.eq(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function neEbytes256ScalarL(bytes memory a, bytes memory b) external {
@@ -199,7 +198,7 @@ contract TFHEManualTestSuite {
         ebytes256 input2 = TFHE.asEbytes256(TFHE.padToBytes256(b));
         ebool result = TFHE.ne(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function neEbytes256ScalarR(bytes memory a, bytes memory b) external {
@@ -207,7 +206,7 @@ contract TFHEManualTestSuite {
         bytes memory input2 = TFHE.padToBytes256(b);
         ebool result = TFHE.ne(input1, input2);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function test_select_ebool(bool control, bool ifTrue, bool ifFalse) public {
@@ -216,7 +215,7 @@ contract TFHEManualTestSuite {
         ebool ifFalseProc = TFHE.asEbool(ifFalse);
         ebool result = TFHE.select(controlProc, ifTrueProc, ifFalseProc);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function test_select_ebytes64(bool control, bytes memory ifTrue, bytes memory ifFalse) public {
@@ -225,7 +224,7 @@ contract TFHEManualTestSuite {
         ebytes64 ifFalseProc = TFHE.asEbytes64(TFHE.padToBytes64(ifFalse));
         ebytes64 result = TFHE.select(controlProc, ifTrueProc, ifFalseProc);
         TFHE.allowThis(result);
-        resB64 = result;
+        resEbytes64 = result;
     }
 
     function test_select_ebytes128(bool control, bytes memory ifTrue, bytes memory ifFalse) public {
@@ -234,7 +233,7 @@ contract TFHEManualTestSuite {
         ebytes128 ifFalseProc = TFHE.asEbytes128(TFHE.padToBytes128(ifFalse));
         ebytes128 result = TFHE.select(controlProc, ifTrueProc, ifFalseProc);
         TFHE.allowThis(result);
-        resB128 = result;
+        resEbytes128 = result;
     }
 
     function test_select_ebytes256(bool control, bytes memory ifTrue, bytes memory ifFalse) public {
@@ -243,7 +242,7 @@ contract TFHEManualTestSuite {
         ebytes256 ifFalseProc = TFHE.asEbytes256(TFHE.padToBytes256(ifFalse));
         ebytes256 result = TFHE.select(controlProc, ifTrueProc, ifFalseProc);
         TFHE.allowThis(result);
-        resB256 = result;
+        resEbytes256 = result;
     }
 
     function test_select(einput control, einput ifTrue, einput ifFalse, bytes calldata inputProof) public {
@@ -252,7 +251,7 @@ contract TFHEManualTestSuite {
         euint32 ifFalseProc = TFHE.asEuint32(ifFalse, inputProof);
         euint32 result = TFHE.select(controlProc, ifTrueProc, ifFalseProc);
         TFHE.allowThis(result);
-        res32 = result;
+        resEuint32 = result;
     }
 
     function test_select_eaddress(einput control, einput ifTrue, einput ifFalse, bytes calldata inputProof) public {
@@ -269,7 +268,7 @@ contract TFHEManualTestSuite {
         eaddress bProc = TFHE.asEaddress(b, inputProof);
         ebool result = TFHE.eq(aProc, bProc);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function test_ne_eaddress_eaddress(einput a, einput b, bytes calldata inputProof) public {
@@ -277,110 +276,102 @@ contract TFHEManualTestSuite {
         eaddress bProc = TFHE.asEaddress(b, inputProof);
         ebool result = TFHE.ne(aProc, bProc);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function test_eq_eaddress_address(einput a, address b, bytes calldata inputProof) public {
         eaddress aProc = TFHE.asEaddress(a, inputProof);
         ebool result = TFHE.eq(aProc, b);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function test_eq_address_eaddress(einput a, address b, bytes calldata inputProof) public {
         eaddress aProc = TFHE.asEaddress(a, inputProof);
         ebool result = TFHE.eq(b, aProc);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function test_ne_eaddress_address(einput a, address b, bytes calldata inputProof) public {
         eaddress aProc = TFHE.asEaddress(a, inputProof);
         ebool result = TFHE.ne(aProc, b);
         TFHE.allowThis(result);
-        resb = result;
+        resEbool = result;
     }
 
     function test_ne_address_eaddress(einput a, address b, bytes calldata inputProof) public {
         eaddress aProc = TFHE.asEaddress(a, inputProof);
         ebool result = TFHE.ne(b, aProc);
         TFHE.allowThis(result);
-        resb = result;
-    }
-
-    function test_ebool_to_euint4_cast(bool input) public {
-        res4 = TFHE.asEuint4(TFHE.asEbool(input));
+        resEbool = result;
     }
 
     function test_ebool_to_euint8_cast(bool input) public {
-        res8 = TFHE.asEuint8(TFHE.asEbool(input));
+        resEuint8 = TFHE.asEuint8(TFHE.asEbool(input));
     }
 
     function test_ebool_to_euint16_cast(bool input) public {
-        res16 = TFHE.asEuint16(TFHE.asEbool(input));
+        resEuint16 = TFHE.asEuint16(TFHE.asEbool(input));
     }
 
     function test_ebool_to_euint32_cast(bool input) public {
-        res32 = TFHE.asEuint32(TFHE.asEbool(input));
+        resEuint32 = TFHE.asEuint32(TFHE.asEbool(input));
     }
 
     function test_ebool_to_euint64_cast(bool input) public {
-        res64 = TFHE.asEuint64(TFHE.asEbool(input));
+        resEuint64 = TFHE.asEuint64(TFHE.asEbool(input));
     }
 
     function test_ebool_to_euint128_cast(bool input) public {
-        res128 = TFHE.asEuint128(TFHE.asEbool(input));
+        resEuint128 = TFHE.asEuint128(TFHE.asEbool(input));
     }
 
     function test_ebool_to_euint256_cast(bool input) public {
-        res256 = TFHE.asEuint256(TFHE.asEbool(input));
-    }
-
-    function test_euint4_to_euint256_cast(uint8 input) public {
-        res256 = TFHE.asEuint256(TFHE.asEuint4(input));
+        resEuint256 = TFHE.asEuint256(TFHE.asEbool(input));
     }
 
     function test_euint128_to_euint8_cast(uint128 input) public {
-        res8 = TFHE.asEuint8(TFHE.asEuint128(input));
+        resEuint8 = TFHE.asEuint8(TFHE.asEuint128(input));
     }
 
     function test_ebool_not(bool input) public {
-        resb = TFHE.not(TFHE.asEbool(input));
+        resEbool = TFHE.not(TFHE.asEbool(input));
     }
 
     function test_ebool_and(bool a, bool b) public {
-        resb = TFHE.and(TFHE.asEbool(a), TFHE.asEbool(b));
+        resEbool = TFHE.and(TFHE.asEbool(a), TFHE.asEbool(b));
     }
 
     function test_ebool_and_scalarL(bool a, bool b) public {
-        resb = TFHE.and(a, TFHE.asEbool(b));
+        resEbool = TFHE.and(a, TFHE.asEbool(b));
     }
 
     function test_ebool_and_scalarR(bool a, bool b) public {
-        resb = TFHE.and(TFHE.asEbool(a), b);
+        resEbool = TFHE.and(TFHE.asEbool(a), b);
     }
 
     function test_ebool_or(bool a, bool b) public {
-        resb = TFHE.or(TFHE.asEbool(a), TFHE.asEbool(b));
+        resEbool = TFHE.or(TFHE.asEbool(a), TFHE.asEbool(b));
     }
 
     function test_ebool_or_scalarL(bool a, bool b) public {
-        resb = TFHE.or(a, TFHE.asEbool(b));
+        resEbool = TFHE.or(a, TFHE.asEbool(b));
     }
 
     function test_ebool_or_scalarR(bool a, bool b) public {
-        resb = TFHE.or(TFHE.asEbool(a), b);
+        resEbool = TFHE.or(TFHE.asEbool(a), b);
     }
 
     function test_ebool_xor(bool a, bool b) public {
-        resb = TFHE.xor(TFHE.asEbool(a), TFHE.asEbool(b));
+        resEbool = TFHE.xor(TFHE.asEbool(a), TFHE.asEbool(b));
     }
 
     function test_ebool_xor_scalarL(bool a, bool b) public {
-        resb = TFHE.xor(a, TFHE.asEbool(b));
+        resEbool = TFHE.xor(a, TFHE.asEbool(b));
     }
 
     function test_ebool_xor_scalarR(bool a, bool b) public {
-        resb = TFHE.xor(TFHE.asEbool(a), b);
+        resEbool = TFHE.xor(TFHE.asEbool(a), b);
     }
 }

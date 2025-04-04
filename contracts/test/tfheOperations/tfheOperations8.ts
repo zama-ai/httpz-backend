@@ -8,13 +8,8 @@ import type { TFHETestSuite4 } from '../../types/contracts/tests/TFHETestSuite4'
 import type { TFHETestSuite5 } from '../../types/contracts/tests/TFHETestSuite5';
 import type { TFHETestSuite6 } from '../../types/contracts/tests/TFHETestSuite6';
 import type { TFHETestSuite7 } from '../../types/contracts/tests/TFHETestSuite7';
-import type { TFHETestSuite8 } from '../../types/contracts/tests/TFHETestSuite8';
-import type { TFHETestSuite9 } from '../../types/contracts/tests/TFHETestSuite9';
-import type { TFHETestSuite10 } from '../../types/contracts/tests/TFHETestSuite10';
-import type { TFHETestSuite11 } from '../../types/contracts/tests/TFHETestSuite11';
 import {
   createInstances,
-  decrypt4,
   decrypt8,
   decrypt16,
   decrypt32,
@@ -102,50 +97,6 @@ async function deployTfheTestFixture7(): Promise<TFHETestSuite7> {
   return contract;
 }
 
-async function deployTfheTestFixture8(): Promise<TFHETestSuite8> {
-  const signers = await getSigners();
-  const admin = signers.alice;
-
-  const contractFactory = await ethers.getContractFactory('TFHETestSuite8');
-  const contract = await contractFactory.connect(admin).deploy();
-  await contract.waitForDeployment();
-
-  return contract;
-}
-
-async function deployTfheTestFixture9(): Promise<TFHETestSuite9> {
-  const signers = await getSigners();
-  const admin = signers.alice;
-
-  const contractFactory = await ethers.getContractFactory('TFHETestSuite9');
-  const contract = await contractFactory.connect(admin).deploy();
-  await contract.waitForDeployment();
-
-  return contract;
-}
-
-async function deployTfheTestFixture10(): Promise<TFHETestSuite10> {
-  const signers = await getSigners();
-  const admin = signers.alice;
-
-  const contractFactory = await ethers.getContractFactory('TFHETestSuite10');
-  const contract = await contractFactory.connect(admin).deploy();
-  await contract.waitForDeployment();
-
-  return contract;
-}
-
-async function deployTfheTestFixture11(): Promise<TFHETestSuite11> {
-  const signers = await getSigners();
-  const admin = signers.alice;
-
-  const contractFactory = await ethers.getContractFactory('TFHETestSuite11');
-  const contract = await contractFactory.connect(admin).deploy();
-  await contract.waitForDeployment();
-
-  return contract;
-}
-
 describe('TFHE operations 8', function () {
   before(async function () {
     await initSigners(1);
@@ -179,4673 +130,2907 @@ describe('TFHE operations 8', function () {
     this.contract7Address = await contract7.getAddress();
     this.contract7 = contract7;
 
-    const contract8 = await deployTfheTestFixture8();
-    this.contract8Address = await contract8.getAddress();
-    this.contract8 = contract8;
-
-    const contract9 = await deployTfheTestFixture9();
-    this.contract9Address = await contract9.getAddress();
-    this.contract9 = contract9;
-
-    const contract10 = await deployTfheTestFixture10();
-    this.contract10Address = await contract10.getAddress();
-    this.contract10 = contract10;
-
-    const contract11 = await deployTfheTestFixture11();
-    this.contract11Address = await contract11.getAddress();
-    this.contract11 = contract11;
-
     const instances = await createInstances(this.signers);
     this.instances = instances;
   });
 
-  it('test operator "eq" overload (euint64, euint32) => ebool test 1 (18443073273307378367, 1540281447)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443073273307378367n);
-    input.add32(1540281447n);
+  it('test operator "ge" overload (euint128, euint128) => ebool test 1 (340282366920938463463371878378473874149, 340282366920938463463371817794816906113)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463371878378473874149n);
+    input.add128(340282366920938463463371817794816906113n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint32(
+    const tx = await this.contract5.ge_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "ge" overload (euint128, euint128) => ebool test 2 (340282366920938463463371817794816906109, 340282366920938463463371817794816906113)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463371817794816906109n);
+    input.add128(340282366920938463463371817794816906113n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ge_euint128_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "eq" overload (euint64, euint32) => ebool test 2 (1540281443, 1540281447)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(1540281443n);
-    input.add32(1540281447n);
+  it('test operator "ge" overload (euint128, euint128) => ebool test 3 (340282366920938463463371817794816906113, 340282366920938463463371817794816906113)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463371817794816906113n);
+    input.add128(340282366920938463463371817794816906113n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint32(
+    const tx = await this.contract5.ge_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "ge" overload (euint128, euint128) => ebool test 4 (340282366920938463463371817794816906113, 340282366920938463463371817794816906109)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463371817794816906113n);
+    input.add128(340282366920938463463371817794816906109n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ge_euint128_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "gt" overload (euint128, euint128) => ebool test 1 (340282366920938463463373466068258350953, 340282366920938463463368725843962081015)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463373466068258350953n);
+    input.add128(340282366920938463463368725843962081015n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.gt_euint128_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "gt" overload (euint128, euint128) => ebool test 2 (340282366920938463463368725843962081011, 340282366920938463463368725843962081015)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463368725843962081011n);
+    input.add128(340282366920938463463368725843962081015n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.gt_euint128_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "eq" overload (euint64, euint32) => ebool test 3 (1540281447, 1540281447)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(1540281447n);
-    input.add32(1540281447n);
+  it('test operator "gt" overload (euint128, euint128) => ebool test 3 (340282366920938463463368725843962081015, 340282366920938463463368725843962081015)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463368725843962081015n);
+    input.add128(340282366920938463463368725843962081015n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint32(
+    const tx = await this.contract5.gt_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "eq" overload (euint64, euint32) => ebool test 4 (1540281447, 1540281443)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(1540281447n);
-    input.add32(1540281443n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint32(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "ne" overload (euint64, euint32) => ebool test 1 (18443424543399945811, 2475089443)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443424543399945811n);
-    input.add32(2475089443n);
+  it('test operator "gt" overload (euint128, euint128) => ebool test 4 (340282366920938463463368725843962081015, 340282366920938463463368725843962081011)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463368725843962081015n);
+    input.add128(340282366920938463463368725843962081011n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint32(
+    const tx = await this.contract5.gt_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(true);
   });
 
-  it('test operator "ne" overload (euint64, euint32) => ebool test 2 (2475089439, 2475089443)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(2475089439n);
-    input.add32(2475089443n);
+  it('test operator "le" overload (euint128, euint128) => ebool test 1 (340282366920938463463366070522534059797, 340282366920938463463369964117073493025)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463366070522534059797n);
+    input.add128(340282366920938463463369964117073493025n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint32(
+    const tx = await this.contract5.le_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(true);
   });
 
-  it('test operator "ne" overload (euint64, euint32) => ebool test 3 (2475089443, 2475089443)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(2475089443n);
-    input.add32(2475089443n);
+  it('test operator "le" overload (euint128, euint128) => ebool test 2 (340282366920938463463366070522534059793, 340282366920938463463366070522534059797)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463366070522534059793n);
+    input.add128(340282366920938463463366070522534059797n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint32(
+    const tx = await this.contract5.le_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "le" overload (euint128, euint128) => ebool test 3 (340282366920938463463366070522534059797, 340282366920938463463366070522534059797)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463366070522534059797n);
+    input.add128(340282366920938463463366070522534059797n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.le_euint128_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "le" overload (euint128, euint128) => ebool test 4 (340282366920938463463366070522534059797, 340282366920938463463366070522534059793)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463366070522534059797n);
+    input.add128(340282366920938463463366070522534059793n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.le_euint128_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "ne" overload (euint64, euint32) => ebool test 4 (2475089443, 2475089439)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(2475089443n);
-    input.add32(2475089439n);
+  it('test operator "lt" overload (euint128, euint128) => ebool test 1 (340282366920938463463373178800352805043, 340282366920938463463370558820913344395)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463373178800352805043n);
+    input.add128(340282366920938463463370558820913344395n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint32(
+    const tx = await this.contract5.lt_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ge" overload (euint64, euint32) => ebool test 1 (18439654895803536359, 1948462184)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439654895803536359n);
-    input.add32(1948462184n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint32(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ge" overload (euint64, euint32) => ebool test 2 (1948462180, 1948462184)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(1948462180n);
-    input.add32(1948462184n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint32(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "ge" overload (euint64, euint32) => ebool test 3 (1948462184, 1948462184)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(1948462184n);
-    input.add32(1948462184n);
+  it('test operator "lt" overload (euint128, euint128) => ebool test 2 (340282366920938463463370558820913344391, 340282366920938463463370558820913344395)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463370558820913344391n);
+    input.add128(340282366920938463463370558820913344395n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint32(
+    const tx = await this.contract5.lt_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(true);
   });
 
-  it('test operator "ge" overload (euint64, euint32) => ebool test 4 (1948462184, 1948462180)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(1948462184n);
-    input.add32(1948462180n);
+  it('test operator "lt" overload (euint128, euint128) => ebool test 3 (340282366920938463463370558820913344395, 340282366920938463463370558820913344395)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463370558820913344395n);
+    input.add128(340282366920938463463370558820913344395n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint32(
+    const tx = await this.contract5.lt_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "gt" overload (euint64, euint32) => ebool test 1 (18445739090666652013, 2575338339)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445739090666652013n);
-    input.add32(2575338339n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint32(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "gt" overload (euint64, euint32) => ebool test 2 (2575338335, 2575338339)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(2575338335n);
-    input.add32(2575338339n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint32(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "gt" overload (euint64, euint32) => ebool test 3 (2575338339, 2575338339)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(2575338339n);
-    input.add32(2575338339n);
+  it('test operator "lt" overload (euint128, euint128) => ebool test 4 (340282366920938463463370558820913344395, 340282366920938463463370558820913344391)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463370558820913344395n);
+    input.add128(340282366920938463463370558820913344391n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint32(
+    const tx = await this.contract5.lt_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "gt" overload (euint64, euint32) => ebool test 4 (2575338339, 2575338335)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(2575338339n);
-    input.add32(2575338335n);
+  it('test operator "min" overload (euint128, euint128) => euint128 test 1 (340282366920938463463371540119009257839, 340282366920938463463369872103194482123)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463371540119009257839n);
+    input.add128(340282366920938463463369872103194482123n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint32(
+    const tx = await this.contract5.min_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt128(await this.contract5.resEuint128());
+    expect(res).to.equal(340282366920938463463369872103194482123n);
   });
 
-  it('test operator "le" overload (euint64, euint32) => ebool test 1 (18442023388952183851, 1762835382)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18442023388952183851n);
-    input.add32(1762835382n);
+  it('test operator "min" overload (euint128, euint128) => euint128 test 2 (340282366920938463463369872103194482119, 340282366920938463463369872103194482123)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463369872103194482119n);
+    input.add128(340282366920938463463369872103194482123n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint32(
+    const tx = await this.contract5.min_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt128(await this.contract5.resEuint128());
+    expect(res).to.equal(340282366920938463463369872103194482119n);
   });
 
-  it('test operator "le" overload (euint64, euint32) => ebool test 2 (1762835378, 1762835382)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(1762835378n);
-    input.add32(1762835382n);
+  it('test operator "min" overload (euint128, euint128) => euint128 test 3 (340282366920938463463369872103194482123, 340282366920938463463369872103194482123)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463369872103194482123n);
+    input.add128(340282366920938463463369872103194482123n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint32(
+    const tx = await this.contract5.min_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt128(await this.contract5.resEuint128());
+    expect(res).to.equal(340282366920938463463369872103194482123n);
   });
 
-  it('test operator "le" overload (euint64, euint32) => ebool test 3 (1762835382, 1762835382)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(1762835382n);
-    input.add32(1762835382n);
+  it('test operator "min" overload (euint128, euint128) => euint128 test 4 (340282366920938463463369872103194482123, 340282366920938463463369872103194482119)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463369872103194482123n);
+    input.add128(340282366920938463463369872103194482119n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint32(
+    const tx = await this.contract5.min_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt128(await this.contract5.resEuint128());
+    expect(res).to.equal(340282366920938463463369872103194482119n);
   });
 
-  it('test operator "le" overload (euint64, euint32) => ebool test 4 (1762835382, 1762835378)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(1762835382n);
-    input.add32(1762835378n);
+  it('test operator "max" overload (euint128, euint128) => euint128 test 1 (340282366920938463463373294351238319455, 340282366920938463463373159732481326341)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463373294351238319455n);
+    input.add128(340282366920938463463373159732481326341n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint32(
+    const tx = await this.contract5.max_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt128(await this.contract5.resEuint128());
+    expect(res).to.equal(340282366920938463463373294351238319455n);
   });
 
-  it('test operator "lt" overload (euint64, euint32) => ebool test 1 (18441377707016357467, 2876988629)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18441377707016357467n);
-    input.add32(2876988629n);
+  it('test operator "max" overload (euint128, euint128) => euint128 test 2 (340282366920938463463373159732481326337, 340282366920938463463373159732481326341)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463373159732481326337n);
+    input.add128(340282366920938463463373159732481326341n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint32(
+    const tx = await this.contract5.max_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt128(await this.contract5.resEuint128());
+    expect(res).to.equal(340282366920938463463373159732481326341n);
   });
 
-  it('test operator "lt" overload (euint64, euint32) => ebool test 2 (2876988625, 2876988629)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(2876988625n);
-    input.add32(2876988629n);
+  it('test operator "max" overload (euint128, euint128) => euint128 test 3 (340282366920938463463373159732481326341, 340282366920938463463373159732481326341)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463373159732481326341n);
+    input.add128(340282366920938463463373159732481326341n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint32(
+    const tx = await this.contract5.max_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt128(await this.contract5.resEuint128());
+    expect(res).to.equal(340282366920938463463373159732481326341n);
   });
 
-  it('test operator "lt" overload (euint64, euint32) => ebool test 3 (2876988629, 2876988629)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(2876988629n);
-    input.add32(2876988629n);
+  it('test operator "max" overload (euint128, euint128) => euint128 test 4 (340282366920938463463373159732481326341, 340282366920938463463373159732481326337)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463373159732481326341n);
+    input.add128(340282366920938463463373159732481326337n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint32(
+    const tx = await this.contract5.max_euint128_euint128(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt128(await this.contract5.resEuint128());
+    expect(res).to.equal(340282366920938463463373159732481326341n);
   });
 
-  it('test operator "lt" overload (euint64, euint32) => ebool test 4 (2876988629, 2876988625)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(2876988629n);
-    input.add32(2876988625n);
+  it('test operator "and" overload (euint128, euint256) => euint256 test 1 (340282366920938463463367431691506925051, 115792089237316195423570985008687907853269984665640564039457578403191444505187)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463367431691506925051n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457578403191444505187n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint32(
+    const tx = await this.contract5.and_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463366726686515167331n);
   });
 
-  it('test operator "min" overload (euint64, euint32) => euint64 test 1 (18439611592084278651, 1078993829)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439611592084278651n);
-    input.add32(1078993829n);
+  it('test operator "and" overload (euint128, euint256) => euint256 test 2 (340282366920938463463367431691506925047, 340282366920938463463367431691506925051)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463367431691506925047n);
+    input.add256(340282366920938463463367431691506925051n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint32(
+    const tx = await this.contract5.and_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(1078993829n);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463367431691506925043n);
   });
 
-  it('test operator "min" overload (euint64, euint32) => euint64 test 2 (1078993825, 1078993829)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(1078993825n);
-    input.add32(1078993829n);
+  it('test operator "and" overload (euint128, euint256) => euint256 test 3 (340282366920938463463367431691506925051, 340282366920938463463367431691506925051)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463367431691506925051n);
+    input.add256(340282366920938463463367431691506925051n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint32(
+    const tx = await this.contract5.and_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(1078993825n);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463367431691506925051n);
   });
 
-  it('test operator "min" overload (euint64, euint32) => euint64 test 3 (1078993829, 1078993829)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(1078993829n);
-    input.add32(1078993829n);
+  it('test operator "and" overload (euint128, euint256) => euint256 test 4 (340282366920938463463367431691506925051, 340282366920938463463367431691506925047)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463367431691506925051n);
+    input.add256(340282366920938463463367431691506925047n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint32(
+    const tx = await this.contract5.and_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(1078993829n);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463367431691506925043n);
   });
 
-  it('test operator "min" overload (euint64, euint32) => euint64 test 4 (1078993829, 1078993825)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(1078993829n);
-    input.add32(1078993825n);
+  it('test operator "or" overload (euint128, euint256) => euint256 test 1 (340282366920938463463367165254567953509, 115792089237316195423570985008687907853269984665640564039457583848360202399085)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463367165254567953509n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457583848360202399085n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint32(
+    const tx = await this.contract5.or_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(1078993825n);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457583990197329063277n);
   });
 
-  it('test operator "max" overload (euint64, euint32) => euint64 test 1 (18438142521959169981, 4265760124)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438142521959169981n);
-    input.add32(4265760124n);
+  it('test operator "or" overload (euint128, euint256) => euint256 test 2 (340282366920938463463367165254567953505, 340282366920938463463367165254567953509)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463367165254567953505n);
+    input.add256(340282366920938463463367165254567953509n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint32(
+    const tx = await this.contract5.or_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18438142521959169981n);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463367165254567953509n);
   });
 
-  it('test operator "max" overload (euint64, euint32) => euint64 test 2 (4265760120, 4265760124)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4265760120n);
-    input.add32(4265760124n);
+  it('test operator "or" overload (euint128, euint256) => euint256 test 3 (340282366920938463463367165254567953509, 340282366920938463463367165254567953509)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463367165254567953509n);
+    input.add256(340282366920938463463367165254567953509n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint32(
+    const tx = await this.contract5.or_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(4265760124n);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463367165254567953509n);
   });
 
-  it('test operator "max" overload (euint64, euint32) => euint64 test 3 (4265760124, 4265760124)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4265760124n);
-    input.add32(4265760124n);
+  it('test operator "or" overload (euint128, euint256) => euint256 test 4 (340282366920938463463367165254567953509, 340282366920938463463367165254567953505)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463367165254567953509n);
+    input.add256(340282366920938463463367165254567953505n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint32(
+    const tx = await this.contract5.or_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(4265760124n);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463367165254567953509n);
   });
 
-  it('test operator "max" overload (euint64, euint32) => euint64 test 4 (4265760124, 4265760120)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4265760124n);
-    input.add32(4265760120n);
+  it('test operator "xor" overload (euint128, euint256) => euint256 test 1 (340282366920938463463370554464339412497, 115792089237316195423570985008687907853269984665640564039457580202086892371107)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463370554464339412497n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457580202086892371107n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint32(
+    const tx = await this.contract5.xor_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(4265760124n);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907852929702298719625575994210494804586019506n);
   });
 
-  it('test operator "add" overload (euint64, euint64) => euint64 test 1 (9222005500490563257, 9222323180954998973)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9222005500490563257n);
-    input.add64(9222323180954998973n);
+  it('test operator "xor" overload (euint128, euint256) => euint256 test 2 (340282366920938463463370554464339412493, 340282366920938463463370554464339412497)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463370554464339412493n);
+    input.add256(340282366920938463463370554464339412497n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_euint64(
+    const tx = await this.contract5.xor_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18444328681445562230n);
-  });
-
-  it('test operator "add" overload (euint64, euint64) => euint64 test 2 (9222005500490563255, 9222005500490563257)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9222005500490563255n);
-    input.add64(9222005500490563257n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18444011000981126512n);
-  });
-
-  it('test operator "add" overload (euint64, euint64) => euint64 test 3 (9222005500490563257, 9222005500490563257)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9222005500490563257n);
-    input.add64(9222005500490563257n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18444011000981126514n);
-  });
-
-  it('test operator "add" overload (euint64, euint64) => euint64 test 4 (9222005500490563257, 9222005500490563255)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9222005500490563257n);
-    input.add64(9222005500490563255n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18444011000981126512n);
-  });
-
-  it('test operator "sub" overload (euint64, euint64) => euint64 test 1 (18440691834306324731, 18440691834306324731)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440691834306324731n);
-    input.add64(18440691834306324731n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.sub_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(0n);
-  });
-
-  it('test operator "sub" overload (euint64, euint64) => euint64 test 2 (18440691834306324731, 18440691834306324727)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440691834306324731n);
-    input.add64(18440691834306324727n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.sub_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(4n);
-  });
-
-  it('test operator "mul" overload (euint64, euint64) => euint64 test 1 (4294482875, 4294789499)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4294482875n);
-    input.add64(4294789499n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18443899955185329625n);
-  });
-
-  it('test operator "mul" overload (euint64, euint64) => euint64 test 2 (4294482875, 4294482875)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4294482875n);
-    input.add64(4294482875n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442583163668265625n);
-  });
-
-  it('test operator "mul" overload (euint64, euint64) => euint64 test 3 (4294482875, 4294482875)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4294482875n);
-    input.add64(4294482875n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442583163668265625n);
-  });
-
-  it('test operator "mul" overload (euint64, euint64) => euint64 test 4 (4294482875, 4294482875)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4294482875n);
-    input.add64(4294482875n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442583163668265625n);
-  });
-
-  it('test operator "and" overload (euint64, euint64) => euint64 test 1 (18444124970074897317, 18442657213736743287)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444124970074897317n);
-    input.add64(18442657213736743287n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442294351260348709n);
-  });
-
-  it('test operator "and" overload (euint64, euint64) => euint64 test 2 (18442657213736743283, 18442657213736743287)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18442657213736743283n);
-    input.add64(18442657213736743287n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442657213736743283n);
-  });
-
-  it('test operator "and" overload (euint64, euint64) => euint64 test 3 (18442657213736743287, 18442657213736743287)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18442657213736743287n);
-    input.add64(18442657213736743287n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442657213736743287n);
-  });
-
-  it('test operator "and" overload (euint64, euint64) => euint64 test 4 (18442657213736743287, 18442657213736743283)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18442657213736743287n);
-    input.add64(18442657213736743283n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442657213736743283n);
-  });
-
-  it('test operator "or" overload (euint64, euint64) => euint64 test 1 (18445851190683093315, 18440297605680046453)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445851190683093315n);
-    input.add64(18440297605680046453n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18446141532670781815n);
-  });
-
-  it('test operator "or" overload (euint64, euint64) => euint64 test 2 (18440297605680046449, 18440297605680046453)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440297605680046449n);
-    input.add64(18440297605680046453n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18440297605680046453n);
-  });
-
-  it('test operator "or" overload (euint64, euint64) => euint64 test 3 (18440297605680046453, 18440297605680046453)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440297605680046453n);
-    input.add64(18440297605680046453n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18440297605680046453n);
-  });
-
-  it('test operator "or" overload (euint64, euint64) => euint64 test 4 (18440297605680046453, 18440297605680046449)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440297605680046453n);
-    input.add64(18440297605680046449n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18440297605680046453n);
-  });
-
-  it('test operator "xor" overload (euint64, euint64) => euint64 test 1 (18439520894560746701, 18440669858368892063)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439520894560746701n);
-    input.add64(18440669858368892063n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(3444795783188562n);
-  });
-
-  it('test operator "xor" overload (euint64, euint64) => euint64 test 2 (18439520894560746697, 18439520894560746701)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439520894560746697n);
-    input.add64(18439520894560746701n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(4n);
-  });
-
-  it('test operator "xor" overload (euint64, euint64) => euint64 test 3 (18439520894560746701, 18439520894560746701)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439520894560746701n);
-    input.add64(18439520894560746701n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(0n);
-  });
-
-  it('test operator "xor" overload (euint64, euint64) => euint64 test 4 (18439520894560746701, 18439520894560746697)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439520894560746701n);
-    input.add64(18439520894560746697n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(4n);
-  });
-
-  it('test operator "eq" overload (euint64, euint64) => ebool test 1 (18443282870504090991, 18446028700927461615)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443282870504090991n);
-    input.add64(18446028700927461615n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "eq" overload (euint64, euint64) => ebool test 2 (18443282870504090987, 18443282870504090991)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443282870504090987n);
-    input.add64(18443282870504090991n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "eq" overload (euint64, euint64) => ebool test 3 (18443282870504090991, 18443282870504090991)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443282870504090991n);
-    input.add64(18443282870504090991n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "eq" overload (euint64, euint64) => ebool test 4 (18443282870504090991, 18443282870504090987)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443282870504090991n);
-    input.add64(18443282870504090987n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "ne" overload (euint64, euint64) => ebool test 1 (18445289136242885897, 18441860560804132295)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445289136242885897n);
-    input.add64(18441860560804132295n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ne" overload (euint64, euint64) => ebool test 2 (18441860560804132291, 18441860560804132295)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18441860560804132291n);
-    input.add64(18441860560804132295n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ne" overload (euint64, euint64) => ebool test 3 (18441860560804132295, 18441860560804132295)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18441860560804132295n);
-    input.add64(18441860560804132295n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "ne" overload (euint64, euint64) => ebool test 4 (18441860560804132295, 18441860560804132291)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18441860560804132295n);
-    input.add64(18441860560804132291n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ge" overload (euint64, euint64) => ebool test 1 (18444613618003912273, 18441817383047397973)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444613618003912273n);
-    input.add64(18441817383047397973n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ge" overload (euint64, euint64) => ebool test 2 (18441817383047397969, 18441817383047397973)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18441817383047397969n);
-    input.add64(18441817383047397973n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "ge" overload (euint64, euint64) => ebool test 3 (18441817383047397973, 18441817383047397973)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18441817383047397973n);
-    input.add64(18441817383047397973n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ge" overload (euint64, euint64) => ebool test 4 (18441817383047397973, 18441817383047397969)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18441817383047397973n);
-    input.add64(18441817383047397969n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "gt" overload (euint64, euint64) => ebool test 1 (18444129545450155179, 18438304556640407461)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444129545450155179n);
-    input.add64(18438304556640407461n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "gt" overload (euint64, euint64) => ebool test 2 (18438304556640407457, 18438304556640407461)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438304556640407457n);
-    input.add64(18438304556640407461n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "gt" overload (euint64, euint64) => ebool test 3 (18438304556640407461, 18438304556640407461)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438304556640407461n);
-    input.add64(18438304556640407461n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "gt" overload (euint64, euint64) => ebool test 4 (18438304556640407461, 18438304556640407457)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438304556640407461n);
-    input.add64(18438304556640407457n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "le" overload (euint64, euint64) => ebool test 1 (18440402951089431437, 18444684457474043493)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440402951089431437n);
-    input.add64(18444684457474043493n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "le" overload (euint64, euint64) => ebool test 2 (18440402951089431433, 18440402951089431437)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440402951089431433n);
-    input.add64(18440402951089431437n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "le" overload (euint64, euint64) => ebool test 3 (18440402951089431437, 18440402951089431437)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440402951089431437n);
-    input.add64(18440402951089431437n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "le" overload (euint64, euint64) => ebool test 4 (18440402951089431437, 18440402951089431433)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440402951089431437n);
-    input.add64(18440402951089431433n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "lt" overload (euint64, euint64) => ebool test 1 (18443308354694945505, 18438494040818835505)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443308354694945505n);
-    input.add64(18438494040818835505n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "lt" overload (euint64, euint64) => ebool test 2 (18438494040818835501, 18438494040818835505)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438494040818835501n);
-    input.add64(18438494040818835505n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "lt" overload (euint64, euint64) => ebool test 3 (18438494040818835505, 18438494040818835505)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438494040818835505n);
-    input.add64(18438494040818835505n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "lt" overload (euint64, euint64) => ebool test 4 (18438494040818835505, 18438494040818835501)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438494040818835505n);
-    input.add64(18438494040818835501n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "min" overload (euint64, euint64) => euint64 test 1 (18438422972288340001, 18441615262395055283)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438422972288340001n);
-    input.add64(18441615262395055283n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18438422972288340001n);
-  });
-
-  it('test operator "min" overload (euint64, euint64) => euint64 test 2 (18438422972288339997, 18438422972288340001)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438422972288339997n);
-    input.add64(18438422972288340001n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18438422972288339997n);
-  });
-
-  it('test operator "min" overload (euint64, euint64) => euint64 test 3 (18438422972288340001, 18438422972288340001)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438422972288340001n);
-    input.add64(18438422972288340001n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18438422972288340001n);
-  });
-
-  it('test operator "min" overload (euint64, euint64) => euint64 test 4 (18438422972288340001, 18438422972288339997)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438422972288340001n);
-    input.add64(18438422972288339997n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18438422972288339997n);
-  });
-
-  it('test operator "max" overload (euint64, euint64) => euint64 test 1 (18445852065991763771, 18440937538047974893)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445852065991763771n);
-    input.add64(18440937538047974893n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18445852065991763771n);
-  });
-
-  it('test operator "max" overload (euint64, euint64) => euint64 test 2 (18440937538047974889, 18440937538047974893)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440937538047974889n);
-    input.add64(18440937538047974893n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18440937538047974893n);
-  });
-
-  it('test operator "max" overload (euint64, euint64) => euint64 test 3 (18440937538047974893, 18440937538047974893)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440937538047974893n);
-    input.add64(18440937538047974893n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18440937538047974893n);
-  });
-
-  it('test operator "max" overload (euint64, euint64) => euint64 test 4 (18440937538047974893, 18440937538047974889)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440937538047974893n);
-    input.add64(18440937538047974889n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint64(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18440937538047974893n);
-  });
-
-  it('test operator "add" overload (euint64, euint128) => euint128 test 1 (2, 9223372036854775809)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(2n);
-    input.add128(9223372036854775809n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(9223372036854775811n);
-  });
-
-  it('test operator "add" overload (euint64, euint128) => euint128 test 2 (9220019285142748118, 9220019285142748120)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9220019285142748118n);
-    input.add128(9220019285142748120n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18440038570285496238n);
-  });
-
-  it('test operator "add" overload (euint64, euint128) => euint128 test 3 (9220019285142748120, 9220019285142748120)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9220019285142748120n);
-    input.add128(9220019285142748120n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18440038570285496240n);
-  });
-
-  it('test operator "add" overload (euint64, euint128) => euint128 test 4 (9220019285142748120, 9220019285142748118)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9220019285142748120n);
-    input.add128(9220019285142748118n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18440038570285496238n);
-  });
-
-  it('test operator "sub" overload (euint64, euint128) => euint128 test 1 (18445847707614326699, 18445847707614326699)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445847707614326699n);
-    input.add128(18445847707614326699n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.sub_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(0n);
-  });
-
-  it('test operator "sub" overload (euint64, euint128) => euint128 test 2 (18445847707614326699, 18445847707614326695)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445847707614326699n);
-    input.add128(18445847707614326695n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.sub_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(4n);
-  });
-
-  it('test operator "mul" overload (euint64, euint128) => euint128 test 1 (2, 4611686018427387905)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(2n);
-    input.add128(4611686018427387905n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(9223372036854775810n);
-  });
-
-  it('test operator "mul" overload (euint64, euint128) => euint128 test 2 (4293652736, 4293652736)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4293652736n);
-    input.add128(4293652736n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18435453817360285696n);
-  });
-
-  it('test operator "mul" overload (euint64, euint128) => euint128 test 3 (4293652736, 4293652736)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4293652736n);
-    input.add128(4293652736n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18435453817360285696n);
-  });
-
-  it('test operator "mul" overload (euint64, euint128) => euint128 test 4 (4293652736, 4293652736)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4293652736n);
-    input.add128(4293652736n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18435453817360285696n);
-  });
-
-  it('test operator "and" overload (euint64, euint128) => euint128 test 1 (18438964653643998977, 340282366920938463463371580179294281733)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438964653643998977n);
-    input.add128(340282366920938463463371580179294281733n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18438894284827860993n);
-  });
-
-  it('test operator "and" overload (euint64, euint128) => euint128 test 2 (18438964653643998973, 18438964653643998977)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438964653643998973n);
-    input.add128(18438964653643998977n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18438964653643998721n);
-  });
-
-  it('test operator "and" overload (euint64, euint128) => euint128 test 3 (18438964653643998977, 18438964653643998977)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438964653643998977n);
-    input.add128(18438964653643998977n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18438964653643998977n);
-  });
-
-  it('test operator "and" overload (euint64, euint128) => euint128 test 4 (18438964653643998977, 18438964653643998973)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438964653643998977n);
-    input.add128(18438964653643998973n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18438964653643998721n);
-  });
-
-  it('test operator "or" overload (euint64, euint128) => euint128 test 1 (18444253937643069461, 340282366920938463463369573351070308735)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444253937643069461n);
-    input.add128(340282366920938463463369573351070308735n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(340282366920938463463374396049659246975n);
-  });
-
-  it('test operator "or" overload (euint64, euint128) => euint128 test 2 (18444253937643069457, 18444253937643069461)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444253937643069457n);
-    input.add128(18444253937643069461n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18444253937643069461n);
-  });
-
-  it('test operator "or" overload (euint64, euint128) => euint128 test 3 (18444253937643069461, 18444253937643069461)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444253937643069461n);
-    input.add128(18444253937643069461n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18444253937643069461n);
-  });
-
-  it('test operator "or" overload (euint64, euint128) => euint128 test 4 (18444253937643069461, 18444253937643069457)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444253937643069461n);
-    input.add128(18444253937643069457n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18444253937643069461n);
-  });
-
-  it('test operator "xor" overload (euint64, euint128) => euint128 test 1 (18445744178466976977, 340282366920938463463371486789808692655)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445744178466976977n);
-    input.add128(340282366920938463463371486789808692655n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(340282366920938463444930285940062611838n);
-  });
-
-  it('test operator "xor" overload (euint64, euint128) => euint128 test 2 (18445744178466976973, 18445744178466976977)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445744178466976973n);
-    input.add128(18445744178466976977n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
+    const res = await decrypt256(await this.contract5.resEuint256());
     expect(res).to.equal(28n);
   });
 
-  it('test operator "xor" overload (euint64, euint128) => euint128 test 3 (18445744178466976977, 18445744178466976977)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445744178466976977n);
-    input.add128(18445744178466976977n);
+  it('test operator "xor" overload (euint128, euint256) => euint256 test 3 (340282366920938463463370554464339412497, 340282366920938463463370554464339412497)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463370554464339412497n);
+    input.add256(340282366920938463463370554464339412497n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_euint128(
+    const tx = await this.contract5.xor_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
+    const res = await decrypt256(await this.contract5.resEuint256());
     expect(res).to.equal(0n);
   });
 
-  it('test operator "xor" overload (euint64, euint128) => euint128 test 4 (18445744178466976977, 18445744178466976973)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445744178466976977n);
-    input.add128(18445744178466976973n);
+  it('test operator "xor" overload (euint128, euint256) => euint256 test 4 (340282366920938463463370554464339412497, 340282366920938463463370554464339412493)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463370554464339412497n);
+    input.add256(340282366920938463463370554464339412493n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_euint128(
+    const tx = await this.contract5.xor_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
+    const res = await decrypt256(await this.contract5.resEuint256());
     expect(res).to.equal(28n);
   });
 
-  it('test operator "eq" overload (euint64, euint128) => ebool test 1 (18440180042915486669, 340282366920938463463371210059252201113)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440180042915486669n);
-    input.add128(340282366920938463463371210059252201113n);
+  it('test operator "eq" overload (euint128, euint256) => ebool test 1 (340282366920938463463372735835714138325, 115792089237316195423570985008687907853269984665640564039457579203676229322547)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463372735835714138325n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457579203676229322547n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint128(
+    const tx = await this.contract5.eq_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "eq" overload (euint64, euint128) => ebool test 2 (18440180042915486665, 18440180042915486669)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440180042915486665n);
-    input.add128(18440180042915486669n);
+  it('test operator "eq" overload (euint128, euint256) => ebool test 2 (340282366920938463463372735835714138321, 340282366920938463463372735835714138325)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463372735835714138321n);
+    input.add256(340282366920938463463372735835714138325n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint128(
+    const tx = await this.contract5.eq_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "eq" overload (euint64, euint128) => ebool test 3 (18440180042915486669, 18440180042915486669)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440180042915486669n);
-    input.add128(18440180042915486669n);
+  it('test operator "eq" overload (euint128, euint256) => ebool test 3 (340282366920938463463372735835714138325, 340282366920938463463372735835714138325)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463372735835714138325n);
+    input.add256(340282366920938463463372735835714138325n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint128(
+    const tx = await this.contract5.eq_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(true);
   });
 
-  it('test operator "eq" overload (euint64, euint128) => ebool test 4 (18440180042915486669, 18440180042915486665)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440180042915486669n);
-    input.add128(18440180042915486665n);
+  it('test operator "eq" overload (euint128, euint256) => ebool test 4 (340282366920938463463372735835714138325, 340282366920938463463372735835714138321)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463372735835714138325n);
+    input.add256(340282366920938463463372735835714138321n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint128(
+    const tx = await this.contract5.eq_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "ne" overload (euint64, euint128) => ebool test 1 (18439484097328106945, 340282366920938463463374251414120336649)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439484097328106945n);
-    input.add128(340282366920938463463374251414120336649n);
+  it('test operator "ne" overload (euint128, euint256) => ebool test 1 (340282366920938463463368244124099232299, 115792089237316195423570985008687907853269984665640564039457579499915017327175)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463368244124099232299n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457579499915017327175n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint128(
+    const tx = await this.contract5.ne_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(true);
   });
 
-  it('test operator "ne" overload (euint64, euint128) => ebool test 2 (18439484097328106941, 18439484097328106945)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439484097328106941n);
-    input.add128(18439484097328106945n);
+  it('test operator "ne" overload (euint128, euint256) => ebool test 2 (340282366920938463463368244124099232295, 340282366920938463463368244124099232299)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463368244124099232295n);
+    input.add256(340282366920938463463368244124099232299n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint128(
+    const tx = await this.contract5.ne_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(true);
   });
 
-  it('test operator "ne" overload (euint64, euint128) => ebool test 3 (18439484097328106945, 18439484097328106945)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439484097328106945n);
-    input.add128(18439484097328106945n);
+  it('test operator "ne" overload (euint128, euint256) => ebool test 3 (340282366920938463463368244124099232299, 340282366920938463463368244124099232299)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463368244124099232299n);
+    input.add256(340282366920938463463368244124099232299n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint128(
+    const tx = await this.contract5.ne_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "ne" overload (euint64, euint128) => ebool test 4 (18439484097328106945, 18439484097328106941)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439484097328106945n);
-    input.add128(18439484097328106941n);
+  it('test operator "ne" overload (euint128, euint256) => ebool test 4 (340282366920938463463368244124099232299, 340282366920938463463368244124099232295)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add128(340282366920938463463368244124099232299n);
+    input.add256(340282366920938463463368244124099232295n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint128(
+    const tx = await this.contract5.ne_euint128_euint256(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(true);
   });
 
-  it('test operator "ge" overload (euint64, euint128) => ebool test 1 (18442500358670120549, 340282366920938463463373603431929658391)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18442500358670120549n);
-    input.add128(340282366920938463463373603431929658391n);
+  it('test operator "and" overload (euint256, euint8) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457582515676676611145, 28)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457582515676676611145n);
+    input.add8(28n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint128(
+    const tx = await this.contract5.and_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(8n);
   });
 
-  it('test operator "ge" overload (euint64, euint128) => ebool test 2 (18442500358670120545, 18442500358670120549)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18442500358670120545n);
-    input.add128(18442500358670120549n);
+  it('test operator "and" overload (euint256, euint8) => euint256 test 2 (24, 28)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(24n);
+    input.add8(28n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint128(
+    const tx = await this.contract5.and_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(24n);
   });
 
-  it('test operator "ge" overload (euint64, euint128) => ebool test 3 (18442500358670120549, 18442500358670120549)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18442500358670120549n);
-    input.add128(18442500358670120549n);
+  it('test operator "and" overload (euint256, euint8) => euint256 test 3 (28, 28)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(28n);
+    input.add8(28n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint128(
+    const tx = await this.contract5.and_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(28n);
   });
 
-  it('test operator "ge" overload (euint64, euint128) => ebool test 4 (18442500358670120549, 18442500358670120545)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18442500358670120549n);
-    input.add128(18442500358670120545n);
+  it('test operator "and" overload (euint256, euint8) => euint256 test 4 (28, 24)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(28n);
+    input.add8(24n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint128(
+    const tx = await this.contract5.and_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(24n);
   });
 
-  it('test operator "gt" overload (euint64, euint128) => ebool test 1 (18440808032965074109, 340282366920938463463365853534758019559)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440808032965074109n);
-    input.add128(340282366920938463463365853534758019559n);
+  it('test operator "or" overload (euint256, euint8) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457575430358626638405, 126)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457575430358626638405n);
+    input.add8(126n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint128(
+    const tx = await this.contract5.or_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457575430358626638463n);
   });
 
-  it('test operator "gt" overload (euint64, euint128) => ebool test 2 (18440808032965074105, 18440808032965074109)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440808032965074105n);
-    input.add128(18440808032965074109n);
+  it('test operator "or" overload (euint256, euint8) => euint256 test 2 (122, 126)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(122n);
+    input.add8(126n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint128(
+    const tx = await this.contract5.or_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(126n);
   });
 
-  it('test operator "gt" overload (euint64, euint128) => ebool test 3 (18440808032965074109, 18440808032965074109)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440808032965074109n);
-    input.add128(18440808032965074109n);
+  it('test operator "or" overload (euint256, euint8) => euint256 test 3 (126, 126)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(126n);
+    input.add8(126n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint128(
+    const tx = await this.contract5.or_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(126n);
   });
 
-  it('test operator "gt" overload (euint64, euint128) => ebool test 4 (18440808032965074109, 18440808032965074105)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440808032965074109n);
-    input.add128(18440808032965074105n);
+  it('test operator "or" overload (euint256, euint8) => euint256 test 4 (126, 122)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(126n);
+    input.add8(122n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint128(
+    const tx = await this.contract5.or_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(126n);
   });
 
-  it('test operator "le" overload (euint64, euint128) => ebool test 1 (18443662339869468477, 340282366920938463463371042076884293495)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443662339869468477n);
-    input.add128(340282366920938463463371042076884293495n);
+  it('test operator "xor" overload (euint256, euint8) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457576872403891001737, 166)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576872403891001737n);
+    input.add8(166n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint128(
+    const tx = await this.contract5.xor_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457576872403891001647n);
   });
 
-  it('test operator "le" overload (euint64, euint128) => ebool test 2 (18443662339869468473, 18443662339869468477)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443662339869468473n);
-    input.add128(18443662339869468477n);
+  it('test operator "xor" overload (euint256, euint8) => euint256 test 2 (162, 166)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(162n);
+    input.add8(166n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint128(
+    const tx = await this.contract5.xor_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(4n);
   });
 
-  it('test operator "le" overload (euint64, euint128) => ebool test 3 (18443662339869468477, 18443662339869468477)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443662339869468477n);
-    input.add128(18443662339869468477n);
+  it('test operator "xor" overload (euint256, euint8) => euint256 test 3 (166, 166)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(166n);
+    input.add8(166n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint128(
+    const tx = await this.contract5.xor_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "le" overload (euint64, euint128) => ebool test 4 (18443662339869468477, 18443662339869468473)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443662339869468477n);
-    input.add128(18443662339869468473n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "lt" overload (euint64, euint128) => ebool test 1 (18444814117403628673, 340282366920938463463365637360413874149)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444814117403628673n);
-    input.add128(340282366920938463463365637360413874149n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "lt" overload (euint64, euint128) => ebool test 2 (18444814117403628669, 18444814117403628673)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444814117403628669n);
-    input.add128(18444814117403628673n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "lt" overload (euint64, euint128) => ebool test 3 (18444814117403628673, 18444814117403628673)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444814117403628673n);
-    input.add128(18444814117403628673n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "lt" overload (euint64, euint128) => ebool test 4 (18444814117403628673, 18444814117403628669)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444814117403628673n);
-    input.add128(18444814117403628669n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "min" overload (euint64, euint128) => euint128 test 1 (18444900314492723695, 340282366920938463463367540489775579127)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444900314492723695n);
-    input.add128(340282366920938463463367540489775579127n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18444900314492723695n);
-  });
-
-  it('test operator "min" overload (euint64, euint128) => euint128 test 2 (18444900314492723691, 18444900314492723695)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444900314492723691n);
-    input.add128(18444900314492723695n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18444900314492723691n);
-  });
-
-  it('test operator "min" overload (euint64, euint128) => euint128 test 3 (18444900314492723695, 18444900314492723695)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444900314492723695n);
-    input.add128(18444900314492723695n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18444900314492723695n);
-  });
-
-  it('test operator "min" overload (euint64, euint128) => euint128 test 4 (18444900314492723695, 18444900314492723691)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444900314492723695n);
-    input.add128(18444900314492723691n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18444900314492723691n);
-  });
-
-  it('test operator "max" overload (euint64, euint128) => euint128 test 1 (18444589551829336117, 340282366920938463463371310064926977589)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444589551829336117n);
-    input.add128(340282366920938463463371310064926977589n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(340282366920938463463371310064926977589n);
-  });
-
-  it('test operator "max" overload (euint64, euint128) => euint128 test 2 (18444589551829336113, 18444589551829336117)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444589551829336113n);
-    input.add128(18444589551829336117n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18444589551829336117n);
-  });
-
-  it('test operator "max" overload (euint64, euint128) => euint128 test 3 (18444589551829336117, 18444589551829336117)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444589551829336117n);
-    input.add128(18444589551829336117n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18444589551829336117n);
-  });
-
-  it('test operator "max" overload (euint64, euint128) => euint128 test 4 (18444589551829336117, 18444589551829336113)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444589551829336117n);
-    input.add128(18444589551829336113n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint128(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt128(await this.contract7.res128());
-    expect(res).to.equal(18444589551829336117n);
-  });
-
-  it('test operator "add" overload (euint64, euint256) => euint256 test 1 (2, 9223372036854775809)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(2n);
-    input.add256(9223372036854775809n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(9223372036854775811n);
-  });
-
-  it('test operator "add" overload (euint64, euint256) => euint256 test 2 (9223002406300982591, 9223002406300982593)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9223002406300982591n);
-    input.add256(9223002406300982593n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18446004812601965184n);
-  });
-
-  it('test operator "add" overload (euint64, euint256) => euint256 test 3 (9223002406300982593, 9223002406300982593)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9223002406300982593n);
-    input.add256(9223002406300982593n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18446004812601965186n);
-  });
-
-  it('test operator "add" overload (euint64, euint256) => euint256 test 4 (9223002406300982593, 9223002406300982591)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9223002406300982593n);
-    input.add256(9223002406300982591n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18446004812601965184n);
-  });
-
-  it('test operator "sub" overload (euint64, euint256) => euint256 test 1 (18445224051732608013, 18445224051732608013)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445224051732608013n);
-    input.add256(18445224051732608013n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.sub_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
+    const res = await decrypt256(await this.contract5.resEuint256());
     expect(res).to.equal(0n);
   });
 
-  it('test operator "sub" overload (euint64, euint256) => euint256 test 2 (18445224051732608013, 18445224051732608009)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445224051732608013n);
-    input.add256(18445224051732608009n);
+  it('test operator "xor" overload (euint256, euint8) => euint256 test 4 (166, 162)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(166n);
+    input.add8(162n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.sub_euint64_euint256(
+    const tx = await this.contract5.xor_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
+    const res = await decrypt256(await this.contract5.resEuint256());
     expect(res).to.equal(4n);
   });
 
-  it('test operator "mul" overload (euint64, euint256) => euint256 test 1 (2, 4611686018427387905)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(2n);
-    input.add256(4611686018427387905n);
+  it('test operator "eq" overload (euint256, euint8) => ebool test 1 (115792089237316195423570985008687907853269984665640564039457575815567596884125, 92)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457575815567596884125n);
+    input.add8(92n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_euint256(
+    const tx = await this.contract5.eq_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(9223372036854775810n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
   });
 
-  it('test operator "mul" overload (euint64, euint256) => euint256 test 2 (4292932541, 4292932541)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4292932541n);
-    input.add256(4292932541n);
+  it('test operator "eq" overload (euint256, euint8) => ebool test 2 (88, 92)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(88n);
+    input.add8(92n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_euint256(
+    const tx = await this.contract5.eq_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18429269801576716681n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
   });
 
-  it('test operator "mul" overload (euint64, euint256) => euint256 test 3 (4292932541, 4292932541)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4292932541n);
-    input.add256(4292932541n);
+  it('test operator "eq" overload (euint256, euint8) => ebool test 3 (92, 92)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(92n);
+    input.add8(92n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_euint256(
+    const tx = await this.contract5.eq_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18429269801576716681n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
   });
 
-  it('test operator "mul" overload (euint64, euint256) => euint256 test 4 (4292932541, 4292932541)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4292932541n);
-    input.add256(4292932541n);
+  it('test operator "eq" overload (euint256, euint8) => ebool test 4 (92, 88)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(92n);
+    input.add8(88n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_euint256(
+    const tx = await this.contract5.eq_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18429269801576716681n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
   });
 
-  it('test operator "and" overload (euint64, euint256) => euint256 test 1 (18443960605514453875, 115792089237316195423570985008687907853269984665640564039457575145704576396421)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443960605514453875n);
-    input.add256(115792089237316195423570985008687907853269984665640564039457575145704576396421n);
+  it('test operator "ne" overload (euint256, euint8) => ebool test 1 (115792089237316195423570985008687907853269984665640564039457583266347155314121, 5)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457583266347155314121n);
+    input.add8(5n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_euint256(
+    const tx = await this.contract5.ne_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18437737227820728321n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
   });
 
-  it('test operator "and" overload (euint64, euint256) => euint256 test 2 (18443960605514453871, 18443960605514453875)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443960605514453871n);
-    input.add256(18443960605514453875n);
+  it('test operator "ne" overload (euint256, euint8) => ebool test 2 (1, 5)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(1n);
+    input.add8(5n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_euint256(
+    const tx = await this.contract5.ne_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18443960605514453859n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
   });
 
-  it('test operator "and" overload (euint64, euint256) => euint256 test 3 (18443960605514453875, 18443960605514453875)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443960605514453875n);
-    input.add256(18443960605514453875n);
+  it('test operator "ne" overload (euint256, euint8) => ebool test 3 (5, 5)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(5n);
+    input.add8(5n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_euint256(
+    const tx = await this.contract5.ne_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18443960605514453875n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
   });
 
-  it('test operator "and" overload (euint64, euint256) => euint256 test 4 (18443960605514453875, 18443960605514453871)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443960605514453875n);
-    input.add256(18443960605514453871n);
+  it('test operator "ne" overload (euint256, euint8) => ebool test 4 (5, 1)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(5n);
+    input.add8(1n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_euint256(
+    const tx = await this.contract5.ne_euint256_euint8(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18443960605514453859n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
   });
 
-  it('test operator "or" overload (euint64, euint256) => euint256 test 1 (18444891827197945405, 115792089237316195423570985008687907853269984665640564039457581376324451236725)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444891827197945405n);
-    input.add256(115792089237316195423570985008687907853269984665640564039457581376324451236725n);
+  it('test operator "and" overload (euint256, euint16) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457582336788729157085, 14244)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457582336788729157085n);
+    input.add16(14244n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_euint256(
+    const tx = await this.contract5.and_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457583990276981260157n);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(5508n);
   });
 
-  it('test operator "or" overload (euint64, euint256) => euint256 test 2 (18444891827197945401, 18444891827197945405)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444891827197945401n);
-    input.add256(18444891827197945405n);
+  it('test operator "and" overload (euint256, euint16) => euint256 test 2 (14240, 14244)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(14240n);
+    input.add16(14244n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_euint256(
+    const tx = await this.contract5.and_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18444891827197945405n);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(14240n);
   });
 
-  it('test operator "or" overload (euint64, euint256) => euint256 test 3 (18444891827197945405, 18444891827197945405)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444891827197945405n);
-    input.add256(18444891827197945405n);
+  it('test operator "and" overload (euint256, euint16) => euint256 test 3 (14244, 14244)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(14244n);
+    input.add16(14244n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_euint256(
+    const tx = await this.contract5.and_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18444891827197945405n);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(14244n);
   });
 
-  it('test operator "or" overload (euint64, euint256) => euint256 test 4 (18444891827197945405, 18444891827197945401)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444891827197945405n);
-    input.add256(18444891827197945401n);
+  it('test operator "and" overload (euint256, euint16) => euint256 test 4 (14244, 14240)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(14244n);
+    input.add16(14240n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_euint256(
+    const tx = await this.contract5.and_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18444891827197945405n);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(14240n);
   });
 
-  it('test operator "xor" overload (euint64, euint256) => euint256 test 1 (18438921176678700429, 115792089237316195423570985008687907853269984665640564039457575984328616481271)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438921176678700429n);
-    input.add256(115792089237316195423570985008687907853269984665640564039457575984328616481271n);
+  it('test operator "or" overload (euint256, euint16) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457577799389986777331, 7238)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457577799389986777331n);
+    input.add16(7238n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_euint256(
+    const tx = await this.contract5.or_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039439139317222450136186n);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457577799389986782455n);
   });
 
-  it('test operator "xor" overload (euint64, euint256) => euint256 test 2 (18438921176678700425, 18438921176678700429)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438921176678700425n);
-    input.add256(18438921176678700429n);
+  it('test operator "or" overload (euint256, euint16) => euint256 test 2 (7234, 7238)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(7234n);
+    input.add16(7238n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_euint256(
+    const tx = await this.contract5.or_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(7238n);
+  });
+
+  it('test operator "or" overload (euint256, euint16) => euint256 test 3 (7238, 7238)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(7238n);
+    input.add16(7238n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint16(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(7238n);
+  });
+
+  it('test operator "or" overload (euint256, euint16) => euint256 test 4 (7238, 7234)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(7238n);
+    input.add16(7234n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint16(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(7238n);
+  });
+
+  it('test operator "xor" overload (euint256, euint16) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457583580014534067651, 38303)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457583580014534067651n);
+    input.add16(38303n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.xor_euint256_euint16(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457583580014534103132n);
+  });
+
+  it('test operator "xor" overload (euint256, euint16) => euint256 test 2 (38299, 38303)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(38299n);
+    input.add16(38303n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.xor_euint256_euint16(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
     expect(res).to.equal(4n);
   });
 
-  it('test operator "xor" overload (euint64, euint256) => euint256 test 3 (18438921176678700429, 18438921176678700429)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438921176678700429n);
-    input.add256(18438921176678700429n);
+  it('test operator "xor" overload (euint256, euint16) => euint256 test 3 (38303, 38303)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(38303n);
+    input.add16(38303n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_euint256(
+    const tx = await this.contract5.xor_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
+    const res = await decrypt256(await this.contract5.resEuint256());
     expect(res).to.equal(0n);
   });
 
-  it('test operator "xor" overload (euint64, euint256) => euint256 test 4 (18438921176678700429, 18438921176678700425)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18438921176678700429n);
-    input.add256(18438921176678700425n);
+  it('test operator "xor" overload (euint256, euint16) => euint256 test 4 (38303, 38299)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(38303n);
+    input.add16(38299n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_euint256(
+    const tx = await this.contract5.xor_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
+    const res = await decrypt256(await this.contract5.resEuint256());
     expect(res).to.equal(4n);
   });
 
-  it('test operator "eq" overload (euint64, euint256) => ebool test 1 (18443851863635995939, 115792089237316195423570985008687907853269984665640564039457575030888379042775)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443851863635995939n);
-    input.add256(115792089237316195423570985008687907853269984665640564039457575030888379042775n);
+  it('test operator "eq" overload (euint256, euint16) => ebool test 1 (115792089237316195423570985008687907853269984665640564039457575880528606387215, 62423)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457575880528606387215n);
+    input.add16(62423n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint256(
+    const tx = await this.contract5.eq_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "eq" overload (euint64, euint256) => ebool test 2 (18443851863635995935, 18443851863635995939)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443851863635995935n);
-    input.add256(18443851863635995939n);
+  it('test operator "eq" overload (euint256, euint16) => ebool test 2 (62419, 62423)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(62419n);
+    input.add16(62423n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint256(
+    const tx = await this.contract5.eq_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "eq" overload (euint64, euint256) => ebool test 3 (18443851863635995939, 18443851863635995939)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443851863635995939n);
-    input.add256(18443851863635995939n);
+  it('test operator "eq" overload (euint256, euint16) => ebool test 3 (62423, 62423)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(62423n);
+    input.add16(62423n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint256(
+    const tx = await this.contract5.eq_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(true);
   });
 
-  it('test operator "eq" overload (euint64, euint256) => ebool test 4 (18443851863635995939, 18443851863635995935)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443851863635995939n);
-    input.add256(18443851863635995935n);
+  it('test operator "eq" overload (euint256, euint16) => ebool test 4 (62423, 62419)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(62423n);
+    input.add16(62419n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_euint256(
+    const tx = await this.contract5.eq_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "ne" overload (euint64, euint256) => ebool test 1 (18446211817960475589, 115792089237316195423570985008687907853269984665640564039457576433191959532665)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18446211817960475589n);
-    input.add256(115792089237316195423570985008687907853269984665640564039457576433191959532665n);
+  it('test operator "ne" overload (euint256, euint16) => ebool test 1 (115792089237316195423570985008687907853269984665640564039457577948948788611795, 36597)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457577948948788611795n);
+    input.add16(36597n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint256(
+    const tx = await this.contract5.ne_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(true);
   });
 
-  it('test operator "ne" overload (euint64, euint256) => ebool test 2 (18446211817960475585, 18446211817960475589)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18446211817960475585n);
-    input.add256(18446211817960475589n);
+  it('test operator "ne" overload (euint256, euint16) => ebool test 2 (36593, 36597)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(36593n);
+    input.add16(36597n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint256(
+    const tx = await this.contract5.ne_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(true);
   });
 
-  it('test operator "ne" overload (euint64, euint256) => ebool test 3 (18446211817960475589, 18446211817960475589)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18446211817960475589n);
-    input.add256(18446211817960475589n);
+  it('test operator "ne" overload (euint256, euint16) => ebool test 3 (36597, 36597)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(36597n);
+    input.add16(36597n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint256(
+    const tx = await this.contract5.ne_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(false);
   });
 
-  it('test operator "ne" overload (euint64, euint256) => ebool test 4 (18446211817960475589, 18446211817960475585)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18446211817960475589n);
-    input.add256(18446211817960475585n);
+  it('test operator "ne" overload (euint256, euint16) => ebool test 4 (36597, 36593)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(36597n);
+    input.add16(36593n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_euint256(
+    const tx = await this.contract5.ne_euint256_euint16(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
+    const res = await decryptBool(await this.contract5.resEbool());
     expect(res).to.equal(true);
   });
 
-  it('test operator "ge" overload (euint64, euint256) => ebool test 1 (18444770112796649545, 115792089237316195423570985008687907853269984665640564039457581281801379635505)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444770112796649545n);
-    input.add256(115792089237316195423570985008687907853269984665640564039457581281801379635505n);
+  it('test operator "and" overload (euint256, euint32) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457578708924703909887, 3686495958)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457578708924703909887n);
+    input.add32(3686495958n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint256(
+    const tx = await this.contract5.and_euint256_euint32(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(422782678n);
   });
 
-  it('test operator "ge" overload (euint64, euint256) => ebool test 2 (18444770112796649541, 18444770112796649545)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444770112796649541n);
-    input.add256(18444770112796649545n);
+  it('test operator "and" overload (euint256, euint32) => euint256 test 2 (3686495954, 3686495958)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(3686495954n);
+    input.add32(3686495958n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint256(
+    const tx = await this.contract5.and_euint256_euint32(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(3686495954n);
   });
 
-  it('test operator "ge" overload (euint64, euint256) => ebool test 3 (18444770112796649545, 18444770112796649545)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444770112796649545n);
-    input.add256(18444770112796649545n);
+  it('test operator "and" overload (euint256, euint32) => euint256 test 3 (3686495958, 3686495958)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(3686495958n);
+    input.add32(3686495958n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint256(
+    const tx = await this.contract5.and_euint256_euint32(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(3686495958n);
   });
 
-  it('test operator "ge" overload (euint64, euint256) => ebool test 4 (18444770112796649545, 18444770112796649541)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444770112796649545n);
-    input.add256(18444770112796649541n);
+  it('test operator "and" overload (euint256, euint32) => euint256 test 4 (3686495958, 3686495954)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(3686495958n);
+    input.add32(3686495954n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_euint256(
+    const tx = await this.contract5.and_euint256_euint32(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(3686495954n);
   });
 
-  it('test operator "gt" overload (euint64, euint256) => ebool test 1 (18443327594956328675, 115792089237316195423570985008687907853269984665640564039457581268418001741927)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443327594956328675n);
-    input.add256(115792089237316195423570985008687907853269984665640564039457581268418001741927n);
+  it('test operator "or" overload (euint256, euint32) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457581531100962164365, 3645239033)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457581531100962164365n);
+    input.add32(3645239033n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint256(
+    const tx = await this.contract5.or_euint256_euint32(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457581531104204418813n);
   });
 
-  it('test operator "gt" overload (euint64, euint256) => ebool test 2 (18443327594956328671, 18443327594956328675)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443327594956328671n);
-    input.add256(18443327594956328675n);
+  it('test operator "or" overload (euint256, euint32) => euint256 test 2 (3645239029, 3645239033)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(3645239029n);
+    input.add32(3645239033n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint256(
+    const tx = await this.contract5.or_euint256_euint32(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(3645239037n);
   });
 
-  it('test operator "gt" overload (euint64, euint256) => ebool test 3 (18443327594956328675, 18443327594956328675)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443327594956328675n);
-    input.add256(18443327594956328675n);
+  it('test operator "or" overload (euint256, euint32) => euint256 test 3 (3645239033, 3645239033)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(3645239033n);
+    input.add32(3645239033n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint256(
+    const tx = await this.contract5.or_euint256_euint32(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(3645239033n);
   });
 
-  it('test operator "gt" overload (euint64, euint256) => ebool test 4 (18443327594956328675, 18443327594956328671)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443327594956328675n);
-    input.add256(18443327594956328671n);
+  it('test operator "or" overload (euint256, euint32) => euint256 test 4 (3645239033, 3645239029)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(3645239033n);
+    input.add32(3645239029n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.gt_euint64_euint256(
+    const tx = await this.contract5.or_euint256_euint32(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(3645239037n);
   });
 
-  it('test operator "le" overload (euint64, euint256) => ebool test 1 (18443803742985479181, 115792089237316195423570985008687907853269984665640564039457581800529684723115)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443803742985479181n);
-    input.add256(115792089237316195423570985008687907853269984665640564039457581800529684723115n);
+  it('test operator "xor" overload (euint256, euint32) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457579466014308445973, 959192485)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457579466014308445973n);
+    input.add32(959192485n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint256(
+    const tx = await this.contract5.xor_euint256_euint32(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457579466015262388912n);
   });
 
-  it('test operator "le" overload (euint64, euint256) => ebool test 2 (18443803742985479177, 18443803742985479181)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443803742985479177n);
-    input.add256(18443803742985479181n);
+  it('test operator "xor" overload (euint256, euint32) => euint256 test 2 (959192481, 959192485)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(959192481n);
+    input.add32(959192485n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint256(
+    const tx = await this.contract5.xor_euint256_euint32(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(4n);
   });
 
-  it('test operator "le" overload (euint64, euint256) => ebool test 3 (18443803742985479181, 18443803742985479181)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443803742985479181n);
-    input.add256(18443803742985479181n);
+  it('test operator "xor" overload (euint256, euint32) => euint256 test 3 (959192485, 959192485)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(959192485n);
+    input.add32(959192485n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint256(
+    const tx = await this.contract5.xor_euint256_euint32(
       encryptedAmount.handles[0],
       encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "le" overload (euint64, euint256) => ebool test 4 (18443803742985479181, 18443803742985479177)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443803742985479181n);
-    input.add256(18443803742985479177n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.le_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "lt" overload (euint64, euint256) => ebool test 1 (18440844601726997069, 115792089237316195423570985008687907853269984665640564039457578884493044868087)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440844601726997069n);
-    input.add256(115792089237316195423570985008687907853269984665640564039457578884493044868087n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "lt" overload (euint64, euint256) => ebool test 2 (18440844601726997065, 18440844601726997069)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440844601726997065n);
-    input.add256(18440844601726997069n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "lt" overload (euint64, euint256) => ebool test 3 (18440844601726997069, 18440844601726997069)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440844601726997069n);
-    input.add256(18440844601726997069n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "lt" overload (euint64, euint256) => ebool test 4 (18440844601726997069, 18440844601726997065)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440844601726997069n);
-    input.add256(18440844601726997065n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.lt_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "min" overload (euint64, euint256) => euint256 test 1 (18446426094775234589, 115792089237316195423570985008687907853269984665640564039457578688132986416989)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18446426094775234589n);
-    input.add256(115792089237316195423570985008687907853269984665640564039457578688132986416989n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18446426094775234589n);
-  });
-
-  it('test operator "min" overload (euint64, euint256) => euint256 test 2 (18446426094775234585, 18446426094775234589)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18446426094775234585n);
-    input.add256(18446426094775234589n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18446426094775234585n);
-  });
-
-  it('test operator "min" overload (euint64, euint256) => euint256 test 3 (18446426094775234589, 18446426094775234589)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18446426094775234589n);
-    input.add256(18446426094775234589n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18446426094775234589n);
-  });
-
-  it('test operator "min" overload (euint64, euint256) => euint256 test 4 (18446426094775234589, 18446426094775234585)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18446426094775234589n);
-    input.add256(18446426094775234585n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.min_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18446426094775234585n);
-  });
-
-  it('test operator "max" overload (euint64, euint256) => euint256 test 1 (18437962634473522913, 115792089237316195423570985008687907853269984665640564039457582464243297466475)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18437962634473522913n);
-    input.add256(115792089237316195423570985008687907853269984665640564039457582464243297466475n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457582464243297466475n);
-  });
-
-  it('test operator "max" overload (euint64, euint256) => euint256 test 2 (18437962634473522909, 18437962634473522913)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18437962634473522909n);
-    input.add256(18437962634473522913n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18437962634473522913n);
-  });
-
-  it('test operator "max" overload (euint64, euint256) => euint256 test 3 (18437962634473522913, 18437962634473522913)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18437962634473522913n);
-    input.add256(18437962634473522913n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18437962634473522913n);
-  });
-
-  it('test operator "max" overload (euint64, euint256) => euint256 test 4 (18437962634473522913, 18437962634473522909)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18437962634473522913n);
-    input.add256(18437962634473522909n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.max_euint64_euint256(
-      encryptedAmount.handles[0],
-      encryptedAmount.handles[1],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt256(await this.contract7.res256());
-    expect(res).to.equal(18437962634473522913n);
-  });
-
-  it('test operator "add" overload (euint64, uint64) => euint64 test 1 (9222005500490563257, 9221821229831123671)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9222005500490563257n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_uint64(
-      encryptedAmount.handles[0],
-      9221821229831123671n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18443826730321686928n);
-  });
-
-  it('test operator "add" overload (euint64, uint64) => euint64 test 2 (9222005500490563255, 9222005500490563257)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9222005500490563255n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_uint64(
-      encryptedAmount.handles[0],
-      9222005500490563257n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18444011000981126512n);
-  });
-
-  it('test operator "add" overload (euint64, uint64) => euint64 test 3 (9222005500490563257, 9222005500490563257)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9222005500490563257n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_uint64(
-      encryptedAmount.handles[0],
-      9222005500490563257n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18444011000981126514n);
-  });
-
-  it('test operator "add" overload (euint64, uint64) => euint64 test 4 (9222005500490563257, 9222005500490563255)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(9222005500490563257n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_euint64_uint64(
-      encryptedAmount.handles[0],
-      9222005500490563255n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18444011000981126512n);
-  });
-
-  it('test operator "add" overload (uint64, euint64) => euint64 test 1 (9221960957990697049, 9221821229831123671)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(9221821229831123671n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_uint64_euint64(
-      9221960957990697049n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18443782187821820720n);
-  });
-
-  it('test operator "add" overload (uint64, euint64) => euint64 test 2 (9222005500490563255, 9222005500490563257)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(9222005500490563257n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_uint64_euint64(
-      9222005500490563255n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18444011000981126512n);
-  });
-
-  it('test operator "add" overload (uint64, euint64) => euint64 test 3 (9222005500490563257, 9222005500490563257)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(9222005500490563257n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_uint64_euint64(
-      9222005500490563257n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18444011000981126514n);
-  });
-
-  it('test operator "add" overload (uint64, euint64) => euint64 test 4 (9222005500490563257, 9222005500490563255)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(9222005500490563255n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.add_uint64_euint64(
-      9222005500490563257n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18444011000981126512n);
-  });
-
-  it('test operator "sub" overload (euint64, uint64) => euint64 test 1 (18440691834306324731, 18440691834306324731)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440691834306324731n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.sub_euint64_uint64(
-      encryptedAmount.handles[0],
-      18440691834306324731n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
+    const res = await decrypt256(await this.contract5.resEuint256());
     expect(res).to.equal(0n);
   });
 
-  it('test operator "sub" overload (euint64, uint64) => euint64 test 2 (18440691834306324731, 18440691834306324727)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440691834306324731n);
-
+  it('test operator "xor" overload (euint256, euint32) => euint256 test 4 (959192485, 959192481)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(959192485n);
+    input.add32(959192481n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.sub_euint64_uint64(
+    const tx = await this.contract5.xor_euint256_euint32(
       encryptedAmount.handles[0],
-      18440691834306324727n,
+      encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
+    const res = await decrypt256(await this.contract5.resEuint256());
     expect(res).to.equal(4n);
   });
 
-  it('test operator "sub" overload (uint64, euint64) => euint64 test 1 (18440691834306324731, 18440691834306324731)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18440691834306324731n);
+  it('test operator "eq" overload (euint256, euint32) => ebool test 1 (115792089237316195423570985008687907853269984665640564039457583253561181359787, 1148703419)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457583253561181359787n);
+    input.add32(1148703419n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.sub_uint64_euint64(
-      18440691834306324731n,
+    const tx = await this.contract5.eq_euint256_euint32(
       encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
+  });
+
+  it('test operator "eq" overload (euint256, euint32) => ebool test 2 (1148703415, 1148703419)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(1148703415n);
+    input.add32(1148703419n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.eq_euint256_euint32(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
+  });
+
+  it('test operator "eq" overload (euint256, euint32) => ebool test 3 (1148703419, 1148703419)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(1148703419n);
+    input.add32(1148703419n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.eq_euint256_euint32(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "eq" overload (euint256, euint32) => ebool test 4 (1148703419, 1148703415)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(1148703419n);
+    input.add32(1148703415n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.eq_euint256_euint32(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
+  });
+
+  it('test operator "ne" overload (euint256, euint32) => ebool test 1 (115792089237316195423570985008687907853269984665640564039457582536407988353049, 2552849794)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457582536407988353049n);
+    input.add32(2552849794n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ne_euint256_euint32(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "ne" overload (euint256, euint32) => ebool test 2 (2552849790, 2552849794)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(2552849790n);
+    input.add32(2552849794n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ne_euint256_euint32(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "ne" overload (euint256, euint32) => ebool test 3 (2552849794, 2552849794)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(2552849794n);
+    input.add32(2552849794n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ne_euint256_euint32(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
+  });
+
+  it('test operator "ne" overload (euint256, euint32) => ebool test 4 (2552849794, 2552849790)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(2552849794n);
+    input.add32(2552849790n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ne_euint256_euint32(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "and" overload (euint256, euint64) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457581873696038066289, 18441256854080844079)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457581873696038066289n);
+    input.add64(18441256854080844079n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.and_euint256_euint64(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(18439989087057219617n);
+  });
+
+  it('test operator "and" overload (euint256, euint64) => euint256 test 2 (18441256854080844075, 18441256854080844079)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18441256854080844075n);
+    input.add64(18441256854080844079n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.and_euint256_euint64(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(18441256854080844075n);
+  });
+
+  it('test operator "and" overload (euint256, euint64) => euint256 test 3 (18441256854080844079, 18441256854080844079)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18441256854080844079n);
+    input.add64(18441256854080844079n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.and_euint256_euint64(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(18441256854080844079n);
+  });
+
+  it('test operator "and" overload (euint256, euint64) => euint256 test 4 (18441256854080844079, 18441256854080844075)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18441256854080844079n);
+    input.add64(18441256854080844075n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.and_euint256_euint64(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(18441256854080844075n);
+  });
+
+  it('test operator "or" overload (euint256, euint64) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457579985002943061415, 18444611788438915611)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457579985002943061415n);
+    input.add64(18444611788438915611n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint64(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457582316588294463423n);
+  });
+
+  it('test operator "or" overload (euint256, euint64) => euint256 test 2 (18444611788438915607, 18444611788438915611)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18444611788438915607n);
+    input.add64(18444611788438915611n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint64(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(18444611788438915615n);
+  });
+
+  it('test operator "or" overload (euint256, euint64) => euint256 test 3 (18444611788438915611, 18444611788438915611)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18444611788438915611n);
+    input.add64(18444611788438915611n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint64(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(18444611788438915611n);
+  });
+
+  it('test operator "or" overload (euint256, euint64) => euint256 test 4 (18444611788438915611, 18444611788438915607)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18444611788438915611n);
+    input.add64(18444611788438915607n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint64(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(18444611788438915615n);
+  });
+
+  it('test operator "xor" overload (euint256, euint64) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457579515515614083701, 18443005938373701431)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457579515515614083701n);
+    input.add64(18443005938373701431n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.xor_euint256_euint64(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039439138022638721045826n);
+  });
+
+  it('test operator "xor" overload (euint256, euint64) => euint256 test 2 (18443005938373701427, 18443005938373701431)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18443005938373701427n);
+    input.add64(18443005938373701431n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.xor_euint256_euint64(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(4n);
+  });
+
+  it('test operator "xor" overload (euint256, euint64) => euint256 test 3 (18443005938373701431, 18443005938373701431)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18443005938373701431n);
+    input.add64(18443005938373701431n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.xor_euint256_euint64(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
     expect(res).to.equal(0n);
   });
 
-  it('test operator "sub" overload (uint64, euint64) => euint64 test 2 (18440691834306324731, 18440691834306324727)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18440691834306324727n);
+  it('test operator "xor" overload (euint256, euint64) => euint256 test 4 (18443005938373701431, 18443005938373701427)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18443005938373701431n);
+    input.add64(18443005938373701427n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.sub_uint64_euint64(
-      18440691834306324731n,
+    const tx = await this.contract5.xor_euint256_euint64(
       encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
+    const res = await decrypt256(await this.contract5.resEuint256());
     expect(res).to.equal(4n);
   });
 
-  it('test operator "mul" overload (euint64, uint64) => euint64 test 1 (4294482875, 4294108167)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4294482875n);
-
+  it('test operator "eq" overload (euint256, euint64) => ebool test 1 (115792089237316195423570985008687907853269984665640564039457580157877855380839, 18445861414108352117)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457580157877855380839n);
+    input.add64(18445861414108352117n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_uint64(
+    const tx = await this.contract5.eq_euint256_euint64(
       encryptedAmount.handles[0],
-      4294108167n,
+      encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18440973986579140125n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
   });
 
-  it('test operator "mul" overload (euint64, uint64) => euint64 test 2 (4294482875, 4294482875)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4294482875n);
-
+  it('test operator "eq" overload (euint256, euint64) => ebool test 2 (18445861414108352113, 18445861414108352117)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18445861414108352113n);
+    input.add64(18445861414108352117n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_uint64(
+    const tx = await this.contract5.eq_euint256_euint64(
       encryptedAmount.handles[0],
-      4294482875n,
+      encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442583163668265625n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
   });
 
-  it('test operator "mul" overload (euint64, uint64) => euint64 test 3 (4294482875, 4294482875)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4294482875n);
-
+  it('test operator "eq" overload (euint256, euint64) => ebool test 3 (18445861414108352117, 18445861414108352117)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18445861414108352117n);
+    input.add64(18445861414108352117n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_uint64(
+    const tx = await this.contract5.eq_euint256_euint64(
       encryptedAmount.handles[0],
-      4294482875n,
+      encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442583163668265625n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
   });
 
-  it('test operator "mul" overload (euint64, uint64) => euint64 test 4 (4294482875, 4294482875)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(4294482875n);
-
+  it('test operator "eq" overload (euint256, euint64) => ebool test 4 (18445861414108352117, 18445861414108352113)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18445861414108352117n);
+    input.add64(18445861414108352113n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_euint64_uint64(
+    const tx = await this.contract5.eq_euint256_euint64(
       encryptedAmount.handles[0],
-      4294482875n,
+      encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442583163668265625n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
   });
 
-  it('test operator "mul" overload (uint64, euint64) => euint64 test 1 (4293014414, 4294108167)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(4294108167n);
+  it('test operator "ne" overload (euint256, euint64) => ebool test 1 (115792089237316195423570985008687907853269984665640564039457582767795625604333, 18442517442309497305)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457582767795625604333n);
+    input.add64(18442517442309497305n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_uint64_euint64(
-      4293014414n,
+    const tx = await this.contract5.ne_euint256_euint64(
       encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18434668256206119138n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
   });
 
-  it('test operator "mul" overload (uint64, euint64) => euint64 test 2 (4294482875, 4294482875)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(4294482875n);
+  it('test operator "ne" overload (euint256, euint64) => ebool test 2 (18442517442309497301, 18442517442309497305)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18442517442309497301n);
+    input.add64(18442517442309497305n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_uint64_euint64(
-      4294482875n,
+    const tx = await this.contract5.ne_euint256_euint64(
       encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442583163668265625n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
   });
 
-  it('test operator "mul" overload (uint64, euint64) => euint64 test 3 (4294482875, 4294482875)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(4294482875n);
+  it('test operator "ne" overload (euint256, euint64) => ebool test 3 (18442517442309497305, 18442517442309497305)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18442517442309497305n);
+    input.add64(18442517442309497305n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_uint64_euint64(
-      4294482875n,
+    const tx = await this.contract5.ne_euint256_euint64(
       encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442583163668265625n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
   });
 
-  it('test operator "mul" overload (uint64, euint64) => euint64 test 4 (4294482875, 4294482875)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(4294482875n);
+  it('test operator "ne" overload (euint256, euint64) => ebool test 4 (18442517442309497305, 18442517442309497301)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(18442517442309497305n);
+    input.add64(18442517442309497301n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.mul_uint64_euint64(
-      4294482875n,
+    const tx = await this.contract5.ne_euint256_euint64(
       encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442583163668265625n);
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
   });
 
-  it('test operator "div" overload (euint64, uint64) => euint64 test 1 (18444804438871636581, 18440669978814863107)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444804438871636581n);
-
+  it('test operator "and" overload (euint256, euint128) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457576570272678427043, 340282366920938463463365977580027748807)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576570272678427043n);
+    input.add128(340282366920938463463365977580027748807n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.div_euint64_uint64(
+    const tx = await this.contract5.and_euint256_euint128(
       encryptedAmount.handles[0],
-      18440669978814863107n,
+      encryptedAmount.handles[1],
       encryptedAmount.inputProof,
     );
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463365902598219506051n);
+  });
+
+  it('test operator "and" overload (euint256, euint128) => euint256 test 2 (340282366920938463463365977580027748803, 340282366920938463463365977580027748807)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463365977580027748803n);
+    input.add128(340282366920938463463365977580027748807n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.and_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463365977580027748803n);
+  });
+
+  it('test operator "and" overload (euint256, euint128) => euint256 test 3 (340282366920938463463365977580027748807, 340282366920938463463365977580027748807)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463365977580027748807n);
+    input.add128(340282366920938463463365977580027748807n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.and_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463365977580027748807n);
+  });
+
+  it('test operator "and" overload (euint256, euint128) => euint256 test 4 (340282366920938463463365977580027748807, 340282366920938463463365977580027748803)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463365977580027748807n);
+    input.add128(340282366920938463463365977580027748803n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.and_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463365977580027748803n);
+  });
+
+  it('test operator "or" overload (euint256, euint128) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457577197813457990369, 340282366920938463463369936236637249441)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457577197813457990369n);
+    input.add128(340282366920938463463369936236637249441n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457579486526930157537n);
+  });
+
+  it('test operator "or" overload (euint256, euint128) => euint256 test 2 (340282366920938463463369936236637249437, 340282366920938463463369936236637249441)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463369936236637249437n);
+    input.add128(340282366920938463463369936236637249441n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463369936236637249469n);
+  });
+
+  it('test operator "or" overload (euint256, euint128) => euint256 test 3 (340282366920938463463369936236637249441, 340282366920938463463369936236637249441)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463369936236637249441n);
+    input.add128(340282366920938463463369936236637249441n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463369936236637249441n);
+  });
+
+  it('test operator "or" overload (euint256, euint128) => euint256 test 4 (340282366920938463463369936236637249441, 340282366920938463463369936236637249437)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463369936236637249441n);
+    input.add128(340282366920938463463369936236637249437n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(340282366920938463463369936236637249469n);
+  });
+
+  it('test operator "xor" overload (euint256, euint128) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457577669991347740401, 340282366920938463463370946277401117143)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457577669991347740401n);
+    input.add128(340282366920938463463370946277401117143n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.xor_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907852929702298719625575994217147101371440934n);
+  });
+
+  it('test operator "xor" overload (euint256, euint128) => euint256 test 2 (340282366920938463463370946277401117139, 340282366920938463463370946277401117143)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463370946277401117139n);
+    input.add128(340282366920938463463370946277401117143n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.xor_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(4n);
+  });
+
+  it('test operator "xor" overload (euint256, euint128) => euint256 test 3 (340282366920938463463370946277401117143, 340282366920938463463370946277401117143)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463370946277401117143n);
+    input.add128(340282366920938463463370946277401117143n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.xor_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(0n);
+  });
+
+  it('test operator "xor" overload (euint256, euint128) => euint256 test 4 (340282366920938463463370946277401117143, 340282366920938463463370946277401117139)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463370946277401117143n);
+    input.add128(340282366920938463463370946277401117139n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.xor_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(4n);
+  });
+
+  it('test operator "eq" overload (euint256, euint128) => ebool test 1 (115792089237316195423570985008687907853269984665640564039457582483289534633819, 340282366920938463463368175294632218305)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457582483289534633819n);
+    input.add128(340282366920938463463368175294632218305n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.eq_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
+  });
+
+  it('test operator "eq" overload (euint256, euint128) => ebool test 2 (340282366920938463463368175294632218301, 340282366920938463463368175294632218305)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463368175294632218301n);
+    input.add128(340282366920938463463368175294632218305n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.eq_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
+  });
+
+  it('test operator "eq" overload (euint256, euint128) => ebool test 3 (340282366920938463463368175294632218305, 340282366920938463463368175294632218305)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463368175294632218305n);
+    input.add128(340282366920938463463368175294632218305n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.eq_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "eq" overload (euint256, euint128) => ebool test 4 (340282366920938463463368175294632218305, 340282366920938463463368175294632218301)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463368175294632218305n);
+    input.add128(340282366920938463463368175294632218301n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.eq_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
+  });
+
+  it('test operator "ne" overload (euint256, euint128) => ebool test 1 (115792089237316195423570985008687907853269984665640564039457580732478702616499, 340282366920938463463370208690176225647)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457580732478702616499n);
+    input.add128(340282366920938463463370208690176225647n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ne_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "ne" overload (euint256, euint128) => ebool test 2 (340282366920938463463370208690176225643, 340282366920938463463370208690176225647)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463370208690176225643n);
+    input.add128(340282366920938463463370208690176225647n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ne_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "ne" overload (euint256, euint128) => ebool test 3 (340282366920938463463370208690176225647, 340282366920938463463370208690176225647)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463370208690176225647n);
+    input.add128(340282366920938463463370208690176225647n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ne_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
+  });
+
+  it('test operator "ne" overload (euint256, euint128) => ebool test 4 (340282366920938463463370208690176225647, 340282366920938463463370208690176225643)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(340282366920938463463370208690176225647n);
+    input.add128(340282366920938463463370208690176225643n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ne_euint256_euint128(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "and" overload (euint256, euint256) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457576731167032528679, 115792089237316195423570985008687907853269984665640564039457578368724569402985)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576731167032528679n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457578368724569402985n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.and_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457575604414494969377n);
+  });
+
+  it('test operator "and" overload (euint256, euint256) => euint256 test 2 (115792089237316195423570985008687907853269984665640564039457576731167032528675, 115792089237316195423570985008687907853269984665640564039457576731167032528679)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576731167032528675n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576731167032528679n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.and_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457576731167032528675n);
+  });
+
+  it('test operator "and" overload (euint256, euint256) => euint256 test 3 (115792089237316195423570985008687907853269984665640564039457576731167032528679, 115792089237316195423570985008687907853269984665640564039457576731167032528679)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576731167032528679n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576731167032528679n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.and_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457576731167032528679n);
+  });
+
+  it('test operator "and" overload (euint256, euint256) => euint256 test 4 (115792089237316195423570985008687907853269984665640564039457576731167032528679, 115792089237316195423570985008687907853269984665640564039457576731167032528675)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576731167032528679n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576731167032528675n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.and_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457576731167032528675n);
+  });
+
+  it('test operator "or" overload (euint256, euint256) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457577608279852617567, 115792089237316195423570985008687907853269984665640564039457576693273518325357)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457577608279852617567n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576693273518325357n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457579297466868481919n);
+  });
+
+  it('test operator "or" overload (euint256, euint256) => euint256 test 2 (115792089237316195423570985008687907853269984665640564039457576693273518325353, 115792089237316195423570985008687907853269984665640564039457576693273518325357)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576693273518325353n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576693273518325357n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457576693273518325357n);
+  });
+
+  it('test operator "or" overload (euint256, euint256) => euint256 test 3 (115792089237316195423570985008687907853269984665640564039457576693273518325357, 115792089237316195423570985008687907853269984665640564039457576693273518325357)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576693273518325357n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576693273518325357n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457576693273518325357n);
+  });
+
+  it('test operator "or" overload (euint256, euint256) => euint256 test 4 (115792089237316195423570985008687907853269984665640564039457576693273518325357, 115792089237316195423570985008687907853269984665640564039457576693273518325353)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576693273518325357n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576693273518325353n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.or_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(115792089237316195423570985008687907853269984665640564039457576693273518325357n);
+  });
+
+  it('test operator "xor" overload (euint256, euint256) => euint256 test 1 (115792089237316195423570985008687907853269984665640564039457578299350234902987, 115792089237316195423570985008687907853269984665640564039457579133571653816313)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457578299350234902987n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457579133571653816313n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.xor_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(1432493188906546n);
+  });
+
+  it('test operator "xor" overload (euint256, euint256) => euint256 test 2 (115792089237316195423570985008687907853269984665640564039457578299350234902983, 115792089237316195423570985008687907853269984665640564039457578299350234902987)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457578299350234902983n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457578299350234902987n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.xor_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(12n);
+  });
+
+  it('test operator "xor" overload (euint256, euint256) => euint256 test 3 (115792089237316195423570985008687907853269984665640564039457578299350234902987, 115792089237316195423570985008687907853269984665640564039457578299350234902987)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457578299350234902987n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457578299350234902987n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.xor_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(0n);
+  });
+
+  it('test operator "xor" overload (euint256, euint256) => euint256 test 4 (115792089237316195423570985008687907853269984665640564039457578299350234902987, 115792089237316195423570985008687907853269984665640564039457578299350234902983)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457578299350234902987n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457578299350234902983n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.xor_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decrypt256(await this.contract5.resEuint256());
+    expect(res).to.equal(12n);
+  });
+
+  it('test operator "eq" overload (euint256, euint256) => ebool test 1 (115792089237316195423570985008687907853269984665640564039457580719248345881805, 115792089237316195423570985008687907853269984665640564039457576623325431097525)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457580719248345881805n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576623325431097525n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.eq_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
+  });
+
+  it('test operator "eq" overload (euint256, euint256) => ebool test 2 (115792089237316195423570985008687907853269984665640564039457576623325431097521, 115792089237316195423570985008687907853269984665640564039457576623325431097525)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576623325431097521n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576623325431097525n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.eq_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
+  });
+
+  it('test operator "eq" overload (euint256, euint256) => ebool test 3 (115792089237316195423570985008687907853269984665640564039457576623325431097525, 115792089237316195423570985008687907853269984665640564039457576623325431097525)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576623325431097525n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576623325431097525n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.eq_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "eq" overload (euint256, euint256) => ebool test 4 (115792089237316195423570985008687907853269984665640564039457576623325431097525, 115792089237316195423570985008687907853269984665640564039457576623325431097521)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576623325431097525n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457576623325431097521n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.eq_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
+  });
+
+  it('test operator "ne" overload (euint256, euint256) => ebool test 1 (115792089237316195423570985008687907853269984665640564039457580202639431468021, 115792089237316195423570985008687907853269984665640564039457583280960900509527)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457580202639431468021n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457583280960900509527n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ne_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "ne" overload (euint256, euint256) => ebool test 2 (115792089237316195423570985008687907853269984665640564039457580202639431468017, 115792089237316195423570985008687907853269984665640564039457580202639431468021)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457580202639431468017n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457580202639431468021n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ne_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "ne" overload (euint256, euint256) => ebool test 3 (115792089237316195423570985008687907853269984665640564039457580202639431468021, 115792089237316195423570985008687907853269984665640564039457580202639431468021)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457580202639431468021n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457580202639431468021n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ne_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(false);
+  });
+
+  it('test operator "ne" overload (euint256, euint256) => ebool test 4 (115792089237316195423570985008687907853269984665640564039457580202639431468021, 115792089237316195423570985008687907853269984665640564039457580202639431468017)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add256(115792089237316195423570985008687907853269984665640564039457580202639431468021n);
+    input.add256(115792089237316195423570985008687907853269984665640564039457580202639431468017n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.ne_euint256_euint256(
+      encryptedAmount.handles[0],
+      encryptedAmount.handles[1],
+      encryptedAmount.inputProof,
+    );
+    await tx.wait();
+    const res = await decryptBool(await this.contract5.resEbool());
+    expect(res).to.equal(true);
+  });
+
+  it('test operator "add" overload (euint8, uint8) => euint8 test 1 (78, 132)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(78n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.add_euint8_uint8(encryptedAmount.handles[0], 132n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(210n);
+  });
+
+  it('test operator "add" overload (euint8, uint8) => euint8 test 2 (74, 78)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(74n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.add_euint8_uint8(encryptedAmount.handles[0], 78n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(152n);
+  });
+
+  it('test operator "add" overload (euint8, uint8) => euint8 test 3 (78, 78)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(78n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.add_euint8_uint8(encryptedAmount.handles[0], 78n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(156n);
+  });
+
+  it('test operator "add" overload (euint8, uint8) => euint8 test 4 (78, 74)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(78n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.add_euint8_uint8(encryptedAmount.handles[0], 74n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(152n);
+  });
+
+  it('test operator "add" overload (uint8, euint8) => euint8 test 1 (83, 67)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+
+    input.add8(67n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.add_uint8_euint8(83n, encryptedAmount.handles[0], encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(150n);
+  });
+
+  it('test operator "add" overload (uint8, euint8) => euint8 test 2 (74, 78)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+
+    input.add8(78n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.add_uint8_euint8(74n, encryptedAmount.handles[0], encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(152n);
+  });
+
+  it('test operator "add" overload (uint8, euint8) => euint8 test 3 (78, 78)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+
+    input.add8(78n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.add_uint8_euint8(78n, encryptedAmount.handles[0], encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(156n);
+  });
+
+  it('test operator "add" overload (uint8, euint8) => euint8 test 4 (78, 74)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+
+    input.add8(74n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.add_uint8_euint8(78n, encryptedAmount.handles[0], encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(152n);
+  });
+
+  it('test operator "sub" overload (euint8, uint8) => euint8 test 1 (45, 45)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(45n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.sub_euint8_uint8(encryptedAmount.handles[0], 45n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(0n);
+  });
+
+  it('test operator "sub" overload (euint8, uint8) => euint8 test 2 (45, 41)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(45n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.sub_euint8_uint8(encryptedAmount.handles[0], 41n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(4n);
+  });
+
+  it('test operator "sub" overload (uint8, euint8) => euint8 test 1 (45, 45)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+
+    input.add8(45n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.sub_uint8_euint8(45n, encryptedAmount.handles[0], encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(0n);
+  });
+
+  it('test operator "sub" overload (uint8, euint8) => euint8 test 2 (45, 41)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+
+    input.add8(41n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.sub_uint8_euint8(45n, encryptedAmount.handles[0], encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(4n);
+  });
+
+  it('test operator "mul" overload (euint8, uint8) => euint8 test 1 (8, 31)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(8n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.mul_euint8_uint8(encryptedAmount.handles[0], 31n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(248n);
+  });
+
+  it('test operator "mul" overload (euint8, uint8) => euint8 test 2 (8, 10)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(8n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.mul_euint8_uint8(encryptedAmount.handles[0], 10n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(80n);
+  });
+
+  it('test operator "mul" overload (euint8, uint8) => euint8 test 3 (10, 10)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(10n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.mul_euint8_uint8(encryptedAmount.handles[0], 10n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(100n);
+  });
+
+  it('test operator "mul" overload (euint8, uint8) => euint8 test 4 (10, 8)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(10n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.mul_euint8_uint8(encryptedAmount.handles[0], 8n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(80n);
+  });
+
+  it('test operator "mul" overload (uint8, euint8) => euint8 test 1 (9, 9)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+
+    input.add8(9n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.mul_uint8_euint8(9n, encryptedAmount.handles[0], encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(81n);
+  });
+
+  it('test operator "mul" overload (uint8, euint8) => euint8 test 2 (8, 10)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+
+    input.add8(10n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.mul_uint8_euint8(8n, encryptedAmount.handles[0], encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(80n);
+  });
+
+  it('test operator "mul" overload (uint8, euint8) => euint8 test 3 (10, 10)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+
+    input.add8(10n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.mul_uint8_euint8(10n, encryptedAmount.handles[0], encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(100n);
+  });
+
+  it('test operator "mul" overload (uint8, euint8) => euint8 test 4 (10, 8)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+
+    input.add8(8n);
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.mul_uint8_euint8(10n, encryptedAmount.handles[0], encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(80n);
+  });
+
+  it('test operator "div" overload (euint8, uint8) => euint8 test 1 (50, 225)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(50n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.div_euint8_uint8(encryptedAmount.handles[0], 225n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(0n);
+  });
+
+  it('test operator "div" overload (euint8, uint8) => euint8 test 2 (40, 44)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(40n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.div_euint8_uint8(encryptedAmount.handles[0], 44n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(0n);
+  });
+
+  it('test operator "div" overload (euint8, uint8) => euint8 test 3 (44, 44)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(44n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.div_euint8_uint8(encryptedAmount.handles[0], 44n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
     expect(res).to.equal(1n);
   });
 
-  it('test operator "div" overload (euint64, uint64) => euint64 test 2 (18444804438871636577, 18444804438871636581)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444804438871636577n);
+  it('test operator "div" overload (euint8, uint8) => euint8 test 4 (44, 40)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(44n);
 
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.div_euint64_uint64(
-      encryptedAmount.handles[0],
-      18444804438871636581n,
-      encryptedAmount.inputProof,
-    );
+    const tx = await this.contract5.div_euint8_uint8(encryptedAmount.handles[0], 40n, encryptedAmount.inputProof);
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(0n);
-  });
-
-  it('test operator "div" overload (euint64, uint64) => euint64 test 3 (18444804438871636581, 18444804438871636581)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444804438871636581n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.div_euint64_uint64(
-      encryptedAmount.handles[0],
-      18444804438871636581n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
+    const res = await decrypt8(await this.contract5.resEuint8());
     expect(res).to.equal(1n);
   });
 
-  it('test operator "div" overload (euint64, uint64) => euint64 test 4 (18444804438871636581, 18444804438871636577)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444804438871636581n);
+  it('test operator "rem" overload (euint8, uint8) => euint8 test 1 (179, 122)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(179n);
 
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.div_euint64_uint64(
-      encryptedAmount.handles[0],
-      18444804438871636577n,
-      encryptedAmount.inputProof,
-    );
+    const tx = await this.contract5.rem_euint8_uint8(encryptedAmount.handles[0], 122n, encryptedAmount.inputProof);
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(57n);
+  });
+
+  it('test operator "rem" overload (euint8, uint8) => euint8 test 2 (17, 21)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(17n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.rem_euint8_uint8(encryptedAmount.handles[0], 21n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(17n);
+  });
+
+  it('test operator "rem" overload (euint8, uint8) => euint8 test 3 (21, 21)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(21n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.rem_euint8_uint8(encryptedAmount.handles[0], 21n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(0n);
+  });
+
+  it('test operator "rem" overload (euint8, uint8) => euint8 test 4 (21, 17)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(21n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.rem_euint8_uint8(encryptedAmount.handles[0], 17n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(4n);
+  });
+
+  it('test operator "and" overload (euint8, uint8) => euint8 test 1 (5, 191)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(5n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.and_euint8_uint8(encryptedAmount.handles[0], 191n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(5n);
+  });
+
+  it('test operator "and" overload (euint8, uint8) => euint8 test 2 (1, 5)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(1n);
+
+    const encryptedAmount = await input.encrypt();
+    const tx = await this.contract5.and_euint8_uint8(encryptedAmount.handles[0], 5n, encryptedAmount.inputProof);
+    await tx.wait();
+    const res = await decrypt8(await this.contract5.resEuint8());
     expect(res).to.equal(1n);
   });
 
-  it('test operator "rem" overload (euint64, uint64) => euint64 test 1 (18446008186519174615, 18445049964172995155)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18446008186519174615n);
+  it('test operator "and" overload (euint8, uint8) => euint8 test 3 (5, 5)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(5n);
 
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.rem_euint64_uint64(
-      encryptedAmount.handles[0],
-      18445049964172995155n,
-      encryptedAmount.inputProof,
-    );
+    const tx = await this.contract5.and_euint8_uint8(encryptedAmount.handles[0], 5n, encryptedAmount.inputProof);
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(958222346179460n);
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(5n);
   });
 
-  it('test operator "rem" overload (euint64, uint64) => euint64 test 2 (18443920463081385689, 18443920463081385693)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443920463081385689n);
+  it('test operator "and" overload (euint8, uint8) => euint8 test 4 (5, 1)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(5n);
 
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.rem_euint64_uint64(
-      encryptedAmount.handles[0],
-      18443920463081385693n,
-      encryptedAmount.inputProof,
-    );
+    const tx = await this.contract5.and_euint8_uint8(encryptedAmount.handles[0], 1n, encryptedAmount.inputProof);
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18443920463081385689n);
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(1n);
   });
 
-  it('test operator "rem" overload (euint64, uint64) => euint64 test 3 (18443920463081385693, 18443920463081385693)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443920463081385693n);
+  it('test operator "and" overload (uint8, euint8) => euint8 test 1 (155, 191)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
 
+    input.add8(191n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.rem_euint64_uint64(
-      encryptedAmount.handles[0],
-      18443920463081385693n,
-      encryptedAmount.inputProof,
-    );
+    const tx = await this.contract5.and_uint8_euint8(155n, encryptedAmount.handles[0], encryptedAmount.inputProof);
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(0n);
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(155n);
   });
 
-  it('test operator "rem" overload (euint64, uint64) => euint64 test 4 (18443920463081385693, 18443920463081385689)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443920463081385693n);
+  it('test operator "and" overload (uint8, euint8) => euint8 test 2 (1, 5)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
 
+    input.add8(5n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.rem_euint64_uint64(
-      encryptedAmount.handles[0],
-      18443920463081385689n,
-      encryptedAmount.inputProof,
-    );
+    const tx = await this.contract5.and_uint8_euint8(1n, encryptedAmount.handles[0], encryptedAmount.inputProof);
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(4n);
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(1n);
   });
 
-  it('test operator "and" overload (euint64, uint64) => euint64 test 1 (18444124970074897317, 18444452212053822561)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444124970074897317n);
+  it('test operator "and" overload (uint8, euint8) => euint8 test 3 (5, 5)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
 
+    input.add8(5n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_uint64(
-      encryptedAmount.handles[0],
-      18444452212053822561n,
-      encryptedAmount.inputProof,
-    );
+    const tx = await this.contract5.and_uint8_euint8(5n, encryptedAmount.handles[0], encryptedAmount.inputProof);
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18444089373216524321n);
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(5n);
   });
 
-  it('test operator "and" overload (euint64, uint64) => euint64 test 2 (18442657213736743283, 18442657213736743287)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18442657213736743283n);
+  it('test operator "and" overload (uint8, euint8) => euint8 test 4 (5, 1)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
 
+    input.add8(1n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_uint64(
-      encryptedAmount.handles[0],
-      18442657213736743287n,
-      encryptedAmount.inputProof,
-    );
+    const tx = await this.contract5.and_uint8_euint8(5n, encryptedAmount.handles[0], encryptedAmount.inputProof);
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442657213736743283n);
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(1n);
   });
 
-  it('test operator "and" overload (euint64, uint64) => euint64 test 3 (18442657213736743287, 18442657213736743287)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18442657213736743287n);
+  it('test operator "or" overload (euint8, uint8) => euint8 test 1 (244, 106)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(244n);
 
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_uint64(
-      encryptedAmount.handles[0],
-      18442657213736743287n,
-      encryptedAmount.inputProof,
-    );
+    const tx = await this.contract5.or_euint8_uint8(encryptedAmount.handles[0], 106n, encryptedAmount.inputProof);
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442657213736743287n);
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(254n);
   });
 
-  it('test operator "and" overload (euint64, uint64) => euint64 test 4 (18442657213736743287, 18442657213736743283)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18442657213736743287n);
+  it('test operator "or" overload (euint8, uint8) => euint8 test 2 (157, 161)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(157n);
 
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_euint64_uint64(
-      encryptedAmount.handles[0],
-      18442657213736743283n,
-      encryptedAmount.inputProof,
-    );
+    const tx = await this.contract5.or_euint8_uint8(encryptedAmount.handles[0], 161n, encryptedAmount.inputProof);
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442657213736743283n);
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(189n);
   });
 
-  it('test operator "and" overload (uint64, euint64) => euint64 test 1 (18445812436048048525, 18444452212053822561)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
+  it('test operator "or" overload (euint8, uint8) => euint8 test 3 (161, 161)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(161n);
 
-    input.add64(18444452212053822561n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_uint64_euint64(
-      18445812436048048525n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
+    const tx = await this.contract5.or_euint8_uint8(encryptedAmount.handles[0], 161n, encryptedAmount.inputProof);
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18443525253958221825n);
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(161n);
   });
 
-  it('test operator "and" overload (uint64, euint64) => euint64 test 2 (18442657213736743283, 18442657213736743287)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
+  it('test operator "or" overload (euint8, uint8) => euint8 test 4 (161, 157)', async function () {
+    const input = this.instances.alice.createEncryptedInput(this.contract5Address, this.signers.alice.address);
+    input.add8(161n);
 
-    input.add64(18442657213736743287n);
     const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_uint64_euint64(
-      18442657213736743283n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
+    const tx = await this.contract5.or_euint8_uint8(encryptedAmount.handles[0], 157n, encryptedAmount.inputProof);
     await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442657213736743283n);
-  });
-
-  it('test operator "and" overload (uint64, euint64) => euint64 test 3 (18442657213736743287, 18442657213736743287)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18442657213736743287n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_uint64_euint64(
-      18442657213736743287n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442657213736743287n);
-  });
-
-  it('test operator "and" overload (uint64, euint64) => euint64 test 4 (18442657213736743287, 18442657213736743283)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18442657213736743283n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.and_uint64_euint64(
-      18442657213736743287n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18442657213736743283n);
-  });
-
-  it('test operator "or" overload (euint64, uint64) => euint64 test 1 (18445851190683093315, 18441158928097514419)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445851190683093315n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_uint64(
-      encryptedAmount.handles[0],
-      18441158928097514419n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18445895250664217587n);
-  });
-
-  it('test operator "or" overload (euint64, uint64) => euint64 test 2 (18440297605680046449, 18440297605680046453)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440297605680046449n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_uint64(
-      encryptedAmount.handles[0],
-      18440297605680046453n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18440297605680046453n);
-  });
-
-  it('test operator "or" overload (euint64, uint64) => euint64 test 3 (18440297605680046453, 18440297605680046453)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440297605680046453n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_uint64(
-      encryptedAmount.handles[0],
-      18440297605680046453n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18440297605680046453n);
-  });
-
-  it('test operator "or" overload (euint64, uint64) => euint64 test 4 (18440297605680046453, 18440297605680046449)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18440297605680046453n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_euint64_uint64(
-      encryptedAmount.handles[0],
-      18440297605680046449n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18440297605680046453n);
-  });
-
-  it('test operator "or" overload (uint64, euint64) => euint64 test 1 (18444816838000851275, 18441158928097514419)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18441158928097514419n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_uint64_euint64(
-      18444816838000851275n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18445951836858858491n);
-  });
-
-  it('test operator "or" overload (uint64, euint64) => euint64 test 2 (18440297605680046449, 18440297605680046453)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18440297605680046453n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_uint64_euint64(
-      18440297605680046449n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18440297605680046453n);
-  });
-
-  it('test operator "or" overload (uint64, euint64) => euint64 test 3 (18440297605680046453, 18440297605680046453)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18440297605680046453n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_uint64_euint64(
-      18440297605680046453n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18440297605680046453n);
-  });
-
-  it('test operator "or" overload (uint64, euint64) => euint64 test 4 (18440297605680046453, 18440297605680046449)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18440297605680046449n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.or_uint64_euint64(
-      18440297605680046453n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(18440297605680046453n);
-  });
-
-  it('test operator "xor" overload (euint64, uint64) => euint64 test 1 (18439520894560746701, 18445914762272407037)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439520894560746701n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_uint64(
-      encryptedAmount.handles[0],
-      18445914762272407037n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(7700087946789168n);
-  });
-
-  it('test operator "xor" overload (euint64, uint64) => euint64 test 2 (18439520894560746697, 18439520894560746701)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439520894560746697n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_uint64(
-      encryptedAmount.handles[0],
-      18439520894560746701n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(4n);
-  });
-
-  it('test operator "xor" overload (euint64, uint64) => euint64 test 3 (18439520894560746701, 18439520894560746701)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439520894560746701n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_uint64(
-      encryptedAmount.handles[0],
-      18439520894560746701n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(0n);
-  });
-
-  it('test operator "xor" overload (euint64, uint64) => euint64 test 4 (18439520894560746701, 18439520894560746697)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18439520894560746701n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_euint64_uint64(
-      encryptedAmount.handles[0],
-      18439520894560746697n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(4n);
-  });
-
-  it('test operator "xor" overload (uint64, euint64) => euint64 test 1 (18446426713533628951, 18445914762272407037)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18445914762272407037n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_uint64_euint64(
-      18446426713533628951n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(1076293857951722n);
-  });
-
-  it('test operator "xor" overload (uint64, euint64) => euint64 test 2 (18439520894560746697, 18439520894560746701)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18439520894560746701n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_uint64_euint64(
-      18439520894560746697n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(4n);
-  });
-
-  it('test operator "xor" overload (uint64, euint64) => euint64 test 3 (18439520894560746701, 18439520894560746701)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18439520894560746701n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_uint64_euint64(
-      18439520894560746701n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(0n);
-  });
-
-  it('test operator "xor" overload (uint64, euint64) => euint64 test 4 (18439520894560746701, 18439520894560746697)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18439520894560746697n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.xor_uint64_euint64(
-      18439520894560746701n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract7.res64());
-    expect(res).to.equal(4n);
-  });
-
-  it('test operator "eq" overload (euint64, uint64) => ebool test 1 (18443282870504090991, 18439130415590833625)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443282870504090991n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_uint64(
-      encryptedAmount.handles[0],
-      18439130415590833625n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "eq" overload (euint64, uint64) => ebool test 2 (18443282870504090987, 18443282870504090991)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443282870504090987n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_uint64(
-      encryptedAmount.handles[0],
-      18443282870504090991n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "eq" overload (euint64, uint64) => ebool test 3 (18443282870504090991, 18443282870504090991)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443282870504090991n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_uint64(
-      encryptedAmount.handles[0],
-      18443282870504090991n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "eq" overload (euint64, uint64) => ebool test 4 (18443282870504090991, 18443282870504090987)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18443282870504090991n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_euint64_uint64(
-      encryptedAmount.handles[0],
-      18443282870504090987n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "eq" overload (uint64, euint64) => ebool test 1 (18442875587397628573, 18439130415590833625)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18439130415590833625n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_uint64_euint64(
-      18442875587397628573n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "eq" overload (uint64, euint64) => ebool test 2 (18443282870504090987, 18443282870504090991)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18443282870504090991n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_uint64_euint64(
-      18443282870504090987n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "eq" overload (uint64, euint64) => ebool test 3 (18443282870504090991, 18443282870504090991)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18443282870504090991n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_uint64_euint64(
-      18443282870504090991n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "eq" overload (uint64, euint64) => ebool test 4 (18443282870504090991, 18443282870504090987)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18443282870504090987n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.eq_uint64_euint64(
-      18443282870504090991n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "ne" overload (euint64, uint64) => ebool test 1 (18445289136242885897, 18440743017590143725)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18445289136242885897n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_uint64(
-      encryptedAmount.handles[0],
-      18440743017590143725n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ne" overload (euint64, uint64) => ebool test 2 (18441860560804132291, 18441860560804132295)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18441860560804132291n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_uint64(
-      encryptedAmount.handles[0],
-      18441860560804132295n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ne" overload (euint64, uint64) => ebool test 3 (18441860560804132295, 18441860560804132295)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18441860560804132295n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_uint64(
-      encryptedAmount.handles[0],
-      18441860560804132295n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "ne" overload (euint64, uint64) => ebool test 4 (18441860560804132295, 18441860560804132291)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18441860560804132295n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_euint64_uint64(
-      encryptedAmount.handles[0],
-      18441860560804132291n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ne" overload (uint64, euint64) => ebool test 1 (18442171622930650065, 18440743017590143725)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18440743017590143725n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_uint64_euint64(
-      18442171622930650065n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ne" overload (uint64, euint64) => ebool test 2 (18441860560804132291, 18441860560804132295)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18441860560804132295n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_uint64_euint64(
-      18441860560804132291n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ne" overload (uint64, euint64) => ebool test 3 (18441860560804132295, 18441860560804132295)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18441860560804132295n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_uint64_euint64(
-      18441860560804132295n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "ne" overload (uint64, euint64) => ebool test 4 (18441860560804132295, 18441860560804132291)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18441860560804132291n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ne_uint64_euint64(
-      18441860560804132295n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ge" overload (euint64, uint64) => ebool test 1 (18444613618003912273, 18444784193665775113)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18444613618003912273n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_uint64(
-      encryptedAmount.handles[0],
-      18444784193665775113n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "ge" overload (euint64, uint64) => ebool test 2 (18441817383047397969, 18441817383047397973)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18441817383047397969n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_uint64(
-      encryptedAmount.handles[0],
-      18441817383047397973n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "ge" overload (euint64, uint64) => ebool test 3 (18441817383047397973, 18441817383047397973)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18441817383047397973n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_uint64(
-      encryptedAmount.handles[0],
-      18441817383047397973n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ge" overload (euint64, uint64) => ebool test 4 (18441817383047397973, 18441817383047397969)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-    input.add64(18441817383047397973n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_euint64_uint64(
-      encryptedAmount.handles[0],
-      18441817383047397969n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ge" overload (uint64, euint64) => ebool test 1 (18439321097396363619, 18444784193665775113)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18444784193665775113n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_uint64_euint64(
-      18439321097396363619n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "ge" overload (uint64, euint64) => ebool test 2 (18441817383047397969, 18441817383047397973)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18441817383047397973n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_uint64_euint64(
-      18441817383047397969n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "ge" overload (uint64, euint64) => ebool test 3 (18441817383047397973, 18441817383047397973)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18441817383047397973n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_uint64_euint64(
-      18441817383047397973n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "ge" overload (uint64, euint64) => ebool test 4 (18441817383047397973, 18441817383047397969)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract7Address, this.signers.alice.address);
-
-    input.add64(18441817383047397969n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract7.ge_uint64_euint64(
-      18441817383047397973n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract7.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "gt" overload (euint64, uint64) => ebool test 1 (18444129545450155179, 18441052996137337147)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18444129545450155179n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.gt_euint64_uint64(
-      encryptedAmount.handles[0],
-      18441052996137337147n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "gt" overload (euint64, uint64) => ebool test 2 (18438304556640407457, 18438304556640407461)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18438304556640407457n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.gt_euint64_uint64(
-      encryptedAmount.handles[0],
-      18438304556640407461n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "gt" overload (euint64, uint64) => ebool test 3 (18438304556640407461, 18438304556640407461)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18438304556640407461n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.gt_euint64_uint64(
-      encryptedAmount.handles[0],
-      18438304556640407461n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "gt" overload (euint64, uint64) => ebool test 4 (18438304556640407461, 18438304556640407457)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18438304556640407461n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.gt_euint64_uint64(
-      encryptedAmount.handles[0],
-      18438304556640407457n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "gt" overload (uint64, euint64) => ebool test 1 (18440314139404889003, 18441052996137337147)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18441052996137337147n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.gt_uint64_euint64(
-      18440314139404889003n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "gt" overload (uint64, euint64) => ebool test 2 (18438304556640407457, 18438304556640407461)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18438304556640407461n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.gt_uint64_euint64(
-      18438304556640407457n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "gt" overload (uint64, euint64) => ebool test 3 (18438304556640407461, 18438304556640407461)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18438304556640407461n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.gt_uint64_euint64(
-      18438304556640407461n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "gt" overload (uint64, euint64) => ebool test 4 (18438304556640407461, 18438304556640407457)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18438304556640407457n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.gt_uint64_euint64(
-      18438304556640407461n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "le" overload (euint64, uint64) => ebool test 1 (18440402951089431437, 18443808705297812893)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18440402951089431437n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.le_euint64_uint64(
-      encryptedAmount.handles[0],
-      18443808705297812893n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "le" overload (euint64, uint64) => ebool test 2 (18440402951089431433, 18440402951089431437)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18440402951089431433n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.le_euint64_uint64(
-      encryptedAmount.handles[0],
-      18440402951089431437n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "le" overload (euint64, uint64) => ebool test 3 (18440402951089431437, 18440402951089431437)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18440402951089431437n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.le_euint64_uint64(
-      encryptedAmount.handles[0],
-      18440402951089431437n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "le" overload (euint64, uint64) => ebool test 4 (18440402951089431437, 18440402951089431433)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18440402951089431437n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.le_euint64_uint64(
-      encryptedAmount.handles[0],
-      18440402951089431433n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "le" overload (uint64, euint64) => ebool test 1 (18443941229431137849, 18443808705297812893)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18443808705297812893n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.le_uint64_euint64(
-      18443941229431137849n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "le" overload (uint64, euint64) => ebool test 2 (18440402951089431433, 18440402951089431437)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18440402951089431437n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.le_uint64_euint64(
-      18440402951089431433n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "le" overload (uint64, euint64) => ebool test 3 (18440402951089431437, 18440402951089431437)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18440402951089431437n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.le_uint64_euint64(
-      18440402951089431437n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "le" overload (uint64, euint64) => ebool test 4 (18440402951089431437, 18440402951089431433)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18440402951089431433n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.le_uint64_euint64(
-      18440402951089431437n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "lt" overload (euint64, uint64) => ebool test 1 (18443308354694945505, 18438426856220799235)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18443308354694945505n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.lt_euint64_uint64(
-      encryptedAmount.handles[0],
-      18438426856220799235n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "lt" overload (euint64, uint64) => ebool test 2 (18438494040818835501, 18438494040818835505)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18438494040818835501n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.lt_euint64_uint64(
-      encryptedAmount.handles[0],
-      18438494040818835505n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "lt" overload (euint64, uint64) => ebool test 3 (18438494040818835505, 18438494040818835505)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18438494040818835505n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.lt_euint64_uint64(
-      encryptedAmount.handles[0],
-      18438494040818835505n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "lt" overload (euint64, uint64) => ebool test 4 (18438494040818835505, 18438494040818835501)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18438494040818835505n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.lt_euint64_uint64(
-      encryptedAmount.handles[0],
-      18438494040818835501n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "lt" overload (uint64, euint64) => ebool test 1 (18444682732892858227, 18438426856220799235)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18438426856220799235n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.lt_uint64_euint64(
-      18444682732892858227n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "lt" overload (uint64, euint64) => ebool test 2 (18438494040818835501, 18438494040818835505)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18438494040818835505n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.lt_uint64_euint64(
-      18438494040818835501n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(true);
-  });
-
-  it('test operator "lt" overload (uint64, euint64) => ebool test 3 (18438494040818835505, 18438494040818835505)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18438494040818835505n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.lt_uint64_euint64(
-      18438494040818835505n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "lt" overload (uint64, euint64) => ebool test 4 (18438494040818835505, 18438494040818835501)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18438494040818835501n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.lt_uint64_euint64(
-      18438494040818835505n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decryptBool(await this.contract8.resb());
-    expect(res).to.equal(false);
-  });
-
-  it('test operator "min" overload (euint64, uint64) => euint64 test 1 (18438422972288340001, 18439986643027034037)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18438422972288340001n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.min_euint64_uint64(
-      encryptedAmount.handles[0],
-      18439986643027034037n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18438422972288340001n);
-  });
-
-  it('test operator "min" overload (euint64, uint64) => euint64 test 2 (18438422972288339997, 18438422972288340001)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18438422972288339997n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.min_euint64_uint64(
-      encryptedAmount.handles[0],
-      18438422972288340001n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18438422972288339997n);
-  });
-
-  it('test operator "min" overload (euint64, uint64) => euint64 test 3 (18438422972288340001, 18438422972288340001)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18438422972288340001n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.min_euint64_uint64(
-      encryptedAmount.handles[0],
-      18438422972288340001n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18438422972288340001n);
-  });
-
-  it('test operator "min" overload (euint64, uint64) => euint64 test 4 (18438422972288340001, 18438422972288339997)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18438422972288340001n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.min_euint64_uint64(
-      encryptedAmount.handles[0],
-      18438422972288339997n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18438422972288339997n);
-  });
-
-  it('test operator "min" overload (uint64, euint64) => euint64 test 1 (18443338893508802671, 18439986643027034037)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18439986643027034037n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.min_uint64_euint64(
-      18443338893508802671n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18439986643027034037n);
-  });
-
-  it('test operator "min" overload (uint64, euint64) => euint64 test 2 (18438422972288339997, 18438422972288340001)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18438422972288340001n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.min_uint64_euint64(
-      18438422972288339997n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18438422972288339997n);
-  });
-
-  it('test operator "min" overload (uint64, euint64) => euint64 test 3 (18438422972288340001, 18438422972288340001)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18438422972288340001n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.min_uint64_euint64(
-      18438422972288340001n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18438422972288340001n);
-  });
-
-  it('test operator "min" overload (uint64, euint64) => euint64 test 4 (18438422972288340001, 18438422972288339997)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18438422972288339997n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.min_uint64_euint64(
-      18438422972288340001n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18438422972288339997n);
-  });
-
-  it('test operator "max" overload (euint64, uint64) => euint64 test 1 (18445852065991763771, 18440623444591001569)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18445852065991763771n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.max_euint64_uint64(
-      encryptedAmount.handles[0],
-      18440623444591001569n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18445852065991763771n);
-  });
-
-  it('test operator "max" overload (euint64, uint64) => euint64 test 2 (18440937538047974889, 18440937538047974893)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18440937538047974889n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.max_euint64_uint64(
-      encryptedAmount.handles[0],
-      18440937538047974893n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18440937538047974893n);
-  });
-
-  it('test operator "max" overload (euint64, uint64) => euint64 test 3 (18440937538047974893, 18440937538047974893)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18440937538047974893n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.max_euint64_uint64(
-      encryptedAmount.handles[0],
-      18440937538047974893n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18440937538047974893n);
-  });
-
-  it('test operator "max" overload (euint64, uint64) => euint64 test 4 (18440937538047974893, 18440937538047974889)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-    input.add64(18440937538047974893n);
-
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.max_euint64_uint64(
-      encryptedAmount.handles[0],
-      18440937538047974889n,
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18440937538047974893n);
-  });
-
-  it('test operator "max" overload (uint64, euint64) => euint64 test 1 (18444013465281910433, 18440623444591001569)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18440623444591001569n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.max_uint64_euint64(
-      18444013465281910433n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18444013465281910433n);
-  });
-
-  it('test operator "max" overload (uint64, euint64) => euint64 test 2 (18440937538047974889, 18440937538047974893)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18440937538047974893n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.max_uint64_euint64(
-      18440937538047974889n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18440937538047974893n);
-  });
-
-  it('test operator "max" overload (uint64, euint64) => euint64 test 3 (18440937538047974893, 18440937538047974893)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18440937538047974893n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.max_uint64_euint64(
-      18440937538047974893n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18440937538047974893n);
-  });
-
-  it('test operator "max" overload (uint64, euint64) => euint64 test 4 (18440937538047974893, 18440937538047974889)', async function () {
-    const input = this.instances.alice.createEncryptedInput(this.contract8Address, this.signers.alice.address);
-
-    input.add64(18440937538047974889n);
-    const encryptedAmount = await input.encrypt();
-    const tx = await this.contract8.max_uint64_euint64(
-      18440937538047974893n,
-      encryptedAmount.handles[0],
-      encryptedAmount.inputProof,
-    );
-    await tx.wait();
-    const res = await decrypt64(await this.contract8.res64());
-    expect(res).to.equal(18440937538047974893n);
+    const res = await decrypt8(await this.contract5.resEuint8());
+    expect(res).to.equal(189n);
   });
 });

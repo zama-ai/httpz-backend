@@ -32,7 +32,6 @@ abstract contract DecryptionOracleCaller {
     uint256 internal counterRequest;
     mapping(uint256 => bytes32[]) private requestedHandles;
     mapping(uint256 => ebool[]) private paramsEBool;
-    mapping(uint256 => euint4[]) private paramsEUint4;
     mapping(uint256 => euint8[]) private paramsEUint8;
     mapping(uint256 => euint16[]) private paramsEUint16;
     mapping(uint256 => euint32[]) private paramsEUint32;
@@ -45,10 +44,6 @@ abstract contract DecryptionOracleCaller {
 
     function addParamsEBool(uint256 requestID, ebool _ebool) internal {
         paramsEBool[requestID].push(_ebool);
-    }
-
-    function addParamsEUint4(uint256 requestID, euint4 _euint4) internal {
-        paramsEUint4[requestID].push(_euint4);
     }
 
     function addParamsEUint8(uint256 requestID, euint8 _euint8) internal {
@@ -95,10 +90,6 @@ abstract contract DecryptionOracleCaller {
 
     function getParamsEBool(uint256 requestID) internal view returns (ebool[] memory) {
         return paramsEBool[requestID];
-    }
-
-    function getParamsEUint4(uint256 requestID) internal view returns (euint4[] memory) {
-        return paramsEUint4[requestID];
     }
 
     function getParamsEUint8(uint256 requestID) internal view returns (euint8[] memory) {
@@ -151,10 +142,6 @@ abstract contract DecryptionOracleCaller {
 
     function toBytes32(ebool newCT) internal pure returns (bytes32 ct) {
         ct = ebool.unwrap(newCT);
-    }
-
-    function toBytes32(euint4 newCT) internal pure returns (bytes32 ct) {
-        ct = euint4.unwrap(newCT);
     }
 
     function toBytes32(euint8 newCT) internal pure returns (bytes32 ct) {
@@ -231,16 +218,16 @@ abstract contract DecryptionOracleCaller {
         uint256 handlesListlen = handlesList.length;
         uint256 signedDataLength;
         for (uint256 i = 0; i < handlesListlen; i++) {
-            uint8 typeCt = uint8(handlesList[i][30]);
-            if (typeCt < 9) {
+            FheType typeCt = FheType(uint8(handlesList[i][30]));
+            if (uint8(typeCt) < 9) {
                 signedDataLength += 32;
-            } else if (typeCt == 9) {
+            } else if (typeCt == FheType.Uint512) {
                 //ebytes64
                 signedDataLength += 128;
-            } else if (typeCt == 10) {
+            } else if (typeCt == FheType.Uint1024) {
                 //ebytes128
                 signedDataLength += 192;
-            } else if (typeCt == 11) {
+            } else if (typeCt == FheType.Uint2048) {
                 //ebytes256
                 signedDataLength += 320;
             } else {
