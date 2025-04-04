@@ -48,28 +48,28 @@ fn main() {
             ));
         });
 
-        group.throughput(Throughput::Elements(num_elems));
-        let bench_id = format!("{bench_name}::throughput::no_cmux::FHEUint64::{num_elems}_elems");
-        group.bench_with_input(bench_id.clone(), &num_elems, move |b, &num_elems| {
-            let _ = Runtime::new().unwrap().block_on(schedule_erc20_no_cmux(
-                b,
-                num_elems as usize,
-                bench_id.clone(),
-            ));
-        });
+        // group.throughput(Throughput::Elements(num_elems));
+        // let bench_id = format!("{bench_name}::throughput::no_cmux::FHEUint64::{num_elems}_elems");
+        // group.bench_with_input(bench_id.clone(), &num_elems, move |b, &num_elems| {
+        //     let _ = Runtime::new().unwrap().block_on(schedule_erc20_no_cmux(
+        //         b,
+        //         num_elems as usize,
+        //         bench_id.clone(),
+        //     ));
+        // });
 
-        group.throughput(Throughput::Elements(num_elems));
-        let bench_id =
-            format!("{bench_name}::throughput::dependent_no_cmux::FHEUint64::{num_elems}_elems");
-        group.bench_with_input(bench_id.clone(), &num_elems, move |b, &num_elems| {
-            let _ = Runtime::new()
-                .unwrap()
-                .block_on(schedule_dependent_erc20_no_cmux(
-                    b,
-                    num_elems as usize,
-                    bench_id.clone(),
-                ));
-        });
+        // group.throughput(Throughput::Elements(num_elems));
+        // let bench_id =
+        //     format!("{bench_name}::throughput::dependent_no_cmux::FHEUint64::{num_elems}_elems");
+        // group.bench_with_input(bench_id.clone(), &num_elems, move |b, &num_elems| {
+        //     let _ = Runtime::new()
+        //         .unwrap()
+        //         .block_on(schedule_dependent_erc20_no_cmux(
+        //             b,
+        //             num_elems as usize,
+        //             bench_id.clone(),
+        //         ));
+        // });
     }
     group.finish();
 
