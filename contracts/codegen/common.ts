@@ -72,27 +72,108 @@ export type OverloadShard = {
 };
 
 /**
- * Represents a Fully Homomorphic Encryption (FHE) type.
- *
- * @interface FheType
- *
- * @property {string} type - The type of the FHE element.
- * @property {string[]} supportedOperators - A list of operators supported by this FHE type.
- * @property {number} bitLength - The bit length of the FHE type.
- * @property {string} clearMatchingType - The corresponding clear (non-encrypted) type.
- * @property {number} [value] - An optional value associated with the FHE type.
- * @property {boolean} [isAlias] - Indicates if this FHE type is an alias.
- * @property {string} [aliasType] - The type that this FHE type is an alias for, if applicable.
- * @property {string} [clearMatchingTypeAlias] - The clear type that the alias corresponds to, if applicable.
+ * Represents a Fully Homomorphic Encryption (FHE) type definition.
+ * This interface defines the structure of an FHE type, including its
+ * properties, supported operators, and related metadata.
  */
 export interface FheType {
+  /**
+   * The name or identifier of the FHE type.
+   */
   type: string;
+
+  /**
+   * A list of operators that are supported by this FHE type.
+   */
   supportedOperators: string[];
+
+  /**
+   * The bit length of the FHE type, representing its size in bits.
+   */
   bitLength: number;
+
+  /**
+   * The corresponding clear (non-encrypted) type that matches this FHE type.
+   */
   clearMatchingType: string;
+
+  /**
+   * The value associated with this FHE type.
+   */
+  value: number;
+
+  /**
+   * An optional list of alias types that are associated with this FHE type.
+   */
+  aliases?: AliasFheType[];
+}
+
+/**
+ * Represents an alias for a Fully Homomorphic Encryption (FHE) type.
+ * This interface provides a way to define alternative names or representations
+ * for an FHE type, along with its supported operators and the corresponding
+ * clear (unencrypted) matching type.
+ */
+export interface AliasFheType {
+  /**
+   * The name or identifier of the FHE type.
+   */
+  type: string;
+
+  /**
+   * A list of operators that are supported by this FHE type.
+   */
+  supportedOperators: string[];
+
+  /**
+   * The corresponding clear (non-encrypted) type that matches this FHE type.
+   */
+  clearMatchingType: string;
+}
+
+/**
+ * Represents an adjusted Fully Homomorphic Encryption (FHE) type with metadata
+ * about its properties, supported operations, and related type information.
+ */
+export interface AdjustedFheType {
+  /**
+   * The name of the FHE type.
+   */
+  type: string;
+
+  /**
+   * A list of operators supported by this FHE type.
+   */
+  supportedOperators: string[];
+
+  /**
+   * The bit length of the FHE type, indicating its size or precision.
+   */
+  bitLength: number;
+
+  /**
+   * The corresponding clear (non-encrypted) type that matches this FHE type.
+   */
+  clearMatchingType: string;
+
+  /**
+   * (Optional) A specific value associated with this FHE type.
+   */
   value?: number;
+
+  /**
+   * (Optional) Indicates whether this type is an alias for another type.
+   */
   isAlias?: boolean;
+
+  /**
+   * (Optional) The name of the type this alias refers to, if applicable.
+   */
   aliasType?: string;
+
+  /**
+   * (Optional) The corresponding clear type for the alias, if applicable.
+   */
   clearMatchingTypeAlias?: string;
 }
 
