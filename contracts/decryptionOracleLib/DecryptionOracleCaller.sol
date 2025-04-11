@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.24;
 
-import "../lib/TFHE.sol";
+import "../lib/HTTPZ.sol";
 import "../lib/Impl.sol";
 
-import "../lib/FHEVMConfig.sol";
+import "../lib/HTTPZConfig.sol";
 
 interface IKMSVerifier {
     function verifyDecryptionEIP712KMSSignatures(
@@ -32,7 +32,6 @@ abstract contract DecryptionOracleCaller {
     uint256 internal counterRequest;
     mapping(uint256 => bytes32[]) private requestedHandles;
     mapping(uint256 => ebool[]) private paramsEBool;
-    mapping(uint256 => euint4[]) private paramsEUint4;
     mapping(uint256 => euint8[]) private paramsEUint8;
     mapping(uint256 => euint16[]) private paramsEUint16;
     mapping(uint256 => euint32[]) private paramsEUint32;
@@ -45,10 +44,6 @@ abstract contract DecryptionOracleCaller {
 
     function addParamsEBool(uint256 requestID, ebool _ebool) internal {
         paramsEBool[requestID].push(_ebool);
-    }
-
-    function addParamsEUint4(uint256 requestID, euint4 _euint4) internal {
-        paramsEUint4[requestID].push(_euint4);
     }
 
     function addParamsEUint8(uint256 requestID, euint8 _euint8) internal {
@@ -97,10 +92,6 @@ abstract contract DecryptionOracleCaller {
         return paramsEBool[requestID];
     }
 
-    function getParamsEUint4(uint256 requestID) internal view returns (euint4[] memory) {
-        return paramsEUint4[requestID];
-    }
-
     function getParamsEUint8(uint256 requestID) internal view returns (euint8[] memory) {
         return paramsEUint8[requestID];
     }
@@ -129,9 +120,9 @@ abstract contract DecryptionOracleCaller {
         return paramsUint256[requestID];
     }
 
-    // keccak256(abi.encode(uint256(keccak256("fhevm.storage.DecryptionOracleConfig")) - 1)) & ~bytes32(uint256(0xff))
+    // keccak256(abi.encode(uint256(keccak256("httpz.storage.DecryptionOracleConfig")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant DecryptionOracleLocation =
-        0xde725b831312c6c6cbab76ff954da6836e26d78fc467781757c36be9c3d67d00;
+        0xd32a9093b7ac7851a2281334e46d88e2ade0a764d3acf8784e882e0899ed1d00;
 
     function getDecryptionOracleConfig() internal pure returns (DecryptionOracleConfigStruct storage $) {
         assembly {
@@ -144,17 +135,13 @@ abstract contract DecryptionOracleCaller {
         $.DecryptionOracleAddress = decryptionOracleAddress;
     }
 
-    function gatewayContractAddress() internal view returns (address) {
+    function getDecryptionOracleAddress() internal view returns (address) {
         DecryptionOracleConfigStruct storage $ = getDecryptionOracleConfig();
         return $.DecryptionOracleAddress;
     }
 
     function toBytes32(ebool newCT) internal pure returns (bytes32 ct) {
         ct = ebool.unwrap(newCT);
-    }
-
-    function toBytes32(euint4 newCT) internal pure returns (bytes32 ct) {
-        ct = euint4.unwrap(newCT);
     }
 
     function toBytes32(euint8 newCT) internal pure returns (bytes32 ct) {
@@ -202,7 +189,7 @@ abstract contract DecryptionOracleCaller {
         bytes4 callbackSelector
     ) internal returns (uint256 requestID) {
         requestID = counterRequest;
-        FHEVMConfigStruct storage $ = Impl.getFHEVMConfig();
+        HTTPZConfigStruct storage $ = Impl.getHTTPZConfig();
         IACL($.ACLAddress).allowForDecryption(ctsHandles);
         DecryptionOracleConfigStruct storage $$ = getDecryptionOracleConfig();
         IDecryptionOracle($$.DecryptionOracleAddress).requestDecryption(requestID, ctsHandles, callbackSelector);
@@ -218,7 +205,7 @@ abstract contract DecryptionOracleCaller {
         assembly {
             calldatacopy(add(decryptedResult, 0x20), start, length) // Copy the relevant part of calldata to decryptedResult memory
         }
-        FHEVMConfigStruct storage $ = Impl.getFHEVMConfig();
+        HTTPZConfigStruct storage $ = Impl.getHTTPZConfig();
         return
             IKMSVerifier($.KMSVerifierAddress).verifyDecryptionEIP712KMSSignatures(
                 handlesList,
@@ -231,16 +218,16 @@ abstract contract DecryptionOracleCaller {
         uint256 handlesListlen = handlesList.length;
         uint256 signedDataLength;
         for (uint256 i = 0; i < handlesListlen; i++) {
-            uint8 typeCt = uint8(handlesList[i][30]);
-            if (typeCt < 9) {
+            FheType typeCt = FheType(uint8(handlesList[i][30]));
+            if (uint8(typeCt) < 9) {
                 signedDataLength += 32;
-            } else if (typeCt == 9) {
+            } else if (typeCt == FheType.Uint512) {
                 //ebytes64
                 signedDataLength += 128;
-            } else if (typeCt == 10) {
+            } else if (typeCt == FheType.Uint1024) {
                 //ebytes128
                 signedDataLength += 192;
-            } else if (typeCt == 11) {
+            } else if (typeCt == FheType.Uint2048) {
                 //ebytes256
                 signedDataLength += 320;
             } else {

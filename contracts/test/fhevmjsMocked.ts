@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import dotenv from 'dotenv';
 import { Wallet, ethers } from 'ethers';
 import * as fs from 'fs';
+import hre from 'hardhat';
 import { Keccak } from 'sha3';
 import { isAddress } from 'web3-validator';
 
@@ -11,8 +12,6 @@ import { getRequiredEnvVar } from '../tasks/utils/loadVariables';
 import { insertSQL } from './coprocessorUtils';
 import { awaitCoprocessor, getClearText } from './coprocessorUtils';
 import { checkIsHardhatSigner } from './utils';
-
-const hre = require('hardhat');
 
 async function getCoprocessorSigners() {
   const coprocessorSigners = [];
@@ -30,17 +29,16 @@ const aclAdd = parsedEnvACL.ACL_CONTRACT_ADDRESS;
 
 enum Types {
   ebool = 0,
-  euint4,
-  euint8,
-  euint16,
-  euint32,
-  euint64,
-  euint128,
-  eaddress,
-  euint256,
-  ebytes64,
-  ebytes128,
-  ebytes256,
+  euint8 = 2,
+  euint16 = 3,
+  euint32 = 4,
+  euint64 = 5,
+  euint128 = 6,
+  eaddress = 7,
+  euint256 = 8,
+  ebytes64 = 9,
+  ebytes128 = 10,
+  ebytes256 = 11,
 }
 
 const sum = (arr: number[]) => arr.reduce((acc, val) => acc + val, 0);
@@ -69,10 +67,6 @@ function createUintToUint8ArrayFunction(numBits: number) {
     switch (numBits) {
       case 2: // ebool takes 2 bits
         byteBuffer = Buffer.from([Types.ebool]);
-        totalBuffer = Buffer.concat([byteBuffer, combinedBuffer]);
-        break;
-      case 4:
-        byteBuffer = Buffer.from([Types.euint4]);
         totalBuffer = Buffer.concat([byteBuffer, combinedBuffer]);
         break;
       case 8:
@@ -191,14 +185,6 @@ export const createEncryptedInputMocked = (contractAddress: string, userAddress:
       if (bits.length > 256) throw Error('Packing more than 256 variables in a single input ciphertext is unsupported');
       return this;
     },
-    add4(value: number | bigint) {
-      checkEncryptedValue(value, 4);
-      values.push(BigInt(value));
-      bits.push(4);
-      if (sum(bits) > 2048) throw Error('Packing more than 2048 bits in a single input ciphertext is unsupported');
-      if (bits.length > 256) throw Error('Packing more than 256 variables in a single input ciphertext is unsupported');
-      return this;
-    },
     add8(value: number | bigint) {
       checkEncryptedValue(value, 8);
       values.push(BigInt(value));
@@ -308,6 +294,11 @@ export const createEncryptedInputMocked = (contractAddress: string, userAddress:
       const encryptedArray = new Uint8Array(encrypted);
       const hash = new Keccak(256).update(Buffer.from(encryptedArray)).digest();
 
+      const chainId = process.env.SOLIDITY_COVERAGE_RUNNING === 'true' ? 31337 : hre.network.config.chainId;
+      if (chainId === undefined) {
+        throw new Error('Chain ID is not defined');
+      }
+
       const handles = bits.map((v, i) => {
         const dataWithIndex = new Uint8Array(hash.length + 1);
         dataWithIndex.set(hash, 0);
@@ -315,9 +306,21 @@ export const createEncryptedInputMocked = (contractAddress: string, userAddress:
         const finalHash = new Keccak(256).update(Buffer.from(dataWithIndex)).digest();
         const dataInput = new Uint8Array(32);
         dataInput.set(finalHash, 0);
-        dataInput.set([i, ENCRYPTION_TYPES[v], 0], 29);
+        // Put the index at byte21
+        dataInput.set([i], 21);
+
+        // Split the chainId over 8 bytes
+        const chainIdBuffer = Buffer.alloc(8);
+        chainIdBuffer.writeBigUInt64BE(BigInt(chainId), 0);
+
+        // Add the chainId to bytes22-29
+        dataInput.set(chainIdBuffer, 22);
+
+        // Add encryption type and handle_version (which is 0) to bytes30-31
+        dataInput.set([ENCRYPTION_TYPES[v], 0], 30);
         return dataInput;
       });
+
       let inputProof = '0x' + numberToHex(handles.length); // numHandles + numCoprocessorSigners + list_handles + signatureCoprocessorSigners (total len : 1+1+32+NUM_HANDLES*32+65*numSigners)
       const numSigners = +process.env.NUM_COPROCESSORS!;
       inputProof += numberToHex(numSigners);

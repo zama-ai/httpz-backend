@@ -199,7 +199,6 @@ where
                 }
             };
 
-            let chain_id = tenant_info.chain_id;
             let handle: Vec<u8> = row.handle.clone();
 
             let (ciphertext64_digest, ciphertext128_digest) =
@@ -214,7 +213,7 @@ where
                     }
                 };
 
-            let handle_u256 = U256::from_be_bytes(try_into_array::<32>(row.handle.clone())?);
+            let handle_bytes32 = FixedBytes::from(try_into_array::<32>(handle.clone())?);
             let key_id = U256::from_be_bytes(tenant_info.key_id);
 
             info!(
@@ -229,9 +228,8 @@ where
             let txn_request = match &self.gas {
                 Some(gas_limit) => ciphertext_manager
                     .addCiphertextMaterial(
-                        handle_u256,
+                        handle_bytes32,
                         key_id,
-                        U256::from(chain_id),
                         ciphertext64_digest,
                         ciphertext128_digest,
                     )
@@ -239,9 +237,8 @@ where
                     .with_gas_limit(*gas_limit),
                 None => ciphertext_manager
                     .addCiphertextMaterial(
-                        handle_u256,
+                        handle_bytes32,
                         key_id,
-                        U256::from(chain_id),
                         ciphertext64_digest,
                         ciphertext128_digest,
                     )

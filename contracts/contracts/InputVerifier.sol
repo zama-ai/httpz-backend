@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BSD-3-Clause-Clear
 pragma solidity ^0.8.24;
 
-import {TFHEExecutor} from "./TFHEExecutor.sol";
+import {HTTPZExecutor} from "./HTTPZExecutor.sol";
 
 // Importing OpenZeppelin contracts for cryptographic signature verification and access control.
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -13,7 +13,7 @@ import {EIP712UpgradeableCrossChain} from "./EIP712UpgradeableCrossChain.sol";
 /**
  * @title    InputVerifier.
  * @notice   This contract allows signature verification of user encrypted inputs.
- *           This contract is called by the TFHEExecutor inside verifyCiphertext function
+ *           This contract is called by the HTTPZExecutor inside verifyCiphertext function
  * @dev      The contract uses EIP712UpgradeableCrossChain for cryptographic operations.
  */
 contract InputVerifier is UUPSUpgradeable, Ownable2StepUpgradeable, EIP712UpgradeableCrossChain {
@@ -30,6 +30,9 @@ contract InputVerifier is UUPSUpgradeable, Ownable2StepUpgradeable, EIP712Upgrad
 
     /// @notice Returned if the input proof is empty.
     error EmptyInputProof();
+
+    /// @notice Returned if the chain id from the input handle is invalid.
+    error InvalidChainId();
 
     /// @notice Returned if the index is invalid.
     error InvalidIndex();
@@ -107,16 +110,16 @@ contract InputVerifier is UUPSUpgradeable, Ownable2StepUpgradeable, EIP712Upgrad
     /// @notice Patch version of the contract.
     uint256 private constant PATCH_VERSION = 0;
 
-    /// @custom:storage-location erc7201:fhevm.storage.InputVerifier
+    /// @custom:storage-location erc7201:httpz.storage.InputVerifier
     struct InputVerifierStorage {
         mapping(address => bool) isSigner; /// @notice Mapping to keep track of addresses that are signers
         address[] signers; /// @notice Array to keep track of all signers
         uint256 threshold; /// @notice The threshold for the number of signers required for a signature to be valid
     }
 
-    /// @dev keccak256(abi.encode(uint256(keccak256("fhevm.storage.InputVerifier")) - 1)) & ~bytes32(uint256(0xff))
+    /// keccak256(abi.encode(uint256(keccak256("httpz.storage.InputVerifier")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant InputVerifierStorageLocation =
-        0x3f7d7a96c8c7024e92d37afccfc9b87773a33b9bc22e23134b683e74a50ace00;
+        0x0f3182ad724e9de82dc79a31e3b0e792f87a844d042e92fa257979351135e300;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -170,21 +173,28 @@ contract InputVerifier is UUPSUpgradeable, Ownable2StepUpgradeable, EIP712Upgrad
      * @return result       Result.
      */
     function verifyCiphertext(
-        TFHEExecutor.ContextUserInputs memory context,
+        HTTPZExecutor.ContextUserInputs memory context,
         bytes32 inputHandle,
         bytes memory inputProof
-    ) public virtual returns (uint256) {
+    ) public virtual returns (bytes32) {
         (bool isProofCached, bytes32 cacheKey) = _checkProofCache(
             inputProof,
             context.userAddress,
             context.contractAddress
         );
+
+        uint64 recoveredChainId = uint64(
+            uint256((inputHandle & 0x00000000000000000000000000000000000000000000ffffffffffffffffffff) >> 16)
+        );
+
+        if (recoveredChainId != block.chainid) revert InvalidChainId();
+
         uint256 result = uint256(inputHandle);
-        uint256 indexHandle = (result & 0x0000000000000000000000000000000000000000000000000000000000ff0000) >> 16;
+        uint256 indexHandle = (result & 0x0000000000000000000000000000000000000000ff00000000000000000000) >> 80;
 
         if (!isProofCached) {
             /// @dev bundleCiphertext is compressedPackedCT+ZKPOK
-            ///      inputHandle is keccak256(keccak256(bundleCiphertext)+index)[0:29]+index+type+version
+            ///      inputHandle is keccak256(keccak256(bundleCiphertext)+index)[0:20] + index[21] + chainId[22:29] + type[30] + version[31]
             ///      and inputProof is len(list_handles) + numSigners + list_handles + signatureCoprocessorSigners (1+1+NUM_HANDLES*32+65*numSigners)
 
             uint256 inputProofLen = inputProof.length;
@@ -193,7 +203,7 @@ contract InputVerifier is UUPSUpgradeable, Ownable2StepUpgradeable, EIP712Upgrad
             uint256 numSigners = uint256(uint8(inputProof[1]));
 
             /// @dev This checks in particular that the list is non-empty.
-            if (numHandles <= indexHandle) revert InvalidIndex();
+            if (numHandles <= indexHandle || indexHandle > 254) revert InvalidIndex();
             if (inputProofLen != 2 + 32 * numHandles + 65 * numSigners) revert DeserializingInputProofFail();
 
             /// @dev Deserialize handle and check that they are from the correct version.
@@ -226,14 +236,15 @@ contract InputVerifier is UUPSUpgradeable, Ownable2StepUpgradeable, EIP712Upgrad
         } else {
             uint8 numHandles = uint8(inputProof[0]);
             /// @dev We know inputProof is non-empty since it has been previously cached.
-            if (numHandles <= indexHandle) revert InvalidIndex();
+            if (numHandles <= indexHandle || indexHandle > 254) revert InvalidIndex();
             uint256 element;
             for (uint256 j = 0; j < 32; j++) {
                 element |= uint256(uint8(inputProof[2 + indexHandle * 32 + j])) << (8 * (31 - j));
             }
             if (element != result) revert InvalidInputHandle();
         }
-        return result;
+
+        return bytes32(result);
     }
 
     /**
@@ -288,7 +299,7 @@ contract InputVerifier is UUPSUpgradeable, Ownable2StepUpgradeable, EIP712Upgrad
      * @dev             If there are too many signers, it could be out-of-gas.
      * @return signers  List of signers.
      */
-    function getSigners() public view virtual returns (address[] memory) {
+    function getCoprocessorSigners() public view virtual returns (address[] memory) {
         InputVerifierStorage storage $ = _getInputVerifierStorage();
         return $.signers;
     }
