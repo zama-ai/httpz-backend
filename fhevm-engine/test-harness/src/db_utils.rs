@@ -10,7 +10,7 @@ use tokio::io::AsyncReadExt;
 use tokio::time::sleep;
 use tracing::info;
 
-pub const ACL_CONTRACT_ADDR: &str = "0x339EcE85B9E11a3A3AA557582784a15d7F82AAf2";
+pub const ACL_CONTRACT_ADDR: &str = "0x05fD9B5EFE0a996095f42Ed7e77c390810CF660c";
 
 /// Uploads a file to the database as a large object and returns its Oid
 pub async fn import_file_into_db(pool: &PgPool, file_path: &str) -> Result<Oid, sqlx::Error> {
