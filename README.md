@@ -71,7 +71,7 @@ The keys are stored by default in `fhevm-engine/fhevm-keys`.
 
 ### Coprocessor
 
-#### Dependences
+#### Dependencies
 
 - `docker-compose`
 - `rust`
